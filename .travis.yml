@@ -7,7 +7,6 @@ install:
 script: py.test
 deploy:
   provider: heroku
-  buildpack: python
   api_key:
     secure: g9x6S2j0taMk2go999zTdd83j3XByy077vtavkcu55xneZjsDzroSmWc3Tuqh+8Gz0Pi89dtOQgoeG5HNRbqH18BmshagkAuFVa6RqVYyKWCyOfgWcr2RDPcoWjuEAspRC8ipEPbIk9kHKLwIRTf6n0ELKe+2O5yAhZ+itQPMkg=
   strategy: git
