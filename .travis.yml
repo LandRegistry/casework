@@ -9,7 +9,7 @@ deploy:
   provider: heroku
   buildpack: python
   api_key:
-    secure: SVOkDnBfcAr/Ok+LhW5msYsLD6cSYe+3C4x3A2Wjr8vhJQ1HW17P+fffWlP28LWuTYodrOJleAQ9B0upOypb5PvbfxHh1lEDO+OK1eZbhhp3JO08seDrYd1kv5e9chsXMD0hfxsZUL54czvy+Yb6V5cFOdMu/d2uXutndg+ohh4=
+    secure: g9x6S2j0taMk2go999zTdd83j3XByy077vtavkcu55xneZjsDzroSmWc3Tuqh+8Gz0Pi89dtOQgoeG5HNRbqH18BmshagkAuFVa6RqVYyKWCyOfgWcr2RDPcoWjuEAspRC8ipEPbIk9kHKLwIRTf6n0ELKe+2O5yAhZ+itQPMkg=
   strategy: git
   app: lr-casework
   on:
