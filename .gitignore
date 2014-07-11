@@ -2,5 +2,5 @@
 .DS_Store
 *.pyc
 
-appname/static/build
-appname/static/.webassets-cache
+casework/static/build
+casework/static/.webassets-cache

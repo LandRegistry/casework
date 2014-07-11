@@ -1,5 +1,5 @@
 from flask import render_template
-from appname import app, db
+from casework import app, db
 from  models import Foo
 from flask.ext.assets import Environment, Bundle
 

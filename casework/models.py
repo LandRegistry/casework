@@ -1,4 +1,4 @@
-from appname import db
+from casework import db
 
 class Foo(db.Model):
 
