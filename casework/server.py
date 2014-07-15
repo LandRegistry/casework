@@ -1,6 +1,8 @@
 from flask import render_template
 from flask import request
-from casework import app
+from casework import app, db
+from  models import Foo
+from flask.ext.assets import Environment
 from .mint import Mint
 
 mint = Mint()
@@ -20,8 +22,16 @@ def index():
 def new_title():
     mint_string = request.form['titleNumber'] + ':' + request.form['titleJSON']
     response = mint.post({"title_number" : request.form['titleNumber'], "foo":"bar"})
-    return response
+    print "RESPONSE", response
+    return mint_string
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html', error = error), 404
+
+@app.route('/success/<title_number>')
+def success(title_number=None):
+    return render_template("success.html", title_number = title_number)
 
 
 #  Some useful headers to set to beef up the robustness of the app
