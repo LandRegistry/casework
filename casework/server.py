@@ -1,8 +1,8 @@
 from flask import render_template
 from flask import request
-from casework import app, db
-from  models import Foo
-from flask.ext.assets import Environment
+
+from casework import app
+
 
 # govuk_template asset path
 @app.context_processor
