@@ -1,8 +1,9 @@
 from flask import render_template
 from flask import request
-
 from casework import app
+from .mint import Mint
 
+mint = Mint()
 
 # govuk_template asset path
 @app.context_processor
@@ -17,10 +18,9 @@ def index():
 
 @app.route('/new_title/', methods=['POST'])
 def new_title():
-
-  if request.method == 'POST':
     mint_string = request.form['titleNumber'] + ':' + request.form['titleJSON']
-    return mint_string
+    response = mint.post({"title_number" : request.form['titleNumber'], "foo":"bar"})
+    return response
 
 
 
