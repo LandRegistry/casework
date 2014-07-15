@@ -1,7 +1,7 @@
 *.db
 .DS_Store
 *.pyc
-.iml
+*.iml
 casework/static/build
 casework/static/.webassets-cache
 dev/
