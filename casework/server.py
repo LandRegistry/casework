@@ -1,22 +1,13 @@
 from flask import render_template
 from flask import request
-from casework import app, db
-from  models import Foo
-from flask.ext.assets import Environment
+from casework import app
 from .mint import Mint
 
 mint = Mint()
 
-# govuk_template asset path
-@app.context_processor
-def asset_path_context_processor():
-    return {'asset_path': '/static/govuk_template/'}
-
 @app.route('/')
 def index():
     return render_template("index.html")
-
-
 
 @app.route('/new_title/', methods=['POST'])
 def new_title():
@@ -32,7 +23,6 @@ def page_not_found(error):
 @app.route('/success/<title_number>')
 def success(title_number=None):
     return render_template("success.html", title_number = title_number)
-
 
 #  Some useful headers to set to beef up the robustness of the app
 # https://www.owasp.org/index.php/List_of_useful_HTTP_headers

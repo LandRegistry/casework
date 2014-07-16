@@ -1,9 +1,6 @@
 #!/bin/bash
 
-export SETTINGS='config.Config'
+export SETTINGS='config.DevelopmentConfig'
+export MINT_URL='http://0.0.0.0:8001'
 
-if [[ $1 == "dev" ]]; then
-    python run_dev.py
-else
-    foreman start
-fi
+python run_dev.py
