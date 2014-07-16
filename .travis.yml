@@ -3,15 +3,14 @@ python:
 - '2.7'
 install:
 - pip install -r requirements.txt
-- pip install pytest
-- gem install sass
+- pip install -r requirements_test.txt
 script: py.test
 deploy:
   provider: heroku
   api_key:
     secure: g9x6S2j0taMk2go999zTdd83j3XByy077vtavkcu55xneZjsDzroSmWc3Tuqh+8Gz0Pi89dtOQgoeG5HNRbqH18BmshagkAuFVa6RqVYyKWCyOfgWcr2RDPcoWjuEAspRC8ipEPbIk9kHKLwIRTf6n0ELKe+2O5yAhZ+itQPMkg=
   strategy: git
-  app: lr-casework
+  app: lr-casework-frontend
   on:
-    repo: LandRegistry/casework
+    repo: LandRegistry/casework-frontend
     branch: master

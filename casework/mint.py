@@ -1,10 +1,10 @@
 import requests
-
+from casework import app
 
 class Mint(object):
 
     def __init__(self):
-        self.api = 'http://0.0.0.0:8001/titles'
+        self.api = '%s/titles' % app.config['MINT_URL']
 
     def post(self, data):
         response = requests.post(self.api, data=data)
