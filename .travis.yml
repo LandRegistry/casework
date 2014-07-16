@@ -8,9 +8,7 @@ script: py.test
 deploy:
   provider: heroku
   api_key:
-    secure: g9x6S2j0taMk2go999zTdd83j3XByy077vtavkcu55xneZjsDzroSmWc3Tuqh+8Gz0Pi89dtOQgoeG5HNRbqH18BmshagkAuFVa6RqVYyKWCyOfgWcr2RDPcoWjuEAspRC8ipEPbIk9kHKLwIRTf6n0ELKe+2O5yAhZ+itQPMkg=
-  strategy: git
+    secure: f08NDNBSVc/Stsq6a2JTCZUv8HoOqP9wlsV3xYjBcvI8ABs+HW7f4tzatI718JoxN9Ck1QsKzSHXbqA1adygAd+V4iMKEOfA0/90cCdVKJdIWYnmT9KNw8AUuuux3GyHdkGSPKzQAWEf0D09moCOVZB40nGp0zsLHGaOS31oTAc=
   app: lr-casework-frontend
   on:
     repo: LandRegistry/casework-frontend
-    branch: master
