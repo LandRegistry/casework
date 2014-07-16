@@ -11,12 +11,13 @@ mint = Mint()
 @app.route('/', methods=('GET', 'POST'))
 def index():
     form = IndexForm()
-    # if form.validate_on_submit():
-    #     return 'its ok'#redirect('/success/tn')
     return render_template("index.html", form = form)
 
 @app.route('/new_title/', methods=['POST'])
 def new_title():
+    form = IndexForm()
+    if form.validate_on_submit():
+        return 'its ok '#'redirect('/success/' + request.form['titleNumber'])
     mint_string = request.form['titleNumber'] + ':' + request.form['titleJSON']
     response = mint.post({"title_number" : request.form['titleNumber'], "foo":"bar"})
     print "RESPONSE", response
