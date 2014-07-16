@@ -7,6 +7,10 @@
   <div id="content">
     <div class="inner-block">
       <form action="/new_title/" method="POST">
+
+        {{ form.csrf_token }}
+        <!--{{ form.titleNumber.label }} {{ form.titleNumber(size=20) }}-->
+
         <h1 id = "firstRegistration" >First Registration</h1>
         <h3>Title number</h2>
 
