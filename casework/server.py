@@ -3,20 +3,19 @@ from flask import request
 from casework import app
 from .mint import Mint
 from flask_wtf import Form
-from wtforms import TextField
-from wtforms.validators import DataRequired
+from registrationform import RegistrationForm
 from json import JSONEncoder
 
 mint = Mint()
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
-    form = IndexForm()
+    form = RegistrationForm()
     return render_template("index.html", form = form)
 
 @app.route('/new_title/', methods=['POST'])
 def new_title():
-    form = IndexForm()
+    form = RegistrationForm()
     mint_JSON =  JSONEncoder().encode({
       "title_id":request.form['titleNumber'],
       "proprietors":[
@@ -76,6 +75,3 @@ def after_request(response):
     response.headers.add('X-Content-Type-Options', 'nosniff')
     response.headers.add('X-XSS-Protection', '1; mode=block')
     return response
-
-class IndexForm(Form):
-    titleNumber = TextField('titleNumber', validators=[DataRequired()])
