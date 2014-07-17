@@ -5,6 +5,7 @@ from .mint import Mint
 from flask_wtf import Form
 from wtforms import TextField
 from wtforms.validators import DataRequired
+from json import JSONEncoder
 
 mint = Mint()
 
@@ -16,17 +17,52 @@ def index():
 @app.route('/new_title/', methods=['POST'])
 def new_title():
     form = IndexForm()
+    mint_JSON =  JSONEncoder().encode({
+      "title_id":request.form['titleNumber'],
+      "proprietors":[
+        {
+          "first_name":request.form['firstName1'],
+          "last_name":request.form['surname1']
+        },
+        {
+          "first_name":request.form['firstName2'],
+          "last_name":request.form['surname2']
+        }
+      ],
+      "property":{
+        "address": {
+          "house_number": request.form['houseNumber'],
+          "road": request.form['road'],
+          "town": request.form['town'],
+          "postcode": request.form['postcode']
+        },
+        "tenure": request.form['tenure'],
+        "class_of_title": request.form['class']
+      },
+      "payment": {
+        "price_paid": request.form['pricePaid'],
+        "titles":[
+          request.form['titleNumber']
+        ]
+      }
+    })
+
     if form.validate_on_submit():
-        return 'its ok '#'redirect('/success/' + request.form['titleNumber'])
-    mint_string = request.form['titleNumber'] + ':' + request.form['titleJSON']
-    response = mint.post({"title_number" : request.form['titleNumber'], "foo":"bar"})
-    print "RESPONSE", response
-    return mint_string
+      response = mint.post(mint_JSON)
+      print "RESPONSE", response
+      #return mint_JSON
+      return render_template('success.html') #need to redirect this with title
+
 
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('error.html', error = error), 404
 
+@app.errorhandler(500)
+def page_not_found(error):
+    return render_template('error.html', error = error), 500
+
+@app.route('/success')
 @app.route('/success/<title_number>')
 def success(title_number=None):
     return render_template("success.html", title_number = title_number)
