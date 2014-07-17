@@ -1,5 +1,8 @@
 from flask import render_template
+from flask import redirect
+from flask import url_for
 from flask import request
+from flask import abort
 from casework import app
 from .mint import Mint
 from flask_wtf import Form
@@ -48,9 +51,10 @@ def new_title():
 
     if form.validate_on_submit():
       response = mint.post(mint_JSON)
-      print "RESPONSE", response
-      #return mint_JSON
-      return render_template('success.html') #need to redirect this with title
+      if response.status_code == 200:
+        return redirect(url_for('success', title_number = request.form['titleNumber']))
+      else:
+        abort(response.status_code)
 
 
 @app.errorhandler(404)
@@ -58,7 +62,7 @@ def page_not_found(error):
     return render_template('error.html', error = error), 404
 
 @app.errorhandler(500)
-def page_not_found(error):
+def internal_server_error(error):
     return render_template('error.html', error = error), 500
 
 @app.route('/success')
