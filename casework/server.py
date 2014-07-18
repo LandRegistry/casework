@@ -1,8 +1,4 @@
-from flask import render_template
-from flask import redirect
-from flask import url_for
-from flask import request
-from flask import abort
+from flask import render_template, redirect, url_for, flash, abort
 from casework import app
 from .mint import Mint
 from registrationform import RegistrationForm
@@ -13,45 +9,49 @@ mint = Mint()
 @app.route('/', methods=('GET', 'POST'))
 def index():
     form = RegistrationForm()
-    return render_template("index.html", form = form)
+    return render_template("title_registration.html", form = form)
 
-@app.route('/title/', methods=['POST'])
+@app.route('/title', methods=['POST'])
 def new_title():
     form = RegistrationForm()
-    mint_JSON =  json.dumps({
-      "title_number":request.form['titleNumber'],
+
+    mint_data =  json.dumps({
+      "title_number": form['title_number'].data,
       "proprietors":[
         {
-          "first_name":request.form['firstName1'],
-          "last_name":request.form['surname1']
+          "first_name": form['first_name1'].data,
+          "last_name": form['surname1'].data #can we sort names out please? not have last_name and surname2?
         },
         {
-          "first_name":request.form['firstName2'],
-          "last_name":request.form['surname2']
+          "first_name": form['first_name2'].data,
+          "last_name": form['surname2'].data
         }
       ],
       "property":{
+
         "address": {
-          "house_number": request.form['houseNumber'],
-          "road": request.form['road'],
-          "town": request.form['town'],
-          "postcode": request.form['postcode']
+          "house_number": form['house_number'].data,
+          "road": form['road'].data,
+          "town": form['town'].data,
+          "postcode": form['postcode'].data
         },
-        "tenure": request.form['tenure'],
-        "class_of_title": request.form['class']
+        "tenure": form['property_tenure'].data,
+        "class_of_title":  form['property_class'].data
       },
       "payment": {
-        "price_paid": request.form['pricePaid'],
+        "price_paid": form['price_paid'].data,
         "titles":[
-          request.form['titleNumber']
+          form['title_number'].data
         ]
       }
     })
 
     if form.validate_on_submit():
-        response = mint.post(mint_JSON)
+        title_number = form['title_number'].data
+        response = mint.post(title_number, mint_data)
         if response.status_code == 200:
-            return redirect(url_for('success', title_number = request.form['titleNumber']))
+            flash('Succesfully created title with number %s'  % title_number)
+            return redirect(url_for('index'))
         else:
             abort(response.status_code)
     else:
