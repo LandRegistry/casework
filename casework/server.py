@@ -55,6 +55,8 @@ def new_title():
         return redirect(url_for('success', title_number = request.form['titleNumber']))
       else:
         abort(response.status_code)
+    else:
+      return render_template('error.html', error = "validation error")
 
 
 @app.errorhandler(404)
