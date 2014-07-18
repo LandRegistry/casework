@@ -8,8 +8,7 @@
     <div class="inner-block">
       <form action="/new_title/" method="POST">
 
-        {{ form.csrf_token }}
-        <!--{{ form.titleNumber.label }} {{ form.titleNumber(size=20) }}-->
+        {{ form.csrf_token }}{{form.hidden_tag()}}
 
         <h1 id = "firstRegistration" >First Registration</h1>
         <h3>Title number</h2>
@@ -31,14 +30,14 @@
         Postcode: <input id = "postcode" type="text" name="postcode"><br>
 
         <h3>Tenure</h3>
-        <input id = "freehold" type="radio" name="tenure" value="freehold">Freehold
-        <input id = "leasehold" type="radio" name="tenure" value="leasehold">Leasehold
+        <input id = "freehold" type="radio" name="propertyTenure" value="freehold">Freehold
+        <input id = "leasehold" type="radio" name="propertyTenure" value="leasehold">Leasehold
 
         <h3>Class of title</h3>
-        <input id = "absolute" type="radio" name="class" value="absolute">absolute<br>
-        <input id = "good" type="radio" name="class" value="good">good<br>
-        <input id = "qualified" type="radio" name="class" value="qualified">qualified<br>
-        <input id = "possessory" type="radio" name="class" value="possessory">possesory
+        <input id = "absolute" type="radio" name="propertyClass" value="absolute">absolute<br>
+        <input id = "good" type="radio" name="propertyClass" value="good">good<br>
+        <input id = "qualified" type="radio" name="propertyClass" value="qualified">qualified<br>
+        <input id = "possessory" type="radio" name="propertyClass" value="possessory">possesory
 
         <h3>Price paid</h3>
         £ <input id = "pricePaid" type="text" name="pricePaid"><br>
