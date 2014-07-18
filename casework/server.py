@@ -20,7 +20,7 @@ def index():
 def new_title():
     form = RegistrationForm()
     mint_JSON =  JSONEncoder().encode({
-      "title_id":request.form['titleNumber'],
+      "title_number":request.form['titleNumber'],
       "proprietors":[
         {
           "first_name":request.form['firstName1'],
