@@ -1,7 +1,10 @@
 import os, logging
 from flask import Flask
+from flask_wtf.csrf import CsrfProtect
 
 app = Flask(__name__)
+
+CsrfProtect(app)
 
 app.config.from_object(os.environ.get('SETTINGS'))
 

@@ -8,7 +8,6 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    CSRF_ENABLED = False
 
 class TestConfig(DevelopmentConfig):
     TESTING = True
