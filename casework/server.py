@@ -5,9 +5,8 @@ from flask import request
 from flask import abort
 from casework import app
 from .mint import Mint
-from flask_wtf import Form
 from registrationform import RegistrationForm
-from json import JSONEncoder
+import json
 
 mint = Mint()
 
@@ -16,10 +15,10 @@ def index():
     form = RegistrationForm()
     return render_template("index.html", form = form)
 
-@app.route('/new_title/', methods=['POST'])
+@app.route('/title/', methods=['POST'])
 def new_title():
     form = RegistrationForm()
-    mint_JSON =  JSONEncoder().encode({
+    mint_JSON =  json.dumps({
       "title_number":request.form['titleNumber'],
       "proprietors":[
         {
@@ -50,14 +49,13 @@ def new_title():
     })
 
     if form.validate_on_submit():
-      response = mint.post(mint_JSON)
-      if response.status_code == 200:
-        return redirect(url_for('success', title_number = request.form['titleNumber']))
-      else:
-        abort(response.status_code)
+        response = mint.post(mint_JSON)
+        if response.status_code == 200:
+            return redirect(url_for('success', title_number = request.form['titleNumber']))
+        else:
+            abort(response.status_code)
     else:
-      return render_template('error.html', error = "validation error")
-
+        return render_template('error.html', error = "validation error")
 
 @app.errorhandler(404)
 def page_not_found(error):
