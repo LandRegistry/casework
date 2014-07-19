@@ -6,9 +6,21 @@
 
   <div id="content">
     <div class="inner-block">
-      <form>
-        <p id = "success">First registration successful for <br>{{ title_number }}</p>
-      </form>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+
+        {% endif %}
+        {% endwith %}
+
+
+
     </div>
   </div>
 

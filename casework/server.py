@@ -6,16 +6,40 @@ import json
 
 mint = Mint()
 
-@app.route('/', methods=('GET', 'POST'))
+@app.route('/')
 def index():
-    form = RegistrationForm()
-    return render_template("title_registration.html", form = form)
+    return render_template("index.html")
 
-@app.route('/title', methods=['POST'])
-def new_title():
+@app.route('/registration', methods=['GET','POST'])
+def registration():
     form = RegistrationForm()
 
-    mint_data =  json.dumps({
+    if form.validate_on_submit():
+        mint_data = form_to_json(form)
+        title_number = form['title_number'].data
+        try:
+            response = mint.post(title_number, mint_data)
+            app.logger.info('Created title number %s at the mint url %s: status code'
+                            % (title_number, mint, response.status_code))
+            flash('Successfully created title with number %s' % title_number)
+        except RuntimeError as e:
+            app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
+            flash('Creation of title with number %s failed' % title_number)
+        return redirect(url_for('registration'))
+
+    else:
+        #TODO this needs tidying
+        # http://wtforms.readthedocs.org/en/latest/specific_problems.html#rendering-errors
+        # has a better way of doing this possibly using jinja macros.
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash("%s - error %s" % (field, error))
+
+    return render_template('title_registration.html', form=form)
+
+
+def form_to_json(form):
+    data = json.dumps({
       "title_number": form['title_number'].data,
       "proprietors":[
         {
@@ -45,17 +69,7 @@ def new_title():
         ]
       }
     })
-
-    if form.validate_on_submit():
-        title_number = form['title_number'].data
-        response = mint.post(title_number, mint_data)
-        if response.status_code == 200:
-            flash('Succesfully created title with number %s'  % title_number)
-            return redirect(url_for('index'))
-        else:
-            abort(response.status_code)
-    else:
-        return render_template('error.html', error = "validation error")
+    return data
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -66,9 +80,8 @@ def internal_server_error(error):
     return render_template('error.html', error = error), 500
 
 @app.route('/success')
-@app.route('/success/<title_number>')
-def success(title_number=None):
-    return render_template("success.html", title_number = title_number)
+def success():
+    return render_template("success.html")
 
 #  Some useful headers to set to beef up the robustness of the app
 # https://www.owasp.org/index.php/List_of_useful_HTTP_headers

@@ -20,12 +20,11 @@
         {% endwith %}
 
 
-      <form action="/title" method="POST">
+      <form action="/registration" method="POST">
 
         {{ form.csrf_token }}{{form.hidden_tag()}}
 
         <h1 id = "first-registration" >First Registration</h1>
-
 
         {{ form.title_number.label }}  {{form.title_number}}
 

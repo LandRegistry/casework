@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import TextField, RadioField, SubmitField
+from wtforms import StringField, RadioField, SubmitField
 from wtforms.validators import DataRequired
 
 class RegistrationForm(Form):
@@ -11,17 +11,17 @@ class RegistrationForm(Form):
     the form object to do the work for you
     """
 
-    title_number = TextField('Title Number')
+    title_number = StringField('Title Number')
 
-    first_name1 = TextField('First name 1', validators=[DataRequired()])
-    surname1 = TextField('Surname 1', validators=[DataRequired()])
-    first_name2 = TextField('First name 2')
-    surname2 = TextField('Surname 2')
+    first_name1 = StringField('First name 1', validators=[DataRequired()])
+    surname1 = StringField('Surname 1', validators=[DataRequired()])
+    first_name2 = StringField('First name 2')
+    surname2 = StringField('Surname 2')
 
-    house_number = TextField('House number', validators=[DataRequired()])
-    road = TextField('Road', validators=[DataRequired()])
-    town = TextField('Town', validators=[DataRequired()])
-    postcode = TextField('Postcode', validators=[DataRequired()])
+    house_number = StringField('House number', validators=[DataRequired()])
+    road = StringField('Road', validators=[DataRequired()])
+    town = StringField('Town', validators=[DataRequired()])
+    postcode = StringField('Postcode', validators=[DataRequired()])
 
     property_tenure = RadioField(
       'Property tenure',
@@ -41,7 +41,7 @@ class RegistrationForm(Form):
       ]
     )
 
-    price_paid = TextField('Price paid', validators=[DataRequired()])
+    price_paid = StringField('Price paid', validators=[DataRequired()])
 
     submit = SubmitField("Submit")
 

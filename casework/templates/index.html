@@ -7,55 +7,9 @@
   <div id="content">
     <div class="inner-block">
 
-     {% with messages = get_flashed_messages() %}
-        {% if messages %}
+        <h1>Caseworking frontend</h1>
 
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }} </li>
-        {% endfor %}
-        </ul>
-
-        {% endif %}
-        {% endwith %}
-
-
-      <form action="/title" method="POST">
-
-        {{ form.csrf_token }}{{form.hidden_tag()}}
-
-        <h1 id = "first-registration" >First Registration</h1>
-
-        <p>Title number</p>
-
-        {{ form.title_number.label }}  {{form.title_number}}
-
-        <p>Proprieters</p>
-        {{ form.first_name1.label }} {{ form.first_name1 }}
-        {{ form.surname1.label }}{{ form.surname1 }}
-
-        {{ form.first_name2.label }} {{ form.first_name2 }}
-        {{ form.surname2.label }} {{ form.surname2 }}
-
-        <p>Property details</p>
-        {{form.house_number.label}} {{form.house_number}}
-        {{form.road.label}} {{form.road}}
-        {{form.town.label}}  {{form.town}}
-        {{form.postcode.label}} {{form.postcode}}
-
-
-        <p>Property tenure</p>
-        {{form.property_tenure.label}}  {{form.property_tenure}}
-
-        <p>Property class</p>
-        {{form.property_class.label}} {{form.property_class}}
-
-
-       {{form.price_paid.label}}  {{form.price_paid}}
-
-       {{form.submit}}
-
-      </form>
+        <p><a href="/registration">First registration</a></p>
     </div>
   </div>
 

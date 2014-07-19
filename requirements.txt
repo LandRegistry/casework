@@ -10,3 +10,4 @@ itsdangerous==0.24
 requests==2.3.0
 wsgiref==0.1.2
 Flask_WTF==0.10.0
+mock
