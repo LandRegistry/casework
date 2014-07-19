@@ -6,7 +6,7 @@ install:
 - pip install -r requirements_test.txt
 script: py.test
 env:
-  - SETTINGS = config.TestConfig
+  - SETTINGS : config.TestConfig
 deploy:
   provider: heroku
   api_key:
