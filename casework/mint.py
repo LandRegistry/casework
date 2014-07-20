@@ -4,7 +4,7 @@ from casework import app
 class Mint(object):
 
     def __init__(self):
-        self.api = '%s/title' % app.config['MINT_URL']
+        self.api = '%s/titles' % app.config['MINT_URL']
 
     def post(self, title_number, json_data):
         title_url = '%s/%s' % (self.api, title_number)

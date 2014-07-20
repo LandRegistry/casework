@@ -19,7 +19,7 @@ def registration():
         title_number = form['title_number'].data
         try:
             response = mint.post(title_number, mint_data)
-            app.logger.info('Created title number %s at the mint url %s: status code'
+            app.logger.info('Created title number %s at the mint url %s: status code %d'
                             % (title_number, mint, response.status_code))
             flash('Successfully created title with number %s' % title_number)
         except RuntimeError as e:
