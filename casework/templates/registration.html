@@ -5,12 +5,16 @@
   <div class="row">
     <div class="col-md-12">
       <h1>Create title</h1>
-      
+
       <form action="" method="POST">
 
         {{ form.csrf_token }}{{form.hidden_tag()}}
-        {{ render_field(form.title_number)}}
+        <!--{{ render_field(form.title_number)}}-->
         
+        Title number:<label name="titleNumber"> {{title_number}} </label>
+        <input id="titleNumber" type="text" name="titleNumber"
+          value={{title_number}} hidden= true><br>
+
         <fieldset>
         <legend>Proprieters</legend>
         {{ render_field(form.first_name1) }}
@@ -38,7 +42,7 @@
         </fieldset>
 
         {{ render_field(form.price_paid)}}
-       
+
        <button type="submit" class="btn btn-default btn-primary">Create title</button>
 
       </form>

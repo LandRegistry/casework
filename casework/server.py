@@ -1,6 +1,8 @@
 from flask import render_template, redirect, url_for, flash, abort, request
 from casework import app
 from .mint import Mint
+from flask_wtf import Form
+from .generate_title_number import TitleNumber
 from forms import RegistrationForm
 import json
 
@@ -13,6 +15,7 @@ def index():
 @app.route('/registration', methods=['GET','POST'])
 def registration():
     form = RegistrationForm()
+    title_class = TitleNumber()
 
     if request.method == 'POST' and form.validate():
         mint_data = form_to_json(form)
@@ -26,7 +29,8 @@ def registration():
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
 
-    return render_template('registration.html', form=form)
+    return render_template('registration.html', form=form, title_number =
+      title_class.getTitleNumber() )
 
 
 def form_to_json(form):
