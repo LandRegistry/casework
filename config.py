@@ -18,3 +18,11 @@ class TestConfig(DevelopmentConfig):
     TESTING = True
     MINT_URL = 'http://locahost:8005'
     PROPERTY_FRONTEND_URL = 'http://localhost:8002'
+
+class DockerConfig(Config):
+    DEBUG = True
+    SECRET_KEY = 'hunter2'
+    MINT_URL = os.environ.get('MINT_1_PORT_8001_TCP', '').replace('tcp://', 'http://')
+    PROPERTY_FRONTEND_URL = os.environ.get('PROPERTYFRONTEND_1_PORT_8002', '').replace('tcp://', 'http://')
+
+
