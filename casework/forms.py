@@ -1,6 +1,6 @@
 from flask_wtf import Form
-from wtforms import StringField, RadioField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, RadioField, SubmitField, IntegerField
+from wtforms.validators import DataRequired, NumberRange
 
 class RegistrationForm(Form):
 
@@ -12,7 +12,6 @@ class RegistrationForm(Form):
     """
 
     title_number = StringField('Title Number')
-
     first_name1 = StringField('First name 1', validators=[DataRequired()])
     surname1 = StringField('Surname 1', validators=[DataRequired()])
     first_name2 = StringField('First name 2')
@@ -41,5 +40,5 @@ class RegistrationForm(Form):
       ]
     )
 
-    price_paid = StringField('Price paid', validators=[DataRequired()])
+    price_paid = IntegerField('Price paid')
 
