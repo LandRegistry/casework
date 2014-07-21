@@ -14,10 +14,12 @@ def index():
 
 @app.route('/registration', methods=['GET','POST'])
 def registration():
-    form = RegistrationForm()
+
     title_class = TitleNumber()
+    form = RegistrationForm(request.form)
 
     if request.method == 'POST' and form.validate():
+
         mint_data = form_to_json(form)
         title_number = form['title_number'].data
         try:
