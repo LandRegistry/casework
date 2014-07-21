@@ -1,6 +1,6 @@
 import unittest
 import mock
-from casework.registrationform import RegistrationForm
+from casework.forms import RegistrationForm
 
 from casework.server import app
 
