@@ -12,15 +12,17 @@
         <!--{{ form.titleNumber.label }} {{ form.titleNumber(size=20) }}-->
 
         <h1 id = "firstRegistration" >First Registration</h1>
-        <h3>Title number</h2>
+        <h3>Title number</h3>
 
-        Title number: <input id="titleNumber" type="text" name="titleNumber"><br>
+        Title number:<label name="titleNumber"> {{title_number}} </label>
+        <input id="titleNumber" type="text" name="titleNumber"
+          value={{title_number}} hidden= true><br>
 
-        <h3>First proprietor</h2>
+        <h3>First proprietor</h3>
         First name: <input id = "firstName1" type="text" name="firstName1"><br>
         Surname: <input id = "surname1" type="text" name="surname1"><br>
 
-        <h3>Second proprietor</h2>
+        <h3>Second proprietor</h3>
         First name: <input id = "firstName2" type="text" name="firstName2"><br>
         Surname: <input id = "surname2" type="text" name="surname2"><br>
 

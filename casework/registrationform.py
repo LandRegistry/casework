@@ -5,4 +5,3 @@ from wtforms.validators import DataRequired
 
 class RegistrationForm(Form):
     titleNumber = TextField('titleNumber', validators=[DataRequired()])
-    
