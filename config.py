@@ -15,7 +15,4 @@ class DevelopmentConfig(Config):
 class TestConfig(DevelopmentConfig):
     TESTING = True
     MINT_URL = 'http://locahost:8005'
-<<<<<<< HEAD
-=======
     PROPERTY_FRONTEND_URL = 'http://localhost:8002'
->>>>>>> origin/link-to-new-title-page
