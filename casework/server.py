@@ -1,10 +1,9 @@
-from flask import render_template, redirect, url_for, flash, abort, request
+from flask import render_template, request, flash
 from casework import app
 from .mint import Mint
-from flask_wtf import Form
 from .generate_title_number import TitleNumber
 from forms import RegistrationForm
-import json
+import simplejson
 
 mint = Mint()
 
@@ -16,11 +15,11 @@ def index():
 def registration():
 
 
-    title_class = TitleNumber()
+    title_class = TitleNumber().getTitleNumber() # please stop with the java naming conventions
     form = RegistrationForm(request.form)
     success_url = None
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST' and form.validate():  # this is the same as form.validate_on_submit()
 
         mint_data = form_to_json(form)
         title_number = form['title_number'].data
@@ -29,14 +28,19 @@ def registration():
             app.logger.info('Created title number %s at the mint url %s: status code %d'
                             % (title_number, response.url, response.status_code))
             success_url = '%s/property/%s' % (app.config['PROPERTY_FRONTEND_URL'], title_number)
+            # you should redirect to registration now and pass sucess_url along as query string param
+            # otherwise the form will not clear
+            # i.e. return redirect(url_for('registration', success_url=success_url))
+            # this passed it along in query string but ? then at top of method
+            # do request.args.get('success_url') instead of success_url = None
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
 
-    return render_template('registration.html', form=form, success_url=success_url, title_number=title_class.getTitleNumber())
+    return render_template('registration.html', form=form, success_url=success_url, title_number=title_class)
 
 def form_to_json(form):
-    data = json.dumps({
+    data = simplejson.dumps({
       "title_number": form['title_number'].data,
       "proprietors":[
         {
