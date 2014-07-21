@@ -1,0 +1,21 @@
+{% macro render_field(field) %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        {% if field.type == 'RadioField'%}
+          {% for value, label, _ in field.iter_choices() %}
+            <div class="radio">
+              <label>
+                <input type="radio" name="{{ field.id }}" value="{{ value }}">{{ label }}
+              </label>
+            </div>
+          {% endfor %}
+        {% else %}
+          {{ field.label(class_="control-label") }}
+          {{ field(class_="form-control", **kwargs) }}
+        {% endif%}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <span class="help-block">{{error}}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endmacro %}

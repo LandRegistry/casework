@@ -1,7 +1,7 @@
-from flask import render_template, redirect, url_for, flash, abort
+from flask import render_template, redirect, url_for, flash, abort, request
 from casework import app
 from .mint import Mint
-from registrationform import RegistrationForm
+from forms import RegistrationForm
 import json
 
 mint = Mint()
@@ -14,7 +14,7 @@ def index():
 def registration():
     form = RegistrationForm()
 
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate():
         mint_data = form_to_json(form)
         title_number = form['title_number'].data
         try:
@@ -25,17 +25,8 @@ def registration():
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
-        return redirect(url_for('registration'))
 
-    else:
-        #TODO this needs tidying
-        # http://wtforms.readthedocs.org/en/latest/specific_problems.html#rendering-errors
-        # has a better way of doing this possibly using jinja macros.
-        for field, errors in form.errors.items():
-            for error in errors:
-                flash("%s - error %s" % (field, error))
-
-    return render_template('title_registration.html', form=form)
+    return render_template('registration.html', form=form)
 
 
 def form_to_json(form):
@@ -78,10 +69,6 @@ def page_not_found(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('error.html', error = error), 500
-
-@app.route('/success')
-def success():
-    return render_template("success.html")
 
 #  Some useful headers to set to beef up the robustness of the app
 # https://www.owasp.org/index.php/List_of_useful_HTTP_headers
