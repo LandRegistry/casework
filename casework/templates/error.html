@@ -1,17 +1,8 @@
-{% extends "landregistry_base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 
-<main id="wrapper" role="main">
-
-  <div id="content">
-    <div class="inner-block">
-      <form>
-        <p id = "error">There has been an error.<br>{{ error }}</p>
-      </form>
-    </div>
-  </div>
-
-</main>
+  <h1>There has been an error</h1>
+  {{error}}
 
 {% endblock %}

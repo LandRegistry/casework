@@ -43,5 +43,3 @@ class RegistrationForm(Form):
 
     price_paid = StringField('Price paid', validators=[DataRequired()])
 
-    submit = SubmitField("Submit")
-
