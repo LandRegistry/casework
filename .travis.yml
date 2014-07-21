@@ -6,11 +6,11 @@ install:
 - pip install -r requirements_test.txt
 script: py.test
 env:
-  - SETTINGS : config.TestConfig
+- SETTINGS=config.TestConfig
 deploy:
   provider: heroku
   api_key:
-    secure: f08NDNBSVc/Stsq6a2JTCZUv8HoOqP9wlsV3xYjBcvI8ABs+HW7f4tzatI718JoxN9Ck1QsKzSHXbqA1adygAd+V4iMKEOfA0/90cCdVKJdIWYnmT9KNw8AUuuux3GyHdkGSPKzQAWEf0D09moCOVZB40nGp0zsLHGaOS31oTAc=
+    secure: LWDLbZ3fXk1jzWrfWdpA6Gj87Jd+jlfKw6PZ3AFjcvJEhImcB70Mzk4pBFtoMTYlrNg5CJM8SFrsos/L4VrRGWjS+Hrvvo30CzwlO8Bd5JgtVD3auGNqls6NPJEuiw4R2il3e9w7CJtN6Fq5C48NzfSU/ofOSyrTn7OCVREqXWs=
   app: lr-casework-frontend
   on:
     repo: LandRegistry/casework-frontend
