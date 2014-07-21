@@ -8,16 +8,16 @@ from .mint import Mint
 from flask_wtf import Form
 from registrationform import RegistrationForm
 from json import JSONEncoder
-from .generate_title_number import RandomTitleNumber
+from .generate_title_number import TitleNumber
 
 mint = Mint()
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
     form = RegistrationForm()
-    random_title = RandomTitleNumber()
+    title_class = TitleNumber()
     return render_template("index.html", form = form, title_number =
-      random_title.getRandomTitleNumber() )
+      title_class.getTitleNumber() )
 
 @app.route('/new_title/', methods=['POST'])
 def new_title():
