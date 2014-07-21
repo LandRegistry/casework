@@ -1,55 +1,36 @@
-{% extends "landregistry_base.html" %}
-
+{% extends "base.html" %}
+{% block page_title %}Welcome{% endblock %}
 {% block content %}
+  <h1>Welcome</h1>
+  <div class="dashboard">
+    <div class="row">
 
-<main id="wrapper" role="main">
+      <div class="col-md-6">
+        <ul>
+          <li><a href="/registration">First registration</a></li>
+        </ul>
+      </div>
 
-  <div id="content">
-    <div class="inner-block">
-      <form action="/new_title/" method="POST">
-
-        {{ form.csrf_token }}
-        <!--{{ form.titleNumber.label }} {{ form.titleNumber(size=20) }}-->
-
-        <h1 id = "firstRegistration" >First Registration</h1>
-        <h3>Title number</h3>
-
-        Title number:<label name="titleNumber"> {{title_number}} </label>
-        <input id="titleNumber" type="text" name="titleNumber"
-          value={{title_number}} hidden= true><br>
-
-        <h3>First proprietor</h3>
-        First name: <input id = "firstName1" type="text" name="firstName1"><br>
-        Surname: <input id = "surname1" type="text" name="surname1"><br>
-
-        <h3>Second proprietor</h3>
-        First name: <input id = "firstName2" type="text" name="firstName2"><br>
-        Surname: <input id = "surname2" type="text" name="surname2"><br>
-
-        <h3>Address of property</h3>
-        House number: <input id = "houseNumber" type="text" name="houseNumber"><br>
-        Road: <input id = "road" type="text" name="road"><br>
-        Town: <input id = "town" type="text" name="town"><br>
-        Postcode: <input id = "postcode" type="text" name="postcode"><br>
-
-        <h3>Tenure</h3>
-        <input id = "freehold" type="radio" name="tenure" value="freehold">Freehold
-        <input id = "leasehold" type="radio" name="tenure" value="leasehold">Leasehold
-
-        <h3>Class of title</h3>
-        <input id = "absolute" type="radio" name="class" value="absolute">absolute<br>
-        <input id = "good" type="radio" name="class" value="good">good<br>
-        <input id = "qualified" type="radio" name="class" value="qualified">qualified<br>
-        <input id = "possessory" type="radio" name="class" value="possessory">possesory
-
-        <h3>Price paid</h3>
-        £ <input id = "pricePaid" type="text" name="pricePaid"><br>
-
-        <input id = "Register" type="submit" value="Register"/><br>
-      </form>
+      <div class="col-md-6">
+        <ul>
+          <li>Other options here</li>
+        </ul>
+      </div>  
     </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <ul>
+          <li>Other options here</li>
+        </ul>
+      </div>
+
+      <div class="col-md-6">
+        <ul>
+          <li>Other options here</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
-
-</main>
-
 {% endblock %}

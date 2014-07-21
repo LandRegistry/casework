@@ -1,23 +1,39 @@
-// GOVUK Toolkit imports
-// ==========================================================================
+body{
+  padding-bottom:50px;
+}
+.navbar{
+  padding:5px;
+  border-radius: 0px;
+}
+.navbar-brand{
+  font-size:24px;
+  padding-left:55px;
+  background:url('../images/lr-logo.png') no-repeat;
+}
 
-@import '../govuk_toolkit/stylesheets/_colours';
-@import '../govuk_toolkit/stylesheets/_conditionals';
-@import '../govuk_toolkit/stylesheets/_css3';
-@import '../govuk_toolkit/stylesheets/_device-pixels';
-@import '../govuk_toolkit/stylesheets/_font_stack';
-@import '../govuk_toolkit/stylesheets/_grid_layout';
-@import '../govuk_toolkit/stylesheets/_measurements';
-@import '../govuk_toolkit/stylesheets/_shims';
-@import '../govuk_toolkit/stylesheets/_typography';
-@import '../govuk_toolkit/stylesheets/_url-helpers';
+.navbar-default {
+  background-color:#fff;
+  border-bottom: 1px solid #2D631F; 
+}
 
-@import '../govuk_toolkit/stylesheets/design-patterns/_alpha-beta';
-@import '../govuk_toolkit/stylesheets/design-patterns/_buttons';
+.dashboard {
+  padding:40px 20px;
+}
 
-// Land Registry elements imports
-// ==========================================================================
+.dashboard ul{
+  font-size: 30px;
+}
 
-@import '../landregistry_elements/_normalise';
-@import '../landregistry_elements/_layout';
-@import '../landregistry_elements/_header-proposition';
+.dashboard li{
+  list-style-type: none;
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 768px) {
+
+.form-control{width:500px;}
+legend {width:500px; border-bottom: 1px solid red; font-size:30px;}
+
+}
+
+
