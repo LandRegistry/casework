@@ -2,9 +2,33 @@ body {
   padding-bottom: 50px; }
 
 .navbar {
-  padding: 5px; }
+  padding: 5px;
+  border-radius: 0px; }
 
 .navbar-brand {
   font-size: 24px;
   padding-left: 55px;
   background: url("../images/lr-logo.png") no-repeat; }
+
+.navbar-default {
+  background-color: #fff;
+  border-bottom: 1px solid #2D631F; }
+
+.dashboard {
+  padding: 40px 20px; }
+
+.dashboard ul {
+  font-size: 30px; }
+
+.dashboard li {
+  list-style-type: none; }
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 768px) {
+  .form-control {
+    width: 500px; }
+
+  legend {
+    width: 500px;
+    border-bottom: 1px solid red;
+    font-size: 30px; } }
