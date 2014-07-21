@@ -1,6 +1,6 @@
 from flask_wtf import Form
-from wtforms import StringField, RadioField, SubmitField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms import StringField, RadioField, SubmitField, DecimalField
+from wtforms.validators import DataRequired, NumberRange, Optional
 
 class RegistrationForm(Form):
 
@@ -40,5 +40,4 @@ class RegistrationForm(Form):
       ]
     )
 
-    price_paid = IntegerField('Price paid')
-
+    price_paid = DecimalField('Price paid (&pound;)', [Optional(),NumberRange(min=0, message='please enter a positive number')], places=2, rounding=None)
