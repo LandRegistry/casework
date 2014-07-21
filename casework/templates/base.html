@@ -13,13 +13,13 @@
     {% with messages = get_flashed_messages() %}
       {% if messages or form and form.errors %}
           {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
+            <div class="alert alert-info" role="alert">{{message|safe}}</div>
           {% endfor %}
            {% if form.errors %}
               <div class="alert alert-danger">
                 <p>Please review the errors below</p>
               </div>
-            {% endif %}
+           {% endif %}
       {% endif %}
     {% endwith %}
 
