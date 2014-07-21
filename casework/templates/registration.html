@@ -1,61 +1,64 @@
+{% from "_form_helpers.html" import render_field %}
 {% extends "base.html" %}
-
+{% block page_title %}Create title{% endblock %}
 {% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Create title</h1>
+      
+      <form action="" method="POST">
 
-  <h1>Create title</h1>
-  
-  <form action="" method="POST">
+        {{ form.csrf_token }}{{form.hidden_tag()}}
 
-    {{ form.csrf_token }}{{form.hidden_tag()}}
+        <div class="form-group">
+          {{ render_field(form.title_number)}}
+        </div>
 
-    <div class="form-group">
-      {{ form.title_number.label }}  {{form.title_number}}
-      </div>
+        <h2>Proprieters</h2>
+        <div class="form-group">
+          {{ render_field(form.first_name1) }}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.surname1) }}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.first_name2) }}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.surname2) }}
+        </div>
 
-    <h2>Proprieters</h2>
-    <div class="form-group">
-      {{ form.first_name1.label }} {{ form.first_name1 }}
+        <h2>Property details</h2>
+        <div class="form-group">
+          {{ render_field(form.house_number)}}
+        </div> 
+        <div class="form-group">
+          {{ render_field(form.road)}}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.town)}}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.postcode)}}
+        </div>
+
+        <h2>Property tenure</h2>
+        <div class="form-group">
+          {{form.property_tenure.label}}  {{form.property_tenure}}
+        </div>
+
+        <h2>Property class</h2>
+        <div class="form-group">
+          {{form.property_class.label}} {{form.property_class}}
+        </div>
+
+       <div class="form-group">
+        {{ render_field(form.price_paid)}}
+       </div>
+       
+       <button type="submit" class="btn btn-default btn-primary">Create title</button>
+
+      </form>
     </div>
-    <div class="form-group">
-      {{ form.surname1.label }}{{ form.surname1 }}
-    </div>
-    <div class="form-group">
-      {{ form.first_name2.label }} {{ form.first_name2 }}
-    </div>
-    <div class="form-group">
-      {{ form.surname2.label }} {{ form.surname2 }}
-    </div>
-
-    <h2>Property details</h2>
-    <div class="form-group">
-      {{form.house_number.label}} {{form.house_number}}
-    </div> 
-    <div class="form-group">
-      {{form.road.label}} {{form.road}}
-    </div>
-    <div class="form-group">
-      {{form.town.label}}  {{form.town}}
-    </div>
-    <div class="form-group">
-      {{form.postcode.label}} {{form.postcode}}
-    </div>
-
-    <h2>Property tenure</h2>
-    <div class="form-group">
-      {{form.property_tenure.label}}  {{form.property_tenure}}
-    </div>
-
-    <h2>Property class</h2>
-    <div class="form-group">
-      {{form.property_class.label}} {{form.property_class}}
-    </div>
-
-   <div class="form-group">
-    {{form.price_paid.label}}  {{form.price_paid}}
-   </div>
-   
-   <button type="submit">Create title</button>
-
-  </form>
-
+  </div>
 {% endblock %}

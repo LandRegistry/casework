@@ -2,26 +2,28 @@
 <html>
 <head>
   <title>{% block page_title %}{% endblock %} | Land Registry casework</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/main.css') }}">
 </head>
 <body>
-  <header>
-    <a href="{{url_for('index')}}">Land Registry casework</a>
-  </header>
-  <main>
+  <nav class="navbar navbar-default" role="navigation">
+    <a class="navbar-brand" href="{{url_for('index')}}">Land Registry casework</a>
+  </nav>
+  <div class="container-fluid">
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-messages">
-          <ul>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        </div>
+      {% if messages or form and form.errors %}
+          {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+          {% endfor %}
+           {% if form.errors %}
+              <div class="alert alert-danger">
+                <p>Please review the errors below</p>
+              </div>
+            {% endif %}
       {% endif %}
     {% endwith %}
 
     {% block content %} {% endblock %}
-  </main>
+  </div>
 </body>
 </html>

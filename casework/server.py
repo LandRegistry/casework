@@ -27,14 +27,6 @@ def registration():
                 app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
                 flash('Creation of title with number %s failed' % title_number)
 
-        else:
-            #TODO this needs tidying
-            # http://wtforms.readthedocs.org/en/latest/specific_problems.html#rendering-errors
-            # has a better way of doing this possibly using jinja macros.
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash("%s - error %s" % (field, error))
-
     return render_template('registration.html', form=form)
 
 
