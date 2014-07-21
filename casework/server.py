@@ -14,18 +14,17 @@ def index():
 def registration():
     form = RegistrationForm()
 
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            mint_data = form_to_json(form)
-            title_number = form['title_number'].data
-            try:
-                response = mint.post(title_number, mint_data)
-                app.logger.info('Created title number %s at the mint url %s: status code %d'
-                                % (title_number, mint, response.status_code))
-                flash('Successfully created title with number %s' % title_number)
-            except RuntimeError as e:
-                app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
-                flash('Creation of title with number %s failed' % title_number)
+    if request.method == 'POST' and form.validate():
+        mint_data = form_to_json(form)
+        title_number = form['title_number'].data
+        try:
+            response = mint.post(title_number, mint_data)
+            app.logger.info('Created title number %s at the mint url %s: status code %d'
+                            % (title_number, mint, response.status_code))
+            flash('Successfully created title with number %s' % title_number)
+        except RuntimeError as e:
+            app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
+            flash('Creation of title with number %s failed' % title_number)
 
     return render_template('registration.html', form=form)
 
@@ -65,7 +64,6 @@ def form_to_json(form):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    dir(error)
     return render_template('error.html', error = error), 404
 
 @app.errorhandler(500)
