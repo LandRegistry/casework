@@ -2,6 +2,12 @@
 {% extends "base.html" %}
 {% block page_title %}Create title{% endblock %}
 {% block content %}
+  {% if success_url %}
+    {# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
+    <div class="alert alert-info" role="alert">
+        New title created, <a href="{{success_url}}">view public property page</a>
+    </div>
+  {% endif %}
   <div class="row">
     <div class="col-md-12">
       <h1>Create title</h1>

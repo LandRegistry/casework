@@ -15,8 +15,10 @@ def index():
 @app.route('/registration', methods=['GET','POST'])
 def registration():
 
+
     title_class = TitleNumber()
     form = RegistrationForm(request.form)
+    success_url = None
 
     if request.method == 'POST' and form.validate():
 
@@ -25,15 +27,13 @@ def registration():
         try:
             response = mint.post(title_number, mint_data)
             app.logger.info('Created title number %s at the mint url %s: status code %d'
-                            % (title_number, mint, response.status_code))
-            flash('Successfully created title with number %s' % title_number)
+                            % (title_number, response.url, response.status_code))
+            success_url = '%s/property/%s' % (app.config['PROPERTY_FRONTEND_URL'], title_number)
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
 
-    return render_template('registration.html', form=form, title_number =
-      title_class.getTitleNumber() )
-
+    return render_template('registration.html', form=form, success_url=success_url, title_number=title_class.getTitleNumber())
 
 def form_to_json(form):
     data = json.dumps({
