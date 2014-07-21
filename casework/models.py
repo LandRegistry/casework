@@ -7,7 +7,7 @@ class Title_numbers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title_number = db.Column('title_number', db.String(64))
 
-    def __init__(self, title_number, data):
+    def __init__(self, title_number):
         self.title_number = title_number
 
     def __repr__(self):
