@@ -7,7 +7,7 @@
     <div class="alert alert-info" role="alert">
       New title created: <strong>{{title_number}}</strong> <br> <a href="{{success_url}}">View public property page</a>
     </div>
-    
+
   {% endif %}
   <div class="row">
     <div class="col-md-12">
@@ -18,12 +18,10 @@
         {{ form.csrf_token }}{{form.hidden_tag()}}
         <!--{{ render_field(form.title_number)}}-->
 
-        <fieldset>
-          Reference: <strong>{{title_number}}</strong>
-        </fieldset>
+        <p>Reference: <strong>{{title_number}}</strong></p>
 
         <fieldset>
-        <legend>Proprieters</legend>
+        <legend>Proprietors</legend>
         {{ render_field(form.first_name1) }}
         {{ render_field(form.surname1) }}
         {{ render_field(form.first_name2) }}
