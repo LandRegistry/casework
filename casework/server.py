@@ -16,7 +16,7 @@ def registration():
 
     title_class = TitleNumber() # please stop with the java naming conventions
     form = RegistrationForm(request.form)
-    property_frontend_url = app.config['PROPERTY_FRONTEND_URL']
+    property_frontend_url = '%s/%s' % (app.config['PROPERTY_FRONTEND_URL'], 'property')
     created = request.args.get('created', None)
 
     if  request.method == 'GET':
