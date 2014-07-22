@@ -12,5 +12,3 @@ createdb -U title_number -O title_number title_number -T template0
 
 python manage.py db upgrade
 python run_dev.py
-
-python run_dev.py
