@@ -36,7 +36,7 @@ class RegistrationForm(Form):
         ('absolute','Absolute'),
         ('good','Good'),
         ('qualified','Qualified'),
-        ('possesory','Possesory')
+        ('possessory','Possessory')
       ]
     )
 
