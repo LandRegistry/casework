@@ -5,8 +5,9 @@
   {% if success_url %}
     {# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
     <div class="alert alert-info" role="alert">
-        New title created, <a href="{{success_url}}">view public property page</a>
+      New title created: <strong>{{title_number}}</strong> <br> <a href="{{success_url}}">View public property page</a>
     </div>
+    
   {% endif %}
   <div class="row">
     <div class="col-md-12">
@@ -17,9 +18,9 @@
         {{ form.csrf_token }}{{form.hidden_tag()}}
         <!--{{ render_field(form.title_number)}}-->
 
-        Title number:<label name="title_number"> {{title_number}} </label>
-        <input id="title_number" type="text" name="title_number"
-          value={{title_number}} hidden= true><br>
+        <fieldset>
+          Reference: <strong>{{title_number}}</strong>
+        </fieldset>
 
         <fieldset>
         <legend>Proprieters</legend>
