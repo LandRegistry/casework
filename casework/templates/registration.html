@@ -2,10 +2,10 @@
 {% extends "base.html" %}
 {% block page_title %}Create title{% endblock %}
 {% block content %}
-  {% if success_url %}
+  {% if created %}
     {# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
     <div class="alert alert-info" role="alert">
-      New title created: <strong>{{title_number}}</strong> <br> <a href="{{success_url}}">View public property page</a>
+        New title created, <a href="{{property_frontend_url}}/{{created}}">view public property page</a>
     </div>
 
   {% endif %}
