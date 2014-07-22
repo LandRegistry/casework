@@ -1,11 +1,14 @@
 from flask import render_template, request, flash, redirect, url_for
 from casework import app
 from .mint import Mint
-from .generate_title_number import TitleNumber
 from forms import RegistrationForm
 import simplejson
+import random
 
 mint = Mint()
+
+def generate_title_number():
+    return 'TEST%d' % random.randint(10000000, 999999999)
 
 @app.route('/')
 def index():
@@ -14,14 +17,13 @@ def index():
 @app.route('/registration', methods=['GET','POST'])
 def registration():
 
-    title_class = TitleNumber() # please stop with the java naming conventions
     form = RegistrationForm(request.form)
     property_frontend_url = '%s/%s' % (app.config['PROPERTY_FRONTEND_URL'], 'property')
     created = request.args.get('created', None)
 
     if  request.method == 'GET':
       #put the title number into the form's hidden field
-      form.title_number.data = title_class.get_title_number()
+      form.title_number.data = generate_title_number()
 
     if request.method == 'POST' and form.validate():
         mint_data = form_to_json(form)
