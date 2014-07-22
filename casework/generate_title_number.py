@@ -13,14 +13,14 @@ from random import randint
 
 class TitleNumber(object):
 
-  def getTitleNumber(self):
-    return self.getSequentialTitleNumber()
+  def get_title_number(self):
+    return self.get_sequential_title_number()
 
-  def getSequentialTitleNumber(self):
-    suffix = self.getNextSuffix()
+  def get_sequential_title_number(self):
+    suffix = self.get_next_suffix()
     return 'TEST' + str(suffix)
 
-  def getNextSuffix(self):
+  def get_next_suffix(self):
     #get the next number from looking at the title_numbers table.
     #The next line get the last record in the table
     numbers = db.session.query(Title_numbers).order_by(Title_numbers.id.desc()).first()
