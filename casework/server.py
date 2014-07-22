@@ -1,4 +1,4 @@
-from flask import render_template, request, flash
+from flask import render_template, request, flash, redirect, url_for
 from casework import app
 from .mint import Mint
 from .generate_title_number import TitleNumber
@@ -14,34 +14,31 @@ def index():
 @app.route('/registration', methods=['GET','POST'])
 def registration():
 
-    title_class = TitleNumber()# please stop with the java naming conventions
+    title_class = TitleNumber() # please stop with the java naming conventions
     form = RegistrationForm(request.form)
-    success_url = None
+    property_frontend_url = app.config['PROPERTY_FRONTEND_URL']
+    created = request.args.get('created', None)
 
     if  request.method == 'GET':
       #put the title number into the form's hidden field
       form.title_number.data = title_class.get_title_number()
 
-    if request.method == 'POST' and form.validate():  # this is the same as form.validate_on_submit()
-
+    if request.method == 'POST' and form.validate():
         mint_data = form_to_json(form)
         title_number = form['title_number'].data
         try:
             response = mint.post(title_number, mint_data)
             app.logger.info('Created title number %s at the mint url %s: status code %d'
                             % (title_number, response.url, response.status_code))
-            success_url = '%s/property/%s' % (app.config['PROPERTY_FRONTEND_URL'], title_number)
-            # you should redirect to registration now and pass sucess_url along as query string param
-            # otherwise the form will not clear
-            # i.e. return redirect(url_for('registration', success_url=success_url))
-            # this passed it along in query string but ? then at top of method
-            # do request.args.get('success_url') instead of success_url = None
+
+            return redirect('%s?created=%s' % (url_for('registration'), title_number))
+
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
 
-    return render_template('registration.html', form=form, success_url=success_url,
-      title_number=form.title_number.data)
+    return render_template('registration.html', form=form, property_frontend_url=property_frontend_url,
+              title_number=form.title_number.data, created=created)
 
 def form_to_json(form):
     data = simplejson.dumps({
