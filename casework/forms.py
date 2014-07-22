@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import StringField, RadioField, DecimalField
+from wtforms import StringField, RadioField, DecimalField, HiddenField
 from wtforms.validators import DataRequired, NumberRange, Optional
 
 class RegistrationForm(Form):
@@ -11,7 +11,7 @@ class RegistrationForm(Form):
     the form object to do the work for you
     """
 
-    title_number = StringField('Title Number')
+    title_number = HiddenField('Title Number')
     first_name1 = StringField('First name 1', validators=[DataRequired()])
     surname1 = StringField('Surname 1', validators=[DataRequired()])
     first_name2 = StringField('First name 2')

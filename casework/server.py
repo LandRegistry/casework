@@ -14,10 +14,13 @@ def index():
 @app.route('/registration', methods=['GET','POST'])
 def registration():
 
-
-    title_class = TitleNumber().getTitleNumber() # please stop with the java naming conventions
+    title_class = TitleNumber()# please stop with the java naming conventions
     form = RegistrationForm(request.form)
     success_url = None
+
+    if  request.method == 'GET':
+      #put the title number into the form's hidden field
+      form.title_number.data = title_class.get_title_number()
 
     if request.method == 'POST' and form.validate():  # this is the same as form.validate_on_submit()
 
@@ -37,7 +40,8 @@ def registration():
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
 
-    return render_template('registration.html', form=form, success_url=success_url, title_number=title_class)
+    return render_template('registration.html', form=form, success_url=success_url,
+      title_number=form.title_number.data)
 
 def form_to_json(form):
     data = simplejson.dumps({
