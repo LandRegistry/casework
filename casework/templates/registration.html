@@ -7,6 +7,7 @@
     <div class="alert alert-info" role="alert">
         New title created, <a href="{{property_frontend_url}}/{{created}}">view public property page</a>
     </div>
+
   {% endif %}
   <div class="row">
     <div class="col-md-12">
@@ -17,12 +18,10 @@
         {{ form.csrf_token }}{{form.hidden_tag()}}
         <!--{{ render_field(form.title_number)}}-->
 
-        Title number:<label name="title_number"> {{title_number}} </label>
-        <input id="title_number" type="text" name="title_number"
-          value={{title_number}} hidden= true><br>
+        <p>Reference: <strong>{{title_number}}</strong></p>
 
         <fieldset>
-        <legend>Proprieters</legend>
+        <legend>Proprietors</legend>
         {{ render_field(form.first_name1) }}
         {{ render_field(form.surname1) }}
         {{ render_field(form.first_name2) }}
