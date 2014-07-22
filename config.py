@@ -8,6 +8,8 @@ class Config(object):
     CSRF_ENABLED = os.environ.get('CSRF_ENABLED')
     SECRET_KEY = os.environ.get('SECRET_KEY')
     PROPERTY_FRONTEND_URL = os.environ.get('PROPERTY_FRONTEND_URL')
+    BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
+    BASIC_AUTH_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD')
 
 class DevelopmentConfig(Config):
     DEBUG = True
