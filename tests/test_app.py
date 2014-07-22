@@ -1,6 +1,5 @@
 import unittest
 import mock
-# from casework.forms import RegistrationForm
 
 from casework.server import app
 
@@ -21,6 +20,7 @@ class CaseworkTestCase(unittest.TestCase):
 
     def check_view_registration(self):
         rv = self.app.get('/registration')
+
         assert rv.status == '200 OK'
 
     @mock.patch('casework.mint.Mint.post', return_value=mock_mint_response)
@@ -47,11 +47,16 @@ class CaseworkTestCase(unittest.TestCase):
         #check the there is a link in the page with the correct url
         assert '/property/%s' % 'TEST1234' in rv.data
 
+    @mock.patch('casework.mint.Mint.post', return_value=mock_mint_response)
+    def check_fail_registration(self, mock_post):
+        data = dict()
+        rv = self.app.post('/registration', data=data,follow_redirects=True)
+        assert 'Please review the errors below' in rv.data
 
     def test_registration(self):
         self.check_view_registration()
         self.check_create_registration()
-        
+        self.check_fail_registration()
 
     def test_404(self):
         rv = self.app.get('/pagedoesnotexist')
