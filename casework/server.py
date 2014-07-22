@@ -8,7 +8,7 @@ import random
 mint = Mint()
 
 def generate_title_number():
-    return 'TEST%d' % random.randint(10000000, 999999999)
+    return 'TEST%d' % random.randint(1, 9999)
 
 @app.route('/')
 def index():
