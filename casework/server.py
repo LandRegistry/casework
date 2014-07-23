@@ -71,7 +71,8 @@ def form_to_json(form):
         "titles":[
           form['title_number'].data
         ]
-      }
+      },
+      "extent": form['extent'].data
     })
     return data
 

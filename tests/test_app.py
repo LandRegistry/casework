@@ -58,6 +58,17 @@ class CaseworkTestCase(unittest.TestCase):
         self.check_create_registration()
         self.check_fail_registration()
 
+    def test_extent(self):
+
+        assert 4 == 5
+
+        #create empty instance of the form
+
+        #add some data
+
+        #run validate and assert is true
+
+
     def test_404(self):
         rv = self.app.get('/pagedoesnotexist')
         assert rv.status == '404 NOT FOUND'
@@ -65,4 +76,3 @@ class CaseworkTestCase(unittest.TestCase):
     def test_view_index(self):
         rv = self.app.get('/')
         assert rv.status == '200 OK'
-
