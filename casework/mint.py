@@ -1,10 +1,9 @@
 import requests
-from casework import app
 
 class Mint(object):
 
-    def __init__(self):
-        self.api = '%s/titles' % app.config['MINT_URL']
+    def __init__(self, mint_url):
+        self.api = '%s/titles' % mint_url
 
     def post(self, title_number, json_data):
         title_url = '%s/%s' % (self.api, title_number)

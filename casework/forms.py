@@ -53,20 +53,4 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-
-    # geom_type = RadioField(
-    #   'Geometry Type',
-    #   choices=[
-    #     ('Point','Point'),
-    #     ('MultiPoint','Multi-Point'),
-    #     ('LineString','Line'),
-    #     ('MultiLineString','Multi-Line'),
-    #     ('Polygon','Area'),
-    #     ('MultiPolygon','Multi-Area'),
-    #     ('GeometryCollection','Collection')
-    #   ]
-    # )
-
     extent = TextAreaField('Co-ordinates', validators=[DataRequired(), validate_geojson])
-
-    # crs = StringField('Co-ordinate Reference System', validators=[DataRequired()])
