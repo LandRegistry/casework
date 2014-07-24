@@ -40,4 +40,4 @@ class RegistrationForm(Form):
       ]
     )
 
-    price_paid = DecimalField('Price paid (&pound;)', [DataRequired(),NumberRange(min=0, message='please enter a positive number')], places=2, rounding=None)
+    price_paid = DecimalField('Price paid (&pound;)', [Optional(),NumberRange(min=0, message='please enter a positive number')], places=2, rounding=None)
