@@ -20,49 +20,21 @@ class CaseworkTestCase(unittest.TestCase):
         self.app = app
         self.client = app.test_client()
 
-
-    def check_view_registration(self):
+    def check_server(self):
+        
         rv = self.client.get('/registration')
-
         assert rv.status == '200 OK'
 
-    # @mock.patch('casework.mint.Mint.post', return_value=mock_mint_response)
-    # def check_create_registration(self, mock_post):
-    #     data = dict(
-    #                 title_number='TEST1234',
-    #                 first_name1='John',
-    #                 surname1='Smith',
-    #                 first_name2='John',
-    #                 surname2='Jone',
-    #                 house_number='2',
-    #                 road='Highstreet',
-    #                 town='New Town',
-    #                 postcode='sw1a1aa',
-    #                 property_tenure='freehold',
-    #                 property_class='good',
-    #                 price_paid=1234.12
-    #                )
-    #
-    #     #post data and check that we get a 200
-    #     rv = self.app.post('/registration', data=data,follow_redirects=True)
-    #     assert rv.status == '200 OK'
-    #
-    #     #check the there is a link in the page with the correct url
-    #     assert '/property/%s' % 'TEST1234' in rv.data
+        rv = self.client.get('/pagedoesnotexist')
+        assert rv.status == '404 NOT FOUND'
 
-    # @mock.patch('casework.mint.Mint.post', return_value=mock_mint_response)
-    # def check_fail_registration(self, mock_post):
-    #     data = dict()
-    #     rv = self.app.post('/registration', data=data,follow_redirects=True)
-    #     assert 'Please review the errors below' in rv.data
+        rv = self.client.get('/')
+        assert rv.status == '200 OK'
 
-    # def test_registration(self):
-    #     self.check_view_registration()
-    #     self.check_create_registration()
-    #     self.check_fail_registration()
+    def test_create_form(self):
 
-    def test_extent(self):
         with self.app.test_request_context():
+
             form = RegistrationForm()
 
             form.title_number.data = "TEST1234"
@@ -76,26 +48,10 @@ class CaseworkTestCase(unittest.TestCase):
             form.town.data = "Seattle"
             form.postcode.data = 'TE57 CD3'
 
-            form.property_tenure.data = "Freehold"
-
-            form.property_class.data = "Absolute"
-
+            form.property_tenure.data = "freehold"
+            form.property_class.data = "absolute"
             form.price_paid.data = "1000000"
-
             form.extent.data = '{ "type": "Feature", "geometry": { "type": "Point", "coordinates": [125.6, 10.1] }, "properties": { "name": "Dinagat Islands" } }'
 
             valid = form.validate()
             assert valid
-
-        #add some data
-
-        #run validate and assert is true
-
-
-    def test_404(self):
-        rv = self.client.get('/pagedoesnotexist')
-        assert rv.status == '404 NOT FOUND'
-
-    def test_view_index(self):
-        rv = self.client.get('/')
-        assert rv.status == '200 OK'
