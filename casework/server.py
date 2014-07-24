@@ -5,8 +5,6 @@ from forms import RegistrationForm
 import simplejson
 import random
 
-print app.config
-
 mint = Mint(app.config['MINT_URL'])
 
 def generate_title_number():
