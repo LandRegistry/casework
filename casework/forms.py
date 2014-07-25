@@ -1,6 +1,13 @@
 from flask_wtf import Form
-from wtforms import StringField, RadioField, DecimalField, HiddenField
-from wtforms.validators import DataRequired, NumberRange, Optional
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField
+from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError
+import geojson
+
+def validate_geojson(form, field):
+    try:
+        geojson.loads(field.data)
+    except ValueError:
+        raise ValidationError('Invalid GeoJSON')
 
 class RegistrationForm(Form):
 
@@ -40,4 +47,10 @@ class RegistrationForm(Form):
       ]
     )
 
-    price_paid = DecimalField('Price paid (&pound;)', [Optional(),NumberRange(min=0, message='please enter a positive number')], places=2, rounding=None)
+    price_paid = DecimalField(
+                    'Price paid (&pound;)',
+                    validators=[Optional(),NumberRange(min=0, message='please enter a positive number')],
+                    places=2,
+                    rounding=None)
+
+    extent = TextAreaField('Co-ordinates', validators=[DataRequired(), validate_geojson])

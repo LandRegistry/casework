@@ -21,3 +21,4 @@ psycopg2==2.5.3
 requests==2.3.0
 simplejson==3.6.0
 wsgiref==0.1.2
+geojson==1.0.7

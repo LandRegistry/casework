@@ -2,7 +2,6 @@ import os
 
 class Config(object):
     DEBUG = False
-
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     MINT_URL = os.environ.get('MINT_URL')
     CSRF_ENABLED = os.environ.get('CSRF_ENABLED')
@@ -13,6 +12,7 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    MINT_URL = 'http://locahost:8005'
 
 class TestConfig(DevelopmentConfig):
     TESTING = True
@@ -24,5 +24,3 @@ class DockerConfig(Config):
     SECRET_KEY = 'hunter2'
     MINT_URL = os.environ.get('MINT_1_PORT_8001_TCP', '').replace('tcp://', 'http://')
     PROPERTY_FRONTEND_URL = os.environ.get('PROPERTYFRONTEND_1_PORT_8002', '').replace('tcp://', 'http://')
-
-

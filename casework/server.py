@@ -5,7 +5,7 @@ from forms import RegistrationForm
 import simplejson
 import random
 
-mint = Mint()
+mint = Mint(app.config['MINT_URL'])
 
 def generate_title_number():
     return 'TEST%d' % random.randint(1, 9999)
@@ -71,7 +71,8 @@ def form_to_json(form):
         "titles":[
           form['title_number'].data
         ]
-      }
+      },
+      "extent": form['extent'].data
     })
     return data
 
