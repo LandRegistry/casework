@@ -1,6 +1,7 @@
 from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError
+from ukpostcodeutils.validation import is_valid_postcode
 import geojson
 
 def validate_geojson(form, field):
@@ -8,6 +9,11 @@ def validate_geojson(form, field):
         geojson.loads(field.data)
     except ValueError:
         raise ValidationError('Invalid GeoJSON')
+
+def validate_postcode(form, field):
+    clean = field.data.replace(' ', '').upper()
+    if not is_valid_postcode(clean):
+        raise ValidationError('Not a valid UK postcode')
 
 class RegistrationForm(Form):
 
@@ -27,7 +33,7 @@ class RegistrationForm(Form):
     house_number = StringField('House number', validators=[DataRequired()])
     road = StringField('Road', validators=[DataRequired()])
     town = StringField('Town', validators=[DataRequired()])
-    postcode = StringField('Postcode', validators=[DataRequired()])
+    postcode = StringField('Postcode', validators=[DataRequired(), validate_postcode])
 
     property_tenure = RadioField(
       'Property tenure',
