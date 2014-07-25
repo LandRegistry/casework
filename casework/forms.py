@@ -59,4 +59,4 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-    extent = TextAreaField('Co-ordinates', validators=[DataRequired(), validate_geojson])
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_geojson])
