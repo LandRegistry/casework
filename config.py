@@ -12,11 +12,11 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MINT_URL = 'http://locahost:8005'
+    MINT_URL = 'http://localhost:8001'
 
 class TestConfig(DevelopmentConfig):
     TESTING = True
-    MINT_URL = 'http://locahost:8005'
+    MINT_URL = 'http://localhost:8001'
     PROPERTY_FRONTEND_URL = 'http://localhost:8002'
 
 class DockerConfig(Config):
