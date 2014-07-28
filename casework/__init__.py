@@ -1,6 +1,5 @@
 import os, logging
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CsrfProtect
 from flask.ext.basicauth import BasicAuth
 
@@ -23,5 +22,3 @@ app.logger.info("\nConfiguration\n%s\n" % app.config)
 @app.context_processor
 def asset_path_context_processor():
     return {'asset_path': '/static/govuk_template/'}
-
-db = SQLAlchemy(app)
