@@ -5,7 +5,7 @@ from ukpostcodeutils.validation import is_valid_postcode
 import geojson
 import utils
 
-def validate_geojson(form, field):
+def validate_extent(form, field):
     try:
         extents = geojson.loads(field.data)
     except ValueError:
@@ -15,7 +15,7 @@ def validate_geojson(form, field):
         raise ValidationError('A valid geometry type is required')
 
     if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
-        raise ValidationError('A polygons or multi-polygon is requried')
+        raise ValidationError('A polygons or multi-polygon is required')
 
     try:
         crs = extents['crs']['properties']['name']
@@ -75,4 +75,4 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_geojson])
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
