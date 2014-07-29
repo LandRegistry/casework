@@ -13,7 +13,7 @@ Some example valid GEOJson to use on form
        "crs": {
          "type": "name",
          "properties": {
-           "name": "urn:ogc:def:crs:EPSG::27700"
+           "name": "urn:ogc:def:crs:EPSG:27700"
          }
        },
        "geometry": {
