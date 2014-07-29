@@ -64,7 +64,7 @@ def form_to_json(form):
           "house_number": form['house_number'].data,
           "road": form['road'].data,
           "town": form['town'].data,
-          "postcode": form['postcode'].data
+          "postcode": _format_postcode(form['postcode'].data)
         },
         "tenure": form['property_tenure'].data,
         "class_of_title":  form['property_class'].data
@@ -78,6 +78,15 @@ def form_to_json(form):
       "extent": form['extent'].data
     })
     return data
+
+def _format_postcode(postcode):
+    out = postcode.upper()
+    if ' ' not in postcode:
+        i = len(postcode) - 3
+        out = out[:i] + ' ' + out[i:]
+
+    return out
+
 
 @app.errorhandler(404)
 def page_not_found(error):
