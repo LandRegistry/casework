@@ -1,7 +1,7 @@
 import unittest
 import mock
 import flask
-from casework.server import app
+from casework.server import app, _format_postcode
 from casework import utils
 from casework.forms import RegistrationForm, validate_price_paid
 from wtforms.validators import ValidationError
@@ -165,3 +165,20 @@ class CaseworkTestCase(unittest.TestCase):
         form.price_paid.data = '100.1'
         valid = form.validate()
         assert valid == True
+
+    def test_format_postcode(self):
+        form = self.get_valid_create_form()
+        form.postcode.data = 'pl11aa'
+        new = _format_postcode(form.postcode.data)
+        assert new == 'PL1 1AA'
+
+        form = self.get_valid_create_form()
+        form.postcode.data = 'pl132aa'
+        new = _format_postcode(form.postcode.data)
+        assert new == 'PL13 2AA'
+
+        form = self.get_valid_create_form()
+        form.postcode.data = 'pl13 2aa'
+        new = _format_postcode(form.postcode.data)
+        assert new == 'PL13 2AA'
+    
