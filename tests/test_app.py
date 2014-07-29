@@ -82,3 +82,7 @@ class CaseworkTestCase(unittest.TestCase):
         form = self.get_valid_create_form()
         valid = form.validate()
         assert valid
+
+    def test_health(self):
+        response = self.client.get('/health')
+        assert response.status == '200 OK'

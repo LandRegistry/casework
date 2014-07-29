@@ -4,8 +4,11 @@ from .mint import Mint
 from forms import RegistrationForm
 import simplejson
 import random
+from healthcheck import HealthCheck
 
 mint = Mint(app.config['MINT_URL'])
+HealthCheck(app, '/health')
+
 
 def generate_title_number():
     return 'TEST%d' % random.randint(1, 9999)
