@@ -15,7 +15,7 @@ def validate_extent(form, field):
         raise ValidationError('A valid geometry type is required')
 
     if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
-        raise ValidationError('A polygons or multi-polygon is required')
+        raise ValidationError('A polygon or multi-polygon is required')
 
     try:
         crs = extents['crs']['properties']['name']
