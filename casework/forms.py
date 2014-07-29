@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField
-from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError
+from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError, Regexp
 from ukpostcodeutils.validation import is_valid_postcode
 import geojson
 import utils
+import re
 
 def validate_extent(form, field):
     try:
@@ -30,6 +33,12 @@ def validate_postcode(form, field):
     clean = field.data.replace(' ', '').upper()
     if not is_valid_postcode(clean):
         raise ValidationError('Not a valid UK postcode')
+
+def validate_price_paid(form, field):
+    regex = '^(£?)?[0-9]+(,[0-9]+)?(\.\d{1,2})?$'
+    if field:
+        if not re.match(regex, str(field.data)):
+            raise ValidationError('Please enter the price paid as pound and pence')
 
 class RegistrationForm(Form):
 
@@ -71,7 +80,7 @@ class RegistrationForm(Form):
 
     price_paid = DecimalField(
                     'Price paid (&pound;)',
-                    validators=[Optional(),NumberRange(min=0, message='please enter a positive number')],
+                    validators=[Optional(), validate_price_paid],
                     places=2,
                     rounding=None)
 

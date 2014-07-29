@@ -2,8 +2,9 @@ import unittest
 import mock
 import flask
 from casework.server import app
-from casework.forms import RegistrationForm
 from casework import utils
+from casework.forms import RegistrationForm, validate_price_paid
+from wtforms.validators import ValidationError
 
 class MockMintResponse():
     status_code = 200
@@ -34,9 +35,9 @@ class CaseworkTestCase(unittest.TestCase):
 
     def test_geojson(self):
         with self.app.test_request_context():
-            
+
             form = RegistrationForm()
-            
+
 
             form.extent.data = ''
             form.validate()
@@ -91,7 +92,7 @@ class CaseworkTestCase(unittest.TestCase):
             return form
 
     def test_postcode_validation(self):
-        
+
         form = self.get_valid_create_form()
         form.postcode.data = 'XXXXX'
 
@@ -111,8 +112,6 @@ class CaseworkTestCase(unittest.TestCase):
         assert valid == True
 
 
-
-
     def test_create_form(self):
 
         form = self.get_valid_create_form()
@@ -122,3 +121,47 @@ class CaseworkTestCase(unittest.TestCase):
     def test_health(self):
         response = self.client.get('/health')
         assert response.status == '200 OK'
+
+    def test_validate_post_code_method(self):
+        form = self.get_valid_create_form()
+
+        form.price_paid.data = '20000.19'
+        result = validate_price_paid(None, form.price_paid)
+        assert result == None
+
+        form.price_paid.data = '20000.99'
+        result = validate_price_paid(None, form.price_paid)
+        assert result == None
+
+        form.price_paid.data = '20000.00'
+        result = validate_price_paid(None, form.price_paid)
+        assert result == None
+
+        form.price_paid.data = '20000'
+        result = validate_price_paid(None, form.price_paid)
+        assert result == None
+
+        form.price_paid.data = '20000.103'
+        try:
+            validate_price_paid(None, form.price_paid)
+        except ValidationError as e:
+            assert e.message == 'Please enter the price paid as pound and pence'
+
+
+    def test_valid_pounds_pence(self):
+        form = self.get_valid_create_form()
+        form.price_paid.data = '20000.10'
+        valid = form.validate()
+        assert valid == True
+
+        form.price_paid.data = '999999'
+        valid = form.validate()
+        assert valid == True
+
+        form.price_paid.data = '0.01'
+        valid = form.validate()
+        assert valid == True
+
+        form.price_paid.data = '100.1'
+        valid = form.validate()
+        assert valid == True
