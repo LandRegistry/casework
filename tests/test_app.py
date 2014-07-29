@@ -66,7 +66,7 @@ class CaseworkTestCase(unittest.TestCase):
         result = utils.validate_ogc_urn('urn:ogc:def:crs:XXX::27700')
         assert result == False
 
-    def test_create_form(self):
+    def get_valid_create_form(self):
 
         with self.app.test_request_context():
 
