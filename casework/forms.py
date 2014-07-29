@@ -8,20 +8,23 @@ import utils
 def validate_geojson(form, field):
     try:
         extents = geojson.loads(field.data)
-
-        if not extents.get('geometry', False):
-            raise ValidationError('Must specifiy a geometry')
-
-        if not extents['geometry']['type'] in ['Polygon', 'MultiPolygon']:
-            raise ValidationError('Only Polygons or MultiPolygons are allowed')
-        try:
-            crs = extents['crs']['properties']['name']
-            if not utils.validate_ogc_urn(crs):
-                raise ValidationError('Not a valid CRS string')
-        except KeyError:
-            raise ValidationError('Must specifiy a CRS')
     except ValueError:
-        raise ValidationError('Invalid GeoJSON')
+        raise ValidationError('Valid GeoJSON is required')
+
+    if not extents.get('geometry', False):
+        raise ValidationError('A valid geometry type is required')
+
+    if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
+        raise ValidationError('A polygons or multi-polygon is requried')
+
+    try:
+        crs = extents['crs']['properties']['name']
+        if not utils.validate_ogc_urn(crs):
+            raise ValidationError("A valid 'CRS' containing an EPSG is required")
+
+    except KeyError:
+        raise ValidationError("A valid 'CRS' is required")
+
 
 def validate_postcode(form, field):
     clean = field.data.replace(' ', '').upper()
