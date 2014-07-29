@@ -2,9 +2,13 @@ import os, logging
 from flask import Flask
 from flask_wtf.csrf import CsrfProtect
 from flask.ext.basicauth import BasicAuth
+from flask.ext.login import LoginManager
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('SETTINGS'))
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 if app.config.get('BASIC_AUTH_USERNAME'):
     app.config['BASIC_AUTH_FORCE'] = True
