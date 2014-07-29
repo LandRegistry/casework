@@ -3,12 +3,28 @@ from wtforms import StringField, RadioField, DecimalField, HiddenField, TextArea
 from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError
 from ukpostcodeutils.validation import is_valid_postcode
 import geojson
+import utils
 
-def validate_geojson(form, field):
+def validate_extent(form, field):
     try:
-        geojson.loads(field.data)
+        extents = geojson.loads(field.data)
     except ValueError:
-        raise ValidationError('Invalid GeoJSON')
+        raise ValidationError('Valid GeoJSON is required')
+
+    if not extents.get('geometry', False):
+        raise ValidationError('A valid geometry type is required')
+
+    if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
+        raise ValidationError('A polygon or multi-polygon is required')
+
+    try:
+        crs = extents['crs']['properties']['name']
+        if not utils.validate_ogc_urn(crs):
+            raise ValidationError("A valid 'CRS' containing an EPSG is required")
+
+    except KeyError:
+        raise ValidationError("A valid 'CRS' is required")
+
 
 def validate_postcode(form, field):
     clean = field.data.replace(' ', '').upper()
@@ -59,4 +75,4 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_geojson])
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
