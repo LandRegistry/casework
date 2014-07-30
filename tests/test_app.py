@@ -84,8 +84,8 @@ class CaseworkTestCase(unittest.TestCase):
             form.town.data = "Seattle"
             form.postcode.data = 'SW1A1AA'
 
-            form.property_tenure.data = "freehold"
-            form.property_class.data = "absolute"
+            form.property_tenure.data = "Freehold"
+            form.property_class.data = "Absolute"
             form.price_paid.data = "1000000"
             form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
 

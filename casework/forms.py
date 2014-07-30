@@ -63,18 +63,18 @@ class RegistrationForm(Form):
     property_tenure = RadioField(
       'Property tenure',
       choices=[
-        ('freehold','Freehold'),
-        ('leasehold','Leasehold')
+        ('Freehold','Freehold'),
+        ('Leasehold','Leasehold')
       ]
     )
 
     property_class = RadioField(
       'Property class',
       choices=[
-        ('absolute','Absolute'),
-        ('good','Good'),
-        ('qualified','Qualified'),
-        ('possessory','Possessory')
+        ('Absolute','Absolute'),
+        ('Good','Good'),
+        ('Qualified','Qualified'),
+        ('Possessory','Possessory')
       ]
     )
 
