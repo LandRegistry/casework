@@ -12,10 +12,11 @@ HealthCheck(app, '/health')
 
 
 def audit(sender, **extra):
-    if current_user.is_anonymous:
-        sender.logger.debug('Audit: anonymous user requesting %s' % request)
+    id = current_user.get_id()
+    if id:
+        sender.logger.debug('Audit: user=[%s], request=[%s]' % (id, request))
     else:
-        sender.logger.debug('Audit: user TODO requesting %s' % request)
+        sender.logger.debug('Audit: user=[anon], request=[%s]' % request)
 
 request_started.connect(audit, app)
 
