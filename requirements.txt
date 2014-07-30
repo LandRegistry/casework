@@ -19,3 +19,4 @@ geojson==1.0.7
 uk-postcode-utils==0.1.0
 -e git+https://github.com/Runscope/healthcheck.git@9d661a916f3ab630ae21e014758aa2f21fd40097#egg=healthcheck
 Flask-Login==0.2.11
+raven==5.0.0
