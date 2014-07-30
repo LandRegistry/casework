@@ -1,14 +1,23 @@
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, request_started
 from casework import app
 from .mint import Mint
 from forms import RegistrationForm
 import simplejson
 import random
 from healthcheck import HealthCheck
+from flask.ext.login import current_user
 
 mint = Mint(app.config['MINT_URL'])
 HealthCheck(app, '/health')
 
+
+def audit(sender, **extra):
+    if current_user.is_anonymous:
+        sender.logger.debug('Audit: anonymous user requesting %s' % request)
+    else:
+        sender.logger.debug('Audit: user TODO requesting %s' % request)
+
+request_started.connect(audit, app)
 
 def generate_title_number():
     return 'TEST%d' % random.randint(1, 9999)
