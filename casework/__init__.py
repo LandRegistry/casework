@@ -3,6 +3,7 @@ from flask import Flask
 from flask_wtf.csrf import CsrfProtect
 from flask.ext.basicauth import BasicAuth
 from flask.ext.login import LoginManager
+from raven.contrib.flask import Sentry
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('SETTINGS'))
@@ -14,6 +15,10 @@ if app.config.get('BASIC_AUTH_USERNAME'):
     app.config['BASIC_AUTH_FORCE'] = True
     basic_auth = BasicAuth(app)
 
+# Sentry exception reporting
+if 'SENTRY_DSN' in os.environ:
+    sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
+    
 CsrfProtect(app)
 
 if not app.debug:
