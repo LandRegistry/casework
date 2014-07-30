@@ -4,7 +4,31 @@
 
 [![Coverage Status](https://img.shields.io/coveralls/LandRegistry/casework-frontend.svg)](https://coveralls.io/r/LandRegistry/casework-frontend)
 
-This app was created using the scaffolder at https://github.com/LandRegistry/flask-example-scaffold
+Basic frontend for title registration
+
+This application requires the following environment variables.
+
+```
+SETTINGS
+DATABASE_URL
+MINT_URL
+PROPERTY_FRONTEND_URL
+SECRET_KEY
+CSRF_ENABLED
+```
+
+For local dev these are the settings.
+
+```
+export SETTINGS='config.DevelopmentConfig'
+export DATABASE_URL='postgresql://localhost/title_number'
+export MINT_URL='http://0.0.0.0:8001'
+export PROPERTY_FRONTEND_URL='http://0.0.0.0:8002'
+export SECRET_KEY='local-dev-not-secret'
+export CSRF_ENABLED=True
+```
+
+The root url presents a simple registration form. For your benefit and pleasure we have provided a snippet of geojon to help in filling out the form.
 
 Some example valid GEOJson to use on form
 ```
