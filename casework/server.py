@@ -14,9 +14,9 @@ HealthCheck(app, '/health')
 def audit(sender, **extra):
     id = current_user.get_id()
     if id:
-        sender.logger.debug('Audit: user=[%s], request=[%s]' % (id, request))
+        sender.logger.info('Audit: user=[%s], request=[%s]' % (id, request))
     else:
-        sender.logger.debug('Audit: user=[anon], request=[%s]' % request)
+        sender.logger.info('Audit: user=[anon], request=[%s]' % request)
 
 request_started.connect(audit, app)
 
