@@ -51,3 +51,25 @@ Some example valid GEOJson to use on form
      }
      }
 ```
+
+
+### Logging into application
+
+This application has a user database. To create test users, use the management script.
+
+### To create a user
+
+First activate the virualenv for this project
+
+Locally:
+```
+python manage.py create_user --email=testuser@mail.com --password=password
+
+```
+
+On Heroku:
+```
+heroku run python manage.py create_user --email=testuser@mail.com --password=password --app lr-casework-frontend
+```
+
+

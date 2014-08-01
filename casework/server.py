@@ -1,13 +1,24 @@
-from casework import app, db
-from flask.ext.login import current_user
-from flask.ext.security import login_required
-from flask import render_template, request, flash, redirect, url_for, request_started
-from forms import RegistrationForm
-from healthcheck import HealthCheck
-from .health import Health
-from .mint import Mint
 import random
 import simplejson
+import requests
+
+from flask.ext.login import current_user
+from flask.ext.security import login_required
+from flask import render_template
+from flask import request
+from flask import flash
+from flask import redirect
+from flask import url_for
+from flask import request_started
+from flask import abort
+
+from casework import app
+from casework import db
+
+from .health import Health
+from .mint import Mint
+
+from forms import RegistrationForm
 
 
 mint = Mint(app.config['MINT_URL'])

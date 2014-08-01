@@ -26,7 +26,7 @@ if app.config.get('BASIC_AUTH_USERNAME'):
 # Sentry exception reporting
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
-    
+
 CsrfProtect(app)
 
 app.logger.info("\nConfiguration\n%s\n" % app.config)
@@ -48,8 +48,3 @@ from .models import User, Role
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
-
-# govuk_template asset path
-@app.context_processor
-def asset_path_context_processor():
-    return {'asset_path': '/static/govuk_template/'}
