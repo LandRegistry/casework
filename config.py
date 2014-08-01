@@ -9,12 +9,13 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SECURITY_PASSWORD_SALT = SECRET_KEY
     SECURITY_PASSWORD_HASH = 'bcrypt'
+    # the following two are optional and are only configured on
+    # heroku so get safely
     BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
     BASIC_AUTH_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD')
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    MINT_URL = 'http://localhost:8001'
 
 class TestConfig(DevelopmentConfig):
     TESTING = True
