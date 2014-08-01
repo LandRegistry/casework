@@ -14,7 +14,7 @@ mint = Mint(app.config['MINT_URL'])
 Health(app, checks=[db.health])
 
 def audit(sender, **extra):
-    id = None #current_user.get_id()
+    id = current_user.get_id()
     if id:
         sender.logger.info('Audit: user=[%s], request=[%s]' % (id, request))
     else:
