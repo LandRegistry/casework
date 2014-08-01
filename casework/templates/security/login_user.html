@@ -1,0 +1,39 @@
+{% extends "global/caseworkfrontend_base.html" %}
+
+{% block content %}
+  <main id="wrapper" role="main">
+    <div id="content">
+
+      {% include "inc_alpha_banner.html" %}
+
+      <div class="inner-block">
+
+        {% from "security/_macros.html" import render_field_with_errors, render_field %}
+        {% include "security/_messages.html" %}
+
+        <div class="full-width">
+
+          <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class="login-user-form">
+
+            <h1 class="form-title heading-large">Login</h1>
+
+            {{ render_field_with_errors(login_user_form.email, class_='form-control') }}
+            {{ render_field_with_errors(login_user_form.password, class_='form-control') }}
+
+            {{ render_field_with_errors(login_user_form.remember) }}
+
+            {{ render_field(login_user_form.submit, class_='button') }}
+
+            {{ login_user_form.hidden_tag() }}
+          </form>
+
+          {% include "security/_menu.html" %}
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+{% endblock %}

@@ -1,18 +1,20 @@
-from flask import render_template, request, flash, redirect, url_for, request_started
-from casework import app
-from .mint import Mint
-from forms import RegistrationForm
-import simplejson
-import random
-from healthcheck import HealthCheck
+from casework import app, db
 from flask.ext.login import current_user
+from flask.ext.security import login_required
+from flask import render_template, request, flash, redirect, url_for, request_started
+from forms import RegistrationForm
+from healthcheck import HealthCheck
+from .health import Health
+from .mint import Mint
+import random
+import simplejson
+
 
 mint = Mint(app.config['MINT_URL'])
-HealthCheck(app, '/health')
-
+Health(app, checks=[db.health])
 
 def audit(sender, **extra):
-    id = current_user.get_id()
+    id = None #current_user.get_id()
     if id:
         sender.logger.info('Audit: user=[%s], request=[%s]' % (id, request))
     else:
@@ -23,11 +25,25 @@ request_started.connect(audit, app)
 def generate_title_number():
     return 'TEST%d' % random.randint(1, 9999)
 
+def get_or_log_error(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return response
+    except requests.exceptions.HTTPError as e:
+        app.logger.error("HTTP Error %s", e)
+        abort(response.status_code)
+    except requests.exceptions.ConnectionError as e:
+        app.logger.error("Error %s", e)
+        abort(500)
+
 @app.route('/')
+@login_required
 def index():
     return render_template("index.html")
 
 @app.route('/registration', methods=['GET','POST'])
+@login_required
 def registration():
 
     form = RegistrationForm(request.form)
@@ -35,8 +51,8 @@ def registration():
     created = request.args.get('created', None)
 
     if  request.method == 'GET':
-      #put the title number into the form's hidden field
-      form.title_number.data = generate_title_number()
+        #put the title number into the form's hidden field
+        form.title_number.data = generate_title_number()
 
     if request.method == 'POST' and form.validate():
         mint_data = form_to_json(form)
@@ -53,7 +69,7 @@ def registration():
             flash('Creation of title with number %s failed' % title_number)
 
     return render_template('registration.html', form=form, property_frontend_url=property_frontend_url,
-              title_number=form.title_number.data, created=created)
+            title_number=form.title_number.data, created=created)
 
 def form_to_json(form):
     data = simplejson.dumps({
