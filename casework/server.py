@@ -27,7 +27,7 @@ Health(app, checks=[db.health])
 def audit(sender, **extra):
     id = current_user.get_id()
     if id:
-        sender.logger.info('Audit: user=[%s], request=[%s]' % (id, request))
+        sender.logger.info('Audit: user=[%s], request=[%s]' % (current_user, request))
     else:
         sender.logger.info('Audit: user=[anon], request=[%s]' % request)
 
