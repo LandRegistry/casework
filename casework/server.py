@@ -17,21 +17,14 @@ from casework import db
 
 from .health import Health
 from .mint import Mint
+from audit import Audit
 
 from forms import RegistrationForm
 
 
 mint = Mint(app.config['MINT_URL'])
 Health(app, checks=[db.health])
-
-def audit(sender, **extra):
-    id = current_user.get_id()
-    if id:
-        sender.logger.info('Audit: user=[%s], request=[%s]' % (current_user, request))
-    else:
-        sender.logger.info('Audit: user=[anon], request=[%s]' % request)
-
-request_started.connect(audit, app)
+Audit(app)
 
 def generate_title_number():
     return 'TEST%d' % random.randint(1, 9999)
