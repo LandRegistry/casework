@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import Form
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError, Regexp
 from ukpostcodeutils.validation import is_valid_postcode
 import geojson
@@ -39,6 +39,23 @@ def validate_price_paid(form, field):
     if field:
         if not re.match(regex, str(field.data)):
             raise ValidationError('Please enter the price paid as pound and pence')
+
+
+class ChargeForm(Form):
+    """
+    Charge Form
+    """
+
+    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired()])
+    chargee_name = StringField('Company name', validators=[DataRequired()])
+    chargee_line1 = StringField('Line 1', validators=[DataRequired()])
+    chargee_line2 = StringField('Line 2', validators=[Optional()])
+    chargee_line3 = StringField('Line 3', validators=[Optional()])
+    chargee_line4 = StringField('Line 4', validators=[Optional()])
+    chargee_town = StringField('Town / City', validators=[DataRequired()])
+    chargee_country = StringField('Country', validators=[DataRequired()])
+    chargee_postcode = StringField('Postcode', validators=[DataRequired(), validate_postcode])
+
 
 class RegistrationForm(Form):
 
@@ -83,5 +100,7 @@ class RegistrationForm(Form):
                     validators=[Optional(), validate_price_paid],
                     places=2,
                     rounding=None)
+
+    charges = FieldList(FormField(ChargeForm, validators=[Optional()]))
 
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
