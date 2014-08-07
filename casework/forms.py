@@ -54,7 +54,7 @@ class ChargeForm(Form):
     chargee_line4 = StringField('Line 4', validators=[Optional()])
     chargee_town = StringField('Town / City', validators=[DataRequired()])
     chargee_country = StringField('Country', validators=[DataRequired()])
-    chargee_postcode = StringField('Postcode', validators=[DataRequired(), validate_postcode])
+    chargee_postcode = StringField('Postcode', validators=[DataRequired()])
 
 
 class RegistrationForm(Form):
@@ -101,6 +101,6 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-    charges = FieldList(FormField(ChargeForm, validators=[Optional()]))
+    charges = FieldList(FormField(ChargeForm))
 
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])

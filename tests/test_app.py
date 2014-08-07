@@ -1,6 +1,7 @@
 import unittest
 import mock
 import flask
+import datetime
 from casework.server import app, _format_postcode
 from casework import utils
 from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
@@ -115,12 +116,12 @@ class CaseworkTestCase(unittest.TestCase):
 
             charge_form = ChargeForm()
             charge_form.chargee_name.data = "Company 1"
-            charge_form.charge_date.data = "01-02-2001"
+            charge_form.charge_date.data = datetime.datetime.strptime("01-02-2001", "%d-%m-%Y")
             charge_form.chargee_line1.data = "21 The Street"
             charge_form.chargee_town.data = "Plymouth"
             charge_form.chargee_country.data = "UK"
-            charge_form.chargee_postcode.data = "PL1 1AA"
-            form.charges = FieldList(FormField(charge_form))
+            charge_form.chargee_postcode.data = "SW1A1AA"
+            form.charges.append_entry(charge_form)
 
             form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
 
@@ -217,12 +218,12 @@ class CaseworkTestCase(unittest.TestCase):
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
 
-    #def test_charge_data(self):
-    #    form = self.get_valid_create_form_with_charge()
-    #    print "**********************"
-    #    print form.charges
-    #    charges =  form.charges
-    #    assert charges[0].chargee_name == 'Company 1'
+    def test_charge_data(self):
+        form = self.get_valid_create_form_with_charge()
+        charges =  form.charges
+        valid = form.validate()
+        assert valid == True
+
 
 #    @responses.activate
 #    def test_registration(self):
