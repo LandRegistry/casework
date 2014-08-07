@@ -1,6 +1,7 @@
 import random
 import simplejson
 import requests
+import json
 
 from flask.ext.login import current_user
 from flask.ext.security import login_required
@@ -105,7 +106,7 @@ def form_to_json(form):
           form['title_number'].data
         ]
       },
-      "extent": form['extent'].data
+      "extent": json.loads(form['extent'].data)
     })
     return data
 
