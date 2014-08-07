@@ -3,7 +3,8 @@ import mock
 import flask
 from casework.server import app, _format_postcode
 from casework import utils
-from casework.forms import RegistrationForm, validate_price_paid
+from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
+from wtforms import FormField, FieldList
 from wtforms.validators import ValidationError
 
 class MockMintResponse():
@@ -67,7 +68,7 @@ class CaseworkTestCase(unittest.TestCase):
         result = utils.validate_ogc_urn('urn:ogc:def:crs:XXX::27700')
         assert result == False
 
-    def get_valid_create_form(self):
+    def get_valid_create_form_without_charge(self):
 
         with self.app.test_request_context():
 
@@ -91,9 +92,43 @@ class CaseworkTestCase(unittest.TestCase):
 
             return form
 
+    def get_valid_create_form_with_charge(self):
+
+        with self.app.test_request_context():
+
+            form = RegistrationForm()
+
+            form.title_number.data = "TEST1234"
+            form.first_name1.data =  "Kurt"
+            form.surname1.data = "Cobain"
+            form.first_name2.data = "Courtney"
+            form.surname2.data = "Love"
+
+            form.house_number.data = '101'
+            form.road.data = "Lake Washington Bldv E"
+            form.town.data = "Seattle"
+            form.postcode.data = 'SW1A1AA'
+
+            form.property_tenure.data = "Freehold"
+            form.property_class.data = "Absolute"
+            form.price_paid.data = "1000000"
+
+            charge_form = ChargeForm()
+            charge_form.chargee_name.data = "Company 1"
+            charge_form.charge_date.data = "01-02-2001"
+            charge_form.chargee_line1.data = "21 The Street"
+            charge_form.chargee_town.data = "Plymouth"
+            charge_form.chargee_country.data = "UK"
+            charge_form.chargee_postcode.data = "PL1 1AA"
+            form.charges = FieldList(FormField(charge_form))
+
+            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
+
+            return form
+
     def test_postcode_validation(self):
 
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_without_charge()
         form.postcode.data = 'XXXXX'
 
         valid = form.validate()
@@ -114,7 +149,7 @@ class CaseworkTestCase(unittest.TestCase):
 
     def test_create_form(self):
 
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_without_charge()
         valid = form.validate()
         assert valid
 
@@ -123,7 +158,7 @@ class CaseworkTestCase(unittest.TestCase):
         assert response.status == '200 OK'
 
     def test_validate_post_code_method(self):
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_without_charge()
 
         form.price_paid.data = '20000.19'
         result = validate_price_paid(None, form.price_paid)
@@ -149,7 +184,7 @@ class CaseworkTestCase(unittest.TestCase):
 
 
     def test_valid_pounds_pence(self):
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_without_charge()
         form.price_paid.data = '20000.10'
         valid = form.validate()
         assert valid == True
@@ -167,18 +202,31 @@ class CaseworkTestCase(unittest.TestCase):
         assert valid == True
 
     def test_format_postcode(self):
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl11aa'
         new = _format_postcode(form.postcode.data)
         assert new == 'PL1 1AA'
 
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_without_charge()
         form.postcode.data = 'pl132aa'
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
 
-        form = self.get_valid_create_form()
+        form = self.get_valid_create_form_without_charge()
         form.postcode.data = 'pl13 2aa'
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
-    
+
+    #def test_charge_data(self):
+    #    form = self.get_valid_create_form_with_charge()
+    #    print "**********************"
+    #    print form.charges
+    #    charges =  form.charges
+    #    assert charges[0].chargee_name == 'Company 1'
+
+#    @responses.activate
+#    def test_registration(self):
+        #title_num = 'TEST1234'
+        #responses.add(responses.POST, 'http://0.0.0.0:8001/titles/' + title_num, body='', status=200)
+
+        #response = self.client.post('/registration', data = dict(form = self.get_valid_create_form_without_charge()))
