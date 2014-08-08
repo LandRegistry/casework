@@ -77,6 +77,14 @@ def registration():
             title_number=form.title_number.data, created=created)
 
 def form_to_json(form):
+
+    arr = []
+    for charge in form['charges'].data:
+        dt = charge.pop('charge_date')
+        print "xXX", dt
+        charge['charge_date'] = str(dt)
+        arr.append(charge)
+
     data = simplejson.dumps({
       "title_number": form['title_number'].data,
       "proprietors":[
@@ -106,8 +114,11 @@ def form_to_json(form):
           form['title_number'].data
         ]
       },
+      "charges": arr,
       "extent": form['extent'].data
     })
+
+    print data
     return data
 
 def _format_postcode(postcode):
