@@ -48,13 +48,8 @@ class ChargeForm(Form):
 
     charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired()])
     chargee_name = StringField('Company name', validators=[DataRequired()])
-    chargee_line1 = StringField('Line 1', validators=[DataRequired()])
-    chargee_line2 = StringField('Line 2', validators=[Optional()])
-    chargee_line3 = StringField('Line 3', validators=[Optional()])
-    chargee_line4 = StringField('Line 4', validators=[Optional()])
-    chargee_town = StringField('Town / City', validators=[DataRequired()])
-    chargee_country = StringField('Country', validators=[DataRequired()])
-    chargee_postcode = StringField('Postcode', validators=[DataRequired()])
+    chargee_registration_number = StringField('Company registration number', validators=[DataRequired()])
+    chargee_address = TextAreaField('Address', validators=[DataRequired()])
 
 
 class RegistrationForm(Form):
@@ -101,6 +96,6 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-    charges = FieldList(FormField(ChargeForm))
+    charges = FieldList(FormField(ChargeForm), min_entries=1)
 
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])

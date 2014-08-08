@@ -58,33 +58,36 @@
         {# render_field(form.crs) #}
         </fieldset>
 
-        <form action="/addCharge" method="POST">
-            <fieldset>
-            <legend>Charges</legend>
-
-                {{ render_field(charge_form.chargee_name) }}
-                {{ render_field(charge_form.charge_date) }}
-                {{ render_field(charge_form.chargee_line1) }}
-                {{ render_field(charge_form.chargee_town) }}
-                {{ render_field(charge_form.chargee_postcode) }}
-                {{ render_field(charge_form.chargee_country) }}
-
-            </fieldset>
-
-            <button type="submit" id="addCharge" class="btn btn-default btn-primary">Add Charge</button>
-
-            <legend>Exising Charges</legend>
-            {% for charge in form.charges %}
-                <ul>
-                    <li> {{charge.chargee_name}} </li>
-                </ul>
+        <div id="charges">
+            <input type="button" value="Another charge"/>
+            {% for charge_form in form.charges %}
+                <div>
+                    Charge
+                    {{render_field(charge_form.charge_date)}}
+                    {{render_field(charge_form.chargee_name)}}
+                    {{render_field(charge_form.chargee_registration_number)}}
+                    {{render_field(charge_form.chargee_address)}}
+                </div>
             {% endfor %}
-
-        </form>
-
+        </div>
        <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
 
       </form>
     </div>
   </div>
+  <script type="text/javascript">
+
+    function addForm(){
+        clone = $('#charges div').first().clone()
+        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + $('#charges div').length);
+        $('#charges').append($('<div>' + cloneHTML + '</div>'));
+
+    }
+
+    $('#charges input[type="button"]').click(
+        function(){
+            addForm();
+        }
+    )
+  </script>
 {% endblock %}
