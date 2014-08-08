@@ -52,7 +52,7 @@ def index():
 def registration():
 
     form = RegistrationForm(request.form)
-    charge_form = ChargeForm(request.form)
+    # charge_form = ChargeForm(request.form)
     property_frontend_url = '%s/%s' % (app.config['PROPERTY_FRONTEND_URL'], 'property')
     created = request.args.get('created', None)
 
@@ -75,7 +75,7 @@ def registration():
             flash('Creation of title with number %s failed' % title_number)
 
     return render_template('registration.html', form=form, property_frontend_url=property_frontend_url,
-            title_number=form.title_number.data, created=created, charge_form=charge_form)
+            title_number=form.title_number.data, created=created)
 
 def form_to_json(form):
     data = simplejson.dumps({

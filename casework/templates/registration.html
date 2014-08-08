@@ -58,24 +58,38 @@
         {# render_field(form.crs) #}
         </fieldset>
 
-       <div data-toggle="fieldset" id="charge-fieldset">
-            <button type="button" data-toggle="fieldset-add-row" data-target="#charge-fieldset">add charge</button>
-            <table>
-                <tr>
-                    <th>Charges</th>
-                </tr>
-                {% for charge in form.charges %}
-                <tr data-toggle="fieldset-entry">
-                    <td>{{ charge.chargee_name }}</td>
-                    <td><button type="button" data-toggle="fieldset-remove-row" id="charge-{{loop.index0}}-remove">-</button></td>
-                </tr>
-                {% endfor %}
-            </table>
+        <div id="charges">
+            <input type="button" value="Another charge"/>
+            {% for charge_form in form.charges %}
+                <div>
+                    Charge
+                    {{render_field(charge_form.charge_date)}}
+                    {{render_field(charge_form.chargee_name)}}
+                    {{render_field(charge_form.chargee_registration_number)}}
+                    {{render_field(charge_form.chargee_address)}}
+                </div>
+            {% endfor %}
         </div>
-
+        
        <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
 
       </form>
     </div>
   </div>
+
+  <script type="text/javascript">
+
+    function addForm(){
+        clone = $('#charges div').first().clone()
+        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + $('#charges div').length);
+        $('#charges').append($('<div>' + cloneHTML + '</div>'));
+
+    }
+
+    $('#charges input[type="button"]').click(
+        function(){
+            addForm();
+        }
+    )
+  </script>
 {% endblock %}
