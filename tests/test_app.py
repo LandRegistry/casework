@@ -222,6 +222,9 @@ class CaseworkTestCase(unittest.TestCase):
         form = self.get_valid_create_form_with_charge()
         valid = form.validate()
         assert valid == True
+        for charge in charges:
+            print "chargee name"
+            print charge.chargee_name
 
 
 #    @responses.activate
