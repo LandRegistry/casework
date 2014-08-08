@@ -120,7 +120,7 @@ class CaseworkTestCase(unittest.TestCase):
             charge_form.chargee_line1.data = "21 The Street"
             charge_form.chargee_town.data = "Plymouth"
             charge_form.chargee_country.data = "UK"
-            charge_form.chargee_postcode.data = "SW1A1AA"
+            charge_form.chargee_postcode.data = "PL1 1AA"
             form.charges.append_entry(charge_form)
 
             form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
@@ -220,7 +220,6 @@ class CaseworkTestCase(unittest.TestCase):
 
     def test_charge_data(self):
         form = self.get_valid_create_form_with_charge()
-        charges =  form.charges
         valid = form.validate()
         assert valid == True
 
