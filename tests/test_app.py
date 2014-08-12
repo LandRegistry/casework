@@ -196,13 +196,14 @@ class CaseworkTestCase(unittest.TestCase):
         rv = self.client.post('/applications' ,
                                 data='{"title_number":"DN1001", "application_type": "Change name"}',
                                 content_type='application/json')
-        
+
         assert rv.status_code == 200
 
         #make sure we can see the thing we just created
         rv = self.client.get('/applications')
         assert rv.status_code == 200
         assert 'DN1001' in rv.data
+        assert 'Change name' in rv.data
 
 
         #invalid keys
