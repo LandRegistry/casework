@@ -1,7 +1,7 @@
 import unittest
 import mock
 import flask
-from casework.server import app, _format_postcode
+from casework.server import app, db, _format_postcode
 from casework import utils
 from casework.forms import RegistrationForm, validate_price_paid
 from wtforms.validators import ValidationError
@@ -19,9 +19,14 @@ class CaseworkTestCase(unittest.TestCase):
         app.config['WTF_CSRF_ENABLED'] = False
         app.config['CSRF_ENABLED'] = False
         app.config['SECRET_KEY'] = 'testing-not-a-secret'
+        db.create_all()
         self.app = app
         self.client = app.test_client()
 
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        
     def check_server(self):
 
         rv = self.client.get('/registration')
@@ -181,4 +186,35 @@ class CaseworkTestCase(unittest.TestCase):
         form.postcode.data = 'pl13 2aa'
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
-    
+
+    def test_applications(self):
+
+        rv = self.client.get('/applications')
+        assert rv.status_code == 200
+
+        #valid
+        rv = self.client.post('/applications' ,
+                                data='{"title_number":"DN1001", "application_type": "Change name"}',
+                                content_type='application/json')
+        
+        assert rv.status_code == 200
+
+        #make sure we can see the thing we just created
+        rv = self.client.get('/applications')
+        assert rv.status_code == 200
+        assert 'DN1001' in rv.data
+
+
+        #invalid keys
+        rv = self.client.post('/applications' ,
+                                data='{"XX":"DN1001", "XX": "Change name"}',
+                                content_type='application/json')
+        
+        assert rv.status_code == 400
+
+        #invalid data
+        rv = self.client.post('/applications' ,
+                                data='{"title_number":null, "application_type": null}',
+                                content_type='application/json')
+        
+        assert rv.status_code == 400

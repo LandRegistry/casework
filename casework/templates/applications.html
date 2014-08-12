@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block page_title %}Welcome{% endblock %}
+{% block content %}
+  <h1>Todo list</h1>
+  <div class="row">
+    <div class="col-md-12">
+    {% if applications %}
+       <table class="table">
+       <thead>
+         <tr>
+           <th>Date submitted</th>
+           <th>Title number</th>
+           <th>Application type</th>
+         </tr>
+       </thead>
+       <tbody>
+        {% for application in applications %}
+          <td>{{application.submitted_at}}</td>
+          <td>{{application.title_number}}</td>
+          <td>{{application.application_type}}</td>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}

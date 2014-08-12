@@ -1,10 +1,11 @@
 import random
-import simplejson
 import requests
 import json
-
-from flask.ext.login import current_user
 from flask.ext.security import login_required
+from flask import request, flash, redirect, url_for, abort, render_template
+from sqlalchemy.exc import IntegrityError
+from casework import app, db
+import models
 from flask import render_template
 from flask import request
 from flask import flash
@@ -19,7 +20,6 @@ from datetime import datetime
 from .health import Health
 from .mint import Mint
 from audit import Audit
-
 from forms import RegistrationForm
 
 
@@ -49,6 +49,37 @@ def get_or_log_error(url):
 @login_required
 def index():
     return render_template("index.html")
+
+@app.route('/applications', methods=['GET','POST'])
+@login_required
+def applications():
+
+    if request.method == 'POST' and request.json:
+
+      data = request.json
+
+      #create a new application
+      application = models.Application()
+
+      try:
+        application.title_number = data['title_number']
+        application.application_type = data['application_type']
+      except KeyError:
+        return '', 400
+
+      #save to database
+      try:
+          db.session.add(application)
+          db.session.commit()
+      except IntegrityError:
+          return '', 400
+
+      #if all OK, return 200
+      return '', 200
+
+    if request.method == 'GET':
+      applications = titles =  models.Application.query.all()
+      return render_template("applications.html", applications=applications)
 
 @app.route('/registration', methods=['GET','POST'])
 @login_required
@@ -80,7 +111,7 @@ def registration():
             title_number=form.title_number.data, created=created)
 
 def form_to_json(form):
-    data = simplejson.dumps({
+    data = json.dumps({
       "title_number": form['title_number'].data,
       "proprietors":[
         {

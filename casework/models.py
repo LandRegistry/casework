@@ -1,5 +1,5 @@
+import datetime
 from flask.ext.security import UserMixin, RoleMixin
-
 from casework import db
 
 roles_users = db.Table('roles_users',
@@ -28,3 +28,12 @@ class User(db.Model, UserMixin):
             'id': str(self.id),
             'email': str(self.email)
         })
+
+class Application(db.Model):
+
+    __tablename__ = 'applications'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title_number = db.Column(db.String(64), nullable=False)
+    application_type = db.Column(db.String(50), nullable=False)
+    submitted_at = db.Column(db.DateTime(),  default=datetime.datetime.now())
