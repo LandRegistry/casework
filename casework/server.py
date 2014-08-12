@@ -81,6 +81,37 @@ def applications():
       applications =  models.Application.query.order_by(models.Application.submitted_at).all()
       return render_template("applications.html", applications=applications)
 
+@app.route('/checks', methods=['GET','POST'])
+@login_required
+def checks():
+
+    if request.method == 'POST' and request.json:
+
+      data = request.json
+
+      #create a new application
+      check = models.Check()
+
+      try:
+        check.title_number = data['title_number']
+        check.application_type = data['application_type']
+      except KeyError:
+        return '', 400
+
+      #save to database
+      try:
+          db.session.add(check)
+          db.session.commit()
+      except IntegrityError:
+          return '', 400
+
+      #if all OK, return 200
+      return '', 200
+
+    if request.method == 'GET':
+      checks =  models.Check.query.order_by(models.Check.submitted_at).all()
+      return render_template("checks.html", checks=checks)
+
 @app.route('/registration', methods=['GET','POST'])
 @login_required
 def registration():

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% block page_title %}Casework{% endblock %}
+{% block page_title %}Checks{% endblock %}
 {% block content %}
-  <h1>Applications to change the register</h1>
+  <h1>Pending checks</h1>
   <div class="row">
     <div class="col-md-12">
-    {% if applications %}
+    {% if checks %}
        <table class="table">
        <thead>
          <tr>
@@ -14,17 +14,17 @@
          </tr>
        </thead>
        <tbody>
-        {% for application in applications %}
+        {% for check in checks %}
           <tr>
-            <td>{{application.submitted_at.strftime('%d %B %Y %H:%M')}}</td>
-            <td>{{application.title_number}}</td>
-            <td>{{application.application_type}}</td>
+            <td>{{check.submitted_at.strftime('%d %B %Y %H:%M')}}</td>
+            <td>{{check.title_number}}</td>
+            <td>{{check.application_type}}</td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
     {% else %}
-      <p>No pending applications</p>
+    	<p>No checks to do</p>
     {% endif %}
     </div>
   </div>

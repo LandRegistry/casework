@@ -219,3 +219,36 @@ class CaseworkTestCase(unittest.TestCase):
                                 content_type='application/json')
         
         assert rv.status_code == 400
+
+    def test_checks(self):
+
+        rv = self.client.get('/checks')
+        assert rv.status_code == 200
+
+        #valid
+        rv = self.client.post('/checks' ,
+                                data='{"title_number":"DN1001", "application_type": "Change name"}',
+                                content_type='application/json')
+
+        assert rv.status_code == 200
+
+        #make sure we can see the thing we just created
+        rv = self.client.get('/checks')
+        assert rv.status_code == 200
+        assert 'DN1001' in rv.data
+        assert 'Change name' in rv.data
+
+
+        #invalid keys
+        rv = self.client.post('/checks' ,
+                                data='{"XX":"DN1001", "XX": "Change name"}',
+                                content_type='application/json')
+        
+        assert rv.status_code == 400
+
+        #invalid data
+        rv = self.client.post('/checks' ,
+                                data='{"title_number":null, "application_type": null}',
+                                content_type='application/json')
+        
+        assert rv.status_code == 400
