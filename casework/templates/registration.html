@@ -81,7 +81,7 @@
 
     function addForm(){
         clone = $('#charges div').first().clone()
-        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + $('#charges div').length);
+        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + $('#charges').length);
         $('#charges').append($('<div>' + cloneHTML + '</div>'));
 
     }
