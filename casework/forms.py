@@ -46,10 +46,10 @@ class ChargeForm(Form):
     Charge Form
     """
 
-    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired()])
-    chargee_name = StringField('Company name', validators=[DataRequired()])
-    chargee_registration_number = StringField('Company registration number', validators=[DataRequired()])
-    chargee_address = TextAreaField('Address', validators=[DataRequired()])
+    charge_date = DateField('Charge date', format='%d-%m-%Y')
+    chargee_name = StringField('Company name')
+    chargee_registration_number = StringField('Company registration number')
+    chargee_address = TextAreaField('Address')
 
 
 class RegistrationForm(Form):

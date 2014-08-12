@@ -117,24 +117,23 @@ class CaseworkTestCase(unittest.TestCase):
             charge_form = ChargeForm()
             charge_form.chargee_name.data = "Company 1"
             charge_form.charge_date.data = datetime.datetime.strptime("01-02-2001", "%d-%m-%Y")
-            charge_form.chargee_line1.data = "21 The Street"
-            charge_form.chargee_town.data = "Plymouth"
-            charge_form.chargee_country.data = "UK"
-            charge_form.chargee_postcode.data = "PL1 1AA"
-            form.charges.append_entry(charge_form)
-
+            charge_form.chargee_address.data = "21 The Street Plymouth UK PL1 1AA"
+            charge_form.chargee_registration_number.data = "1234567"
+            form.charges = [charge_form]
+            
             form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
 
             return form
 
     def test_postcode_validation(self):
 
-        form = self.get_valid_create_form_without_charge()
+        form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'XXXXX'
 
         valid = form.validate()
         assert valid == False
-
+        #TODO: Can use form.errors to test the validation errors
+        
         form.postcode.data = 'sw1a1aa'
         valid = form.validate()
         assert valid == True
@@ -150,7 +149,7 @@ class CaseworkTestCase(unittest.TestCase):
 
     def test_create_form(self):
 
-        form = self.get_valid_create_form_without_charge()
+        form = self.get_valid_create_form_with_charge()
         valid = form.validate()
         assert valid
 
@@ -159,7 +158,7 @@ class CaseworkTestCase(unittest.TestCase):
         assert response.status == '200 OK'
 
     def test_validate_post_code_method(self):
-        form = self.get_valid_create_form_without_charge()
+        form = self.get_valid_create_form_with_charge()
 
         form.price_paid.data = '20000.19'
         result = validate_price_paid(None, form.price_paid)
@@ -185,7 +184,7 @@ class CaseworkTestCase(unittest.TestCase):
 
 
     def test_valid_pounds_pence(self):
-        form = self.get_valid_create_form_without_charge()
+        form = self.get_valid_create_form_with_charge()
         form.price_paid.data = '20000.10'
         valid = form.validate()
         assert valid == True
@@ -208,12 +207,12 @@ class CaseworkTestCase(unittest.TestCase):
         new = _format_postcode(form.postcode.data)
         assert new == 'PL1 1AA'
 
-        form = self.get_valid_create_form_without_charge()
+        form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl132aa'
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
 
-        form = self.get_valid_create_form_without_charge()
+        form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl13 2aa'
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
@@ -222,7 +221,7 @@ class CaseworkTestCase(unittest.TestCase):
         form = self.get_valid_create_form_with_charge()
         valid = form.validate()
         assert valid == True
-        for charge in charges:
+        for charge in form.charges:
             print "chargee name"
             print charge.chargee_name
 
