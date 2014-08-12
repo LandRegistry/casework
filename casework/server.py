@@ -78,7 +78,7 @@ def applications():
       return '', 200
 
     if request.method == 'GET':
-      applications = titles =  models.Application.query.all()
+      applications =  models.Application.query.order_by(models.Application.submitted_at).all()
       return render_template("applications.html", applications=applications)
 
 @app.route('/registration', methods=['GET','POST'])
