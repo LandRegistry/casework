@@ -187,7 +187,7 @@ class CaseworkTestCase(unittest.TestCase):
         new = _format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
 
-    def test_applications(self):
+    def test_casework(self):
 
         rv = self.client.get('/casework')
         assert rv.status_code == 200

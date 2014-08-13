@@ -52,7 +52,7 @@ def index():
 
 @app.route('/casework', methods=['GET','POST'])
 @login_required
-def applications():
+def casework():
 
     if request.method == 'POST' and request.json:
 
