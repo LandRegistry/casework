@@ -29,9 +29,9 @@ class User(db.Model, UserMixin):
             'email': str(self.email)
         })
 
-class Application(db.Model):
+class Casework(db.Model):
 
-    __tablename__ = 'applications'
+    __tablename__ = 'casework'
 
     id = db.Column(db.Integer, primary_key=True)
     title_number = db.Column(db.String(64), nullable=False)

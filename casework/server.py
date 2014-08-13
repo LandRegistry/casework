@@ -50,7 +50,7 @@ def get_or_log_error(url):
 def index():
     return render_template("index.html")
 
-@app.route('/applications', methods=['GET','POST'])
+@app.route('/casework', methods=['GET','POST'])
 @login_required
 def applications():
 
@@ -59,27 +59,27 @@ def applications():
       data = request.json
 
       #create a new application
-      application = models.Application()
+      casework = models.Casework()
 
       try:
-        application.title_number = data['title_number']
-        application.application_type = data['application_type']
+        casework.title_number = data['title_number']
+        casework.application_type = data['application_type']
       except KeyError:
-        return '', 400
+        return 'Could not find expected keys in data', 400
 
       #save to database
       try:
-          db.session.add(application)
+          db.session.add(casework)
           db.session.commit()
       except IntegrityError:
-          return '', 400
+          return 'Failed to save', 400
 
       #if all OK, return 200
-      return '', 200
+      return 'OK', 200
 
     if request.method == 'GET':
-      applications =  models.Application.query.order_by(models.Application.submitted_at).all()
-      return render_template("applications.html", applications=applications)
+      casework_items =  models.Casework.query.order_by(models.Casework.submitted_at).all()
+      return render_template("casework.html", casework_items=casework_items)
 
 @app.route('/checks', methods=['GET','POST'])
 @login_required
@@ -96,17 +96,17 @@ def checks():
         check.title_number = data['title_number']
         check.application_type = data['application_type']
       except KeyError:
-        return '', 400
+        return 'Could not find expected keys in data', 400
 
       #save to database
       try:
           db.session.add(check)
           db.session.commit()
       except IntegrityError:
-          return '', 400
+          return 'Failed to save', 400
 
       #if all OK, return 200
-      return '', 200
+      return 'OK', 200
 
     if request.method == 'GET':
       checks =  models.Check.query.order_by(models.Check.submitted_at).all()
