@@ -10,7 +10,6 @@ from casework import app
 from casework import db
 from casework import user_datastore
 
-
 app.config.from_object(os.environ['SETTINGS'])
 
 migrate = Migrate(app, db)

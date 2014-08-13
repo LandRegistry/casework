@@ -1,10 +1,11 @@
 import random
-import simplejson
 import requests
 import json
-
-from flask.ext.login import current_user
 from flask.ext.security import login_required
+from flask import request, flash, redirect, url_for, abort, render_template
+from sqlalchemy.exc import IntegrityError
+from casework import app, db
+import models
 from flask import render_template
 from flask import request
 from flask import flash
@@ -19,7 +20,6 @@ from datetime import datetime
 from .health import Health
 from .mint import Mint
 from audit import Audit
-
 from forms import RegistrationForm
 
 
@@ -49,6 +49,68 @@ def get_or_log_error(url):
 @login_required
 def index():
     return render_template("index.html")
+
+@app.route('/casework', methods=['GET','POST'])
+@login_required
+def casework():
+
+    if request.method == 'POST' and request.json:
+
+      data = request.json
+
+      #create a new application
+      casework = models.Casework()
+
+      try:
+        casework.title_number = data['title_number']
+        casework.application_type = data['application_type']
+      except KeyError:
+        return 'Could not find expected keys in data', 400
+
+      #save to database
+      try:
+          db.session.add(casework)
+          db.session.commit()
+      except IntegrityError:
+          return 'Failed to save', 400
+
+      #if all OK, return 200
+      return 'OK', 200
+
+    if request.method == 'GET':
+      casework_items =  models.Casework.query.order_by(models.Casework.submitted_at).all()
+      return render_template("casework.html", casework_items=casework_items)
+
+@app.route('/checks', methods=['GET','POST'])
+@login_required
+def checks():
+
+    if request.method == 'POST' and request.json:
+
+      data = request.json
+
+      #create a new application
+      check = models.Check()
+
+      try:
+        check.title_number = data['title_number']
+        check.application_type = data['application_type']
+      except KeyError:
+        return 'Could not find expected keys in data', 400
+
+      #save to database
+      try:
+          db.session.add(check)
+          db.session.commit()
+      except IntegrityError:
+          return 'Failed to save', 400
+
+      #if all OK, return 200
+      return 'OK', 200
+
+    if request.method == 'GET':
+      checks =  models.Check.query.order_by(models.Check.submitted_at).all()
+      return render_template("checks.html", checks=checks)
 
 @app.route('/registration', methods=['GET','POST'])
 @login_required
@@ -80,7 +142,7 @@ def registration():
             title_number=form.title_number.data, created=created)
 
 def form_to_json(form):
-    data = simplejson.dumps({
+    data = json.dumps({
       "title_number": form['title_number'].data,
       "proprietors":[
         {

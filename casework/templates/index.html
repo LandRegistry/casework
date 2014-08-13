@@ -1,36 +1,17 @@
 {% extends "base.html" %}
 {% block page_title %}Welcome{% endblock %}
 {% block content %}
-  <h1>Welcome</h1>
   <div class="dashboard">
     <div class="row">
 
-      <div class="col-md-6">
+      <div class="col-md-12">
         <ul>
           <li><a href="/registration">First registration</a></li>
+          <li><a href="/casework">Casework list</a></li>
+          <li><a href="/checks">Check list</a></li>
         </ul>
       </div>
 
-      <div class="col-md-6">
-        <ul>
-          <li><!--Other options here--></li>
-        </ul>
-      </div>
     </div>
-
-    <div class="row">
-      <div class="col-md-6">
-        <ul>
-          <li><!--Other options here--></li>
-        </ul>
-      </div>
-
-      <div class="col-md-6">
-        <ul>
-          <li><!--Other options here--></li>
-        </ul>
-      </div>
-    </div>
-
   </div>
 {% endblock %}
