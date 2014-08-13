@@ -1,12 +1,12 @@
 import unittest
-import mock
-import flask
 import datetime
-from casework.server import app, _format_postcode
-from casework import utils
-from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
-from wtforms import FormField, FieldList
+
 from wtforms.validators import ValidationError
+
+from casework.server import app, format_postcode
+from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
+from casework.validators import validate_ogc_urn
+
 
 class MockMintResponse():
     status_code = 200
@@ -57,16 +57,16 @@ class CaseworkTestCase(unittest.TestCase):
 
     def test_validate_ogc_urn(self):
 
-        result = utils.validate_ogc_urn('urn:ogc:def:crs:EPSG:27700')
+        result = validate_ogc_urn('urn:ogc:def:crs:EPSG:27700')
         assert result == True
 
-        result = utils.validate_ogc_urn('urn:ogc:def:crs:EPSG:1234')
+        result = validate_ogc_urn('urn:ogc:def:crs:EPSG:1234')
         assert result == True
 
-        result = utils.validate_ogc_urn('XXXXX')
+        result = validate_ogc_urn('XXXXX')
         assert result == False
 
-        result = utils.validate_ogc_urn('urn:ogc:def:crs:XXX::27700')
+        result = validate_ogc_urn('urn:ogc:def:crs:XXX::27700')
         assert result == False
 
     def get_valid_create_form_without_charge(self):
@@ -204,17 +204,17 @@ class CaseworkTestCase(unittest.TestCase):
     def test_format_postcode(self):
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl11aa'
-        new = _format_postcode(form.postcode.data)
+        new = format_postcode(form.postcode.data)
         assert new == 'PL1 1AA'
 
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl132aa'
-        new = _format_postcode(form.postcode.data)
+        new = format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
 
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl13 2aa'
-        new = _format_postcode(form.postcode.data)
+        new = format_postcode(form.postcode.data)
         assert new == 'PL13 2AA'
 
     def test_charge_data(self):

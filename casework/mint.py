@@ -1,5 +1,7 @@
 import requests
+
 from casework import app
+
 
 class Mint(object):
 

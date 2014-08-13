@@ -85,8 +85,6 @@
               {{render_field(form.charges_template[0].chargee_address)}}
           </div>
       </div>
-      {% else %}
-        sausages
       {% endif %}
 
     </div>
@@ -99,21 +97,9 @@
         $('#charges').append($('<div>' + cloneHTML + '</div>'));
     }
 
-    function add_test_form(){
-        clone = $('#test-charges-template div').first().clone()
-        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + ($('#charges').length - 1));
-        $('#test-charges').append($('<div>' + cloneHTML + '</div>'));
-    }
-
-    $('#buttons input[type="button"]').click(
+    $('#charges input[type="button"]').click(
         function(){
             addForm();
-        }
-    )
-
-    $('#buttons input[type="test-button"]').click(
-        function(){
-            add_test_form();
         }
     )
   </script>
