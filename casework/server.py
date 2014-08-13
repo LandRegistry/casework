@@ -15,7 +15,7 @@ from flask import abort
 
 from casework import app
 from casework import db
-
+from datetime import datetime
 from .health import Health
 from .mint import Mint
 from audit import Audit
@@ -27,8 +27,11 @@ mint = Mint(app.config['MINT_URL'])
 Health(app, checks=[db.health])
 Audit(app)
 
+def TimestampMillisec64():
+    return int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000) 
+
 def generate_title_number():
-    return 'TEST%d' % random.randint(1, 9999)
+    return 'TEST%d' % TimestampMillisec64()
 
 def get_or_log_error(url):
     try:
