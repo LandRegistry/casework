@@ -4,7 +4,7 @@ from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, Optional
 
-from casework.validators import validate_postcode, validate_price_paid, validate_extent
+from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode
 import simplejson
 
 
@@ -68,10 +68,10 @@ class RegistrationForm(Form):
 
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
 
-    def remove_templated_form_elements_and_validate(self):
+    def validate(self):
         old_form_charges_template = self.charges_template
         del self.charges_template
-        form_is_validated = self.validate()
+        form_is_validated = super(RegistrationForm, self).validate()
         self.charges_template = old_form_charges_template
         return form_is_validated
 
@@ -119,11 +119,5 @@ class RegistrationForm(Form):
 
         return data
 
-    def format_postcode(postcode):
-        out = postcode.upper()
-        if ' ' not in postcode:
-            i = len(postcode) - 3
-            out = out[:i] + ' ' + out[i:]
 
-        return out
 

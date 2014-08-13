@@ -2,105 +2,111 @@
 {% extends "base.html" %}
 {% block page_title %}Create title{% endblock %}
 {% block content %}
-  {% if created %}
-    {# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
-    <div class="alert alert-info" role="alert">
-        New title created, <a href="{{property_frontend_url}}/{{created}}">view public property page</a>
-    </div>
+{% if created %}
+{# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
+<div class="alert alert-info" role="alert">
+    New title created, <a href="{{property_frontend_url}}/{{created}}">view public property page</a>
+</div>
 
-  {% endif %}
-  <div class="row">
+{% endif %}
+<div class="row">
     <div class="col-md-12">
-      <h1>Create title</h1>
+        <h1>Create title</h1>
 
-      <form id="registration-form" action="" method="POST">
+        <form id="registration-form" action="" method="POST">
 
-        {{ form.csrf_token }}{{form.hidden_tag()}}
-        <!--{{ render_field(form.title_number)}}-->
+            {{ form.csrf_token }}{{form.hidden_tag()}}
+            <!--{{ render_field(form.title_number)}}-->
 
-        <p>Reference: <strong>{{title_number}}</strong></p>
+            <p>Reference: <strong>{{title_number}}</strong></p>
 
-        <fieldset>
-        <legend>Proprietors</legend>
-        {{ render_field(form.first_name1) }}
-        {{ render_field(form.surname1) }}
-        {{ render_field(form.first_name2) }}
-        {{ render_field(form.surname2) }}
-        </fieldset>
+            <fieldset>
+                <legend>Proprietors</legend>
+                {{ render_field(form.first_name1) }}
+                {{ render_field(form.surname1) }}
+                {{ render_field(form.first_name2) }}
+                {{ render_field(form.surname2) }}
+            </fieldset>
 
-        <fieldset>
-        <legend>Property Address</legend>
-        {{ render_field(form.house_number)}}
-        {{ render_field(form.road)}}
-        {{ render_field(form.town)}}
-        {{ render_field(form.postcode)}}
-        </fieldset>
+            <fieldset>
+                <legend>Property Address</legend>
+                {{ render_field(form.house_number)}}
+                {{ render_field(form.road)}}
+                {{ render_field(form.town)}}
+                {{ render_field(form.postcode)}}
+            </fieldset>
 
-        <fieldset>
-        <legend>Tenure</legend>
-        {{ render_field(form.property_tenure)}}
-        </fieldset>
+            <fieldset>
+                <legend>Tenure</legend>
+                {{ render_field(form.property_tenure)}}
+            </fieldset>
 
-        <fieldset>
-        <legend>Class of title</legend>
-        {{ render_field(form.property_class)}}
-        </fieldset>
+            <fieldset>
+                <legend>Class of title</legend>
+                {{ render_field(form.property_class)}}
+            </fieldset>
 
-        <fieldset>
-        <legend>Price Paid</legend>
-        {{ render_field(form.price_paid)}}
-        </fieldset>
+            <fieldset>
+                <legend>Price Paid</legend>
+                {{ render_field(form.price_paid)}}
+            </fieldset>
 
-        <fieldset>
-        <legend>Extent Geometry</legend>
-        {# render_field(form.geom_type) #}
-        {{ render_field(form.extent) }}
-        {# render_field(form.crs) #}
-        </fieldset>
+            <fieldset>
+                <legend>Extent Geometry</legend>
+                {# render_field(form.geom_type) #}
+                {{ render_field(form.extent) }}
+                {# render_field(form.crs) #}
+            </fieldset>
 
-        <div id="charges">
-            <input type="button" value="Add another charge"/>
-            {% for charge_form in form.charges %}
-                <div>
-                    Charge
-                    {{render_field(charge_form.charge_date)}}
-                    {{render_field(charge_form.chargee_name)}}
-                    {{render_field(charge_form.chargee_registration_number)}}
-                    {{render_field(charge_form.chargee_address)}}
-                </div>
-            {% endfor %}
+            <div id="charges">
+                <ol>
+                    {% for charge_form in form.charges %}
+                    <li>
+                        <div>
+                            Charge
+                            {{render_field(charge_form.charge_date)}}
+                            {{render_field(charge_form.chargee_name)}}
+                            {{render_field(charge_form.chargee_registration_number)}}
+                            {{render_field(charge_form.chargee_address)}}
+                        </div>
+                    </li>
+                </ol>
+                {% endfor %}
+            </div>
+
+            <div id="addchargesbutton">
+                <input type="button" value="Add another charge"/>
+            </div>
+
+            <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
+        </form>
+
+        {% if form.charges_template %}
+        <div id="chargestemplate" style="display: none;">
+            <div>
+                Charge
+                {{render_field(form.charges_template[0].charge_date)}}
+                {{render_field(form.charges_template[0].chargee_name)}}
+                {{render_field(form.charges_template[0].chargee_registration_number)}}
+                {{render_field(form.charges_template[0].chargee_address)}}
+            </div>
         </div>
-
-       <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
-
-      </form>
-
-      {% if form.charges_template %}
-      <div id="chargestemplate" style="display: none;">
-          <div>
-              Charge
-              {{render_field(form.charges_template[0].charge_date)}}
-              {{render_field(form.charges_template[0].chargee_name)}}
-              {{render_field(form.charges_template[0].chargee_registration_number)}}
-              {{render_field(form.charges_template[0].chargee_address)}}
-          </div>
-      </div>
-      {% endif %}
+        {% endif %}
 
     </div>
-  </div>
-  <script type="text/javascript">
+</div>
+<script type="text/javascript">
 
-    function addForm(){
+    function addForm() {
         clone = $('#chargestemplate div').first().clone()
         cloneHTML = clone.html().replace(/charges_template-0/g, 'charges-' + ($('#charges').length - 1));
         $('#charges').append($('<div>' + cloneHTML + '</div>'));
     }
 
-    $('#charges input[type="button"]').click(
-        function(){
-            addForm();
-        }
+    $('#addchargesbutton input[type="button"]').click(
+            function () {
+                addForm();
+            }
     )
-  </script>
+</script>
 {% endblock %}

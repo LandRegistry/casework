@@ -3,9 +3,9 @@ import datetime
 
 from wtforms.validators import ValidationError
 
-from casework.server import app, format_postcode
+from casework.server import app
 from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
-from casework.validators import validate_ogc_urn
+from casework.validators import validate_ogc_urn, format_postcode
 
 
 class MockMintResponse():

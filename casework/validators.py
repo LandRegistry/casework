@@ -46,6 +46,15 @@ def validate_postcode(form, field):
         raise ValidationError('Not a valid UK postcode')
 
 
+def format_postcode(postcode):
+    out = postcode.upper()
+    if ' ' not in postcode:
+        i = len(postcode) - 3
+        out = out[:i] + ' ' + out[i:]
+
+    return out
+
+
 def validate_price_paid(form, field):
     regex = '^(£?)?[0-9]+(,[0-9]+)?(\.\d{1,2})?$'
     if field:
