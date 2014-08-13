@@ -13,7 +13,7 @@
     <div class="col-md-12">
       <h1>Create title</h1>
 
-      <form action="" method="POST">
+      <form id="registration-form" action="" method="POST">
 
         {{ form.csrf_token }}{{form.hidden_tag()}}
         <!--{{ render_field(form.title_number)}}-->
@@ -97,12 +97,23 @@
         clone = $('#chargestemplate div').first().clone()
         cloneHTML = clone.html().replace(/charges_template-0/g, 'charges-' + ($('#charges').length - 1));
         $('#charges').append($('<div>' + cloneHTML + '</div>'));
-
     }
 
-    $('#charges input[type="button"]').click(
+    function add_test_form(){
+        clone = $('#test-charges-template div').first().clone()
+        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + ($('#charges').length - 1));
+        $('#test-charges').append($('<div>' + cloneHTML + '</div>'));
+    }
+
+    $('#buttons input[type="button"]').click(
         function(){
             addForm();
+        }
+    )
+
+    $('#buttons input[type="test-button"]').click(
+        function(){
+            add_test_form();
         }
     )
   </script>
