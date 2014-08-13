@@ -70,17 +70,32 @@
                 </div>
             {% endfor %}
         </div>
-        
+
        <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
 
       </form>
+
+      {% if form.charges_template %}
+      <div id="chargestemplate" style="display: none;">
+          <div>
+              Charge
+              {{render_field(form.charges_template[0].charge_date)}}
+              {{render_field(form.charges_template[0].chargee_name)}}
+              {{render_field(form.charges_template[0].chargee_registration_number)}}
+              {{render_field(form.charges_template[0].chargee_address)}}
+          </div>
+      </div>
+      {% else %}
+        sausages
+      {% endif %}
+
     </div>
   </div>
   <script type="text/javascript">
 
     function addForm(){
-        clone = $('#charges div').first().clone()
-        cloneHTML = clone.html().replace(/charges-0/g, 'charges-' + $('#charges').length);
+        clone = $('#chargestemplate div').first().clone()
+        cloneHTML = clone.html().replace(/charges_template-0/g, 'charges-' + ($('#charges').length - 1));
         $('#charges').append($('<div>' + cloneHTML + '</div>'));
 
     }

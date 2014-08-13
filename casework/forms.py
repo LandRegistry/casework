@@ -40,6 +40,8 @@ def validate_price_paid(form, field):
         if not re.match(regex, str(field.data)):
             raise ValidationError('Please enter the price paid as pound and pence')
 
+def get_form_template():
+  return FieldList(FormField(ChargeForm), min_entries=1)
 
 class ChargeForm(Form):
     """
@@ -96,6 +98,8 @@ class RegistrationForm(Form):
                     places=2,
                     rounding=None)
 
-    charges = FieldList(FormField(ChargeForm), min_entries=1)
+    charges = FieldList(FormField(ChargeForm), min_entries=0)
+
+    charges_template = get_form_template()
 
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])

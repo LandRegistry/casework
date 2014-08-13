@@ -20,7 +20,7 @@ from .health import Health
 from .mint import Mint
 from audit import Audit
 
-from forms import RegistrationForm, ChargeForm
+from forms import RegistrationForm, ChargeForm, get_form_template
 
 
 mint = Mint(app.config['MINT_URL'])
@@ -60,7 +60,23 @@ def registration():
         #put the title number into the form's hidden field
         form.title_number.data = generate_title_number()
 
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
+
+      app.logger.info("Orig is " + repr(form.charges_template))
+      old_form_charges_template = form.charges_template
+      del form.charges_template
+
+      app.logger.info("Copy is " + repr(old_form_charges_template))
+
+      app.logger.info("About to validate")
+      form_is_validated = form.validate()
+
+      app.logger.info("Validated")
+      #get_form_template().bind(form, "charges_template")
+      form.charges_template = form.old_form_charges_template
+      app.logger.info("FCT is " + repr(form.charges_template))
+
+      if form_is_validated:
         mint_data = form_to_json(form)
         title_number = form['title_number'].data
         try:
