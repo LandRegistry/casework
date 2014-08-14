@@ -14,6 +14,16 @@ body {
   background-color: #fff;
   border-bottom: 1px solid #2D631F; }
 
+.charges ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.charges ul li {
+    padding-left: 0px;
+    list-style-type: none;
+}
+
 ul.navbar-nav.navbar-right:last-child {
   margin-right: 20px; }
 
