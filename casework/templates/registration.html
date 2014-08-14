@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 {% block page_title %}Create title{% endblock %}
 {% block content %}
+
 {% if created %}
 {# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
 <div class="alert alert-info" role="alert">
@@ -9,6 +10,17 @@
 </div>
 
 {% endif %}
+
+{% macro render_charge(form_element) -%}
+<div>
+    Charge
+    {{render_field(form_element.charge_date)}}
+    {{render_field(form_element.chargee_name)}}
+    {{render_field(form_element.chargee_registration_number)}}
+    {{render_field(form_element.chargee_address)}}
+</div>
+{%- endmacro %}
+
 <div class="row">
     <div class="col-md-12">
         <h1>Create title</h1>
@@ -62,13 +74,7 @@
                 <ul id="chargeslist">
                     {% for charge_form in form.charges %}
                     <li>
-                        <div>
-                            Charge
-                            {{render_field(charge_form.charge_date)}}
-                            {{render_field(charge_form.chargee_name)}}
-                            {{render_field(charge_form.chargee_registration_number)}}
-                            {{render_field(charge_form.chargee_address)}}
-                        </div>
+                        {{ render_charge(charge_form) }}
                     </li>
                     {% endfor %}
                 </ul>
@@ -83,13 +89,7 @@
 
         {% if form.charges_template %}
         <div id="chargestemplate" style="display: none;">
-            <div>
-                Charge
-                {{render_field(form.charges_template[0].charge_date)}}
-                {{render_field(form.charges_template[0].chargee_name)}}
-                {{render_field(form.charges_template[0].chargee_registration_number)}}
-                {{render_field(form.charges_template[0].chargee_address)}}
-            </div>
+            {{ render_charge(form.charges_template[0]) }}
         </div>
         {% endif %}
 
