@@ -13,9 +13,7 @@ from flask import redirect
 from flask import url_for
 from flask import request_started
 from flask import abort
-
-from casework import app
-from casework import db
+from casework import app, db, csrf
 from datetime import datetime
 from .health import Health
 from .mint import Mint
@@ -50,6 +48,7 @@ def get_or_log_error(url):
 def index():
     return render_template("index.html")
 
+@csrf.exempt
 @app.route('/casework', methods=['GET','POST'])
 @login_required
 def casework():
@@ -81,6 +80,7 @@ def casework():
       casework_items =  models.Casework.query.order_by(models.Casework.submitted_at).all()
       return render_template("casework.html", casework_items=casework_items)
 
+@csrf.exempt
 @app.route('/checks', methods=['GET','POST'])
 @login_required
 def checks():

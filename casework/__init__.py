@@ -28,6 +28,7 @@ if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
 
 CsrfProtect(app)
+csrf = CsrfProtect(app)
 
 app.logger.info("\nConfiguration\n%s\n" % app.config)
 
