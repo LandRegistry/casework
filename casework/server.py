@@ -1,6 +1,6 @@
 import random
 import requests
-import json
+import simplejson as json
 from flask.ext.security import login_required
 from flask import request, flash, redirect, url_for, abort, render_template
 from sqlalchemy.exc import IntegrityError
@@ -28,7 +28,7 @@ Health(app, checks=[db.health])
 Audit(app)
 
 def TimestampMillisec64():
-    return int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000) 
+    return int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000)
 
 def generate_title_number():
     return 'TEST%d' % TimestampMillisec64()
@@ -172,7 +172,7 @@ def form_to_json(form):
         ]
       },
       "extent": json.loads(form['extent'].data)
-    })
+    }, use_decimal=True)
     return data
 
 def _format_postcode(postcode):
