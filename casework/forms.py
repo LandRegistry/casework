@@ -1,47 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import Form
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField
-from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError, Regexp
-from ukpostcodeutils.validation import is_valid_postcode
-import geojson
-import utils
-import re
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
+from wtforms.validators import DataRequired, Optional
 
-def validate_extent(form, field):
-    try:
-        extents = geojson.loads(field.data)
-    except ValueError:
-        raise ValidationError('Valid GeoJSON is required')
-
-    if not extents.get('geometry', False):
-        raise ValidationError('A valid geometry type is required')
-
-    if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
-        raise ValidationError('A polygon or multi-polygon is required')
-
-    try:
-        crs = extents['crs']['properties']['name']
-        if not utils.validate_ogc_urn(crs):
-            raise ValidationError("A valid 'CRS' containing an EPSG is required")
-
-    except KeyError:
-        raise ValidationError("A valid 'CRS' is required")
+from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode
+import simplejson
 
 
-def validate_postcode(form, field):
-    clean = field.data.replace(' ', '').upper()
-    if not is_valid_postcode(clean):
-        raise ValidationError('Not a valid UK postcode')
+class ChargeForm(Form):
+    """
+    Charge Form
+    """
 
-def validate_price_paid(form, field):
-    regex = '^(£?)?[0-9]+(,[0-9]+)?(\.\d{1,2})?$'
-    if field:
-        if not re.match(regex, str(field.data)):
-            raise ValidationError('Please enter the price paid as pound and pence')
+    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired()])
+    chargee_name = StringField('Company name', validators=[DataRequired()])
+    chargee_registration_number = StringField('Company registration number', validators=[DataRequired()])
+    chargee_address = TextAreaField('Address', validators=[DataRequired()])
+
 
 class RegistrationForm(Form):
-
     """
     The names of the variables here MUST match the name attribute of the fields
     in the index.html for WTForms to work
@@ -61,27 +39,85 @@ class RegistrationForm(Form):
     postcode = StringField('Postcode', validators=[DataRequired(), validate_postcode])
 
     property_tenure = RadioField(
-      'Property tenure',
-      choices=[
-        ('Freehold','Freehold'),
-        ('Leasehold','Leasehold')
-      ]
+        'Property tenure',
+        choices=[
+            ('Freehold', 'Freehold'),
+            ('Leasehold', 'Leasehold')
+        ]
     )
 
     property_class = RadioField(
-      'Property class',
-      choices=[
-        ('Absolute','Absolute'),
-        ('Good','Good'),
-        ('Qualified','Qualified'),
-        ('Possessory','Possessory')
-      ]
+        'Property class',
+        choices=[
+            ('Absolute', 'Absolute'),
+            ('Good', 'Good'),
+            ('Qualified', 'Qualified'),
+            ('Possessory', 'Possessory')
+        ]
     )
 
     price_paid = DecimalField(
-                    'Price paid (&pound;)',
-                    validators=[Optional(), validate_price_paid],
-                    places=2,
-                    rounding=None)
+        'Price paid (&pound;)',
+        validators=[Optional(), validate_price_paid],
+        places=2,
+        rounding=None)
+
+    charges = FieldList(FormField(ChargeForm), min_entries=0)
+
+    charges_template = FieldList(FormField(ChargeForm), min_entries=1)
 
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
+
+    def validate(self):
+        old_form_charges_template = self.charges_template
+        del self.charges_template
+        form_is_validated = super(RegistrationForm, self).validate()
+        self.charges_template = old_form_charges_template
+        return form_is_validated
+
+
+    def to_json(self):
+        arr = []
+        for charge in self['charges'].data:
+            dt = charge.pop('charge_date')
+            print "xXX", dt
+            charge['charge_date'] = str(dt)
+            arr.append(charge)
+
+        data = simplejson.dumps({
+            "title_number": self['title_number'].data,
+            "proprietors": [
+                {
+                    "first_name": self['first_name1'].data,
+                    "last_name": self['surname1'].data
+                },
+                {
+                    "first_name": self['first_name2'].data,
+                    "last_name": self['surname2'].data
+                }
+            ],
+            "property": {
+
+                "address": {
+                    "house_number": self['house_number'].data,
+                    "road": self['road'].data,
+                    "town": self['town'].data,
+                    "postcode": format_postcode(self['postcode'].data)
+                },
+                "tenure": self['property_tenure'].data,
+                "class_of_title": self['property_class'].data
+            },
+            "payment": {
+                "price_paid": self['price_paid'].data,
+                "titles": [
+                    self['title_number'].data
+                ]
+            },
+            "charges": arr,
+            "extent": self['extent'].data
+        })
+
+        return data
+
+
+
