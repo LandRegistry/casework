@@ -1,9 +1,6 @@
 from sqlalchemy.exc import IntegrityError
-
 import models
-
 from flask.ext.security import login_required
-
 from flask import render_template
 from flask import request
 from flask import flash
@@ -11,11 +8,8 @@ from flask import redirect
 from flask import url_for
 from casework import csrf
 from audit import Audit
-
 from casework import app
-
 from casework import db
-
 from casework.title_number_generator import generate_title_number
 from .health import Health
 from .mint import Mint
@@ -33,9 +27,9 @@ def index():
     return render_template("index.html")
 
 
-@csrf.exempt
 @app.route('/casework', methods=['GET', 'POST'])
 @login_required
+@csrf.exempt
 def casework():
     if request.method == 'POST' and request.json:
 

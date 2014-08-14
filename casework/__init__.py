@@ -27,8 +27,8 @@ if app.config.get('BASIC_AUTH_USERNAME'):
 if 'SENTRY_DSN' in os.environ:
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
 
-CsrfProtect(app)
-csrf = CsrfProtect(app)
+csrf = CsrfProtect()
+csrf.init_app(app)
 
 app.logger.info("\nConfiguration\n%s\n" % app.config)
 
