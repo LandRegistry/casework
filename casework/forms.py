@@ -114,10 +114,7 @@ class RegistrationForm(Form):
                 ]
             },
             "charges": arr,
-            "extent": self['extent'].data
+            "extent": simplejson.loads(self['extent'].data)
         })
 
         return data
-
-
-
