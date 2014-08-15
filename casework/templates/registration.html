@@ -5,7 +5,7 @@
 
 {% if created %}
 {# We are not using flash() here, as we need to render some HTML, and don't want to leave the door open to XXS attacks) #}
-<div class="alert alert-info" role="alert">
+<div class="alert alert-info" role="alert" xmlns="http://www.w3.org/1999/html">
     New title created, <a href="{{property_frontend_url}}/{{created}}">view public property page</a>
 </div>
 
@@ -13,11 +13,12 @@
 
 {% macro render_charge(form_element) -%}
 <div>
-    Charge
+    <legend>Charge</legend>
     {{render_field(form_element.charge_date)}}
     {{render_field(form_element.chargee_name)}}
     {{render_field(form_element.chargee_registration_number)}}
     {{render_field(form_element.chargee_address)}}
+    </legend
 </div>
 {%- endmacro %}
 
@@ -71,17 +72,23 @@
             </fieldset>
 
             <div id="charges" class="charges">
-                <ul id="chargeslist">
-                    {% for charge_form in form.charges %}
-                    <li>
-                        {{ render_charge(charge_form) }}
-                    </li>
-                    {% endfor %}
-                </ul>
+                <fieldset>
+                    <legend>Charges</legend>
+                    {% if not form.charges %}
+                    <p id="nocharges"> There are no charges on this title</p>
+                    {% endif %}
+                    <ul id="chargeslist">
+                        {% for charge_form in form.charges %}
+                        <li>
+                            {{ render_charge(charge_form) }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </fieldset>
             </div>
 
             <div id="addchargesbutton">
-                <input type="button" value="Add another charge"/>
+                <input type="button" value="Add a charge"/>
             </div>
 
             <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
@@ -96,11 +103,20 @@
     </div>
 </div>
 <script type="text/javascript">
-
     function addForm() {
-        clone = $('#chargestemplate div').first().clone()
-        cloneHTML = clone.html().replace(/charges_template-0/g, 'charges-' + ($('#chargeslist').find('li').length));
-        $('#chargeslist').append($("<li></li>").html(cloneHTML));
+        var numberOfCharges = ($('#chargeslist').find('li').length);
+
+        var newChargeHtml = $('#chargestemplate div')
+                .first()
+                .clone()
+                .html()
+                .replace(/charges_template-0/g, 'charges-' + numberOfCharges);
+
+        $('#chargeslist').append($("<li></li>").html(newChargeHtml));
+
+        if (numberOfCharges > 0) {
+            $('#nocharges').hide()
+        }
     }
 
     $('#addchargesbutton input[type="button"]').click(
