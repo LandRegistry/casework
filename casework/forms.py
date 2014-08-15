@@ -5,7 +5,8 @@ from wtforms import StringField, RadioField, DecimalField, HiddenField, TextArea
 from wtforms.validators import DataRequired, Optional
 import simplejson
 
-from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode
+from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode, \
+    ValidateDateNotInFuture
 
 
 class ChargeForm(Form):
@@ -13,7 +14,7 @@ class ChargeForm(Form):
     Charge Form
     """
 
-    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired()])
+    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
     chargee_name = StringField('Company name', validators=[DataRequired()])
     chargee_registration_number = StringField('Company registration number', validators=[DataRequired()])
     chargee_address = TextAreaField('Address', validators=[DataRequired()])
