@@ -59,3 +59,5 @@ class Check(db.Model):
     @property
     def with_bst_time(self):
         return convert_to_bst(self.submitted_at)
+
+    application_type = db.Column(db.String(50), nullable=False)
