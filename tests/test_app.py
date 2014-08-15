@@ -5,7 +5,7 @@ from wtforms.validators import ValidationError
 
 from casework.server import app, db
 from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
-from casework.validators import validate_ogc_urn, format_postcode
+from casework.validators import format_postcode
 
 
 class CaseworkTestCase(unittest.TestCase):
@@ -24,13 +24,13 @@ class CaseworkTestCase(unittest.TestCase):
 
     def check_server(self):
         rv = self.client.get('/registration')
-        assert rv.status == '200 OK'
+        self.assertEquals(rv.status, '200 OK')
 
         rv = self.client.get('/pagedoesnotexist')
-        assert rv.status == '404 NOT FOUND'
+        self.assertEqual(rv.status, '404 NOT FOUND')
 
         rv = self.client.get('/')
-        assert rv.status == '200 OK'
+        self.assertEqual(rv.status, '200 OK')
 
     def test_geojson(self):
         with self.app.test_request_context():
@@ -49,19 +49,6 @@ class CaseworkTestCase(unittest.TestCase):
             form.extent.data = '{"type": "Feature","geometry": {"type": "Point","coordinates": [125.6, 10.1]},"properties": {"name": "Dinagat Islands"}}'
             form.validate()
             assert form.extent.errors[0] == 'A polygon or multi-polygon is required'
-
-    def test_validate_ogc_urn(self):
-        result = validate_ogc_urn('urn:ogc:def:crs:EPSG:27700')
-        assert result == True
-
-        result = validate_ogc_urn('urn:ogc:def:crs:EPSG:1234')
-        assert result == True
-
-        result = validate_ogc_urn('XXXXX')
-        assert result == False
-
-        result = validate_ogc_urn('urn:ogc:def:crs:XXX::27700')
-        assert result == False
 
     def get_valid_create_form_without_charge(self):
         with self.app.test_request_context():
