@@ -23,7 +23,6 @@ class CaseworkTestCase(unittest.TestCase):
         db.drop_all()
 
     def check_server(self):
-
         rv = self.client.get('/registration')
         assert rv.status == '200 OK'
 
@@ -52,7 +51,6 @@ class CaseworkTestCase(unittest.TestCase):
             assert form.extent.errors[0] == 'A polygon or multi-polygon is required'
 
     def test_validate_ogc_urn(self):
-
         result = validate_ogc_urn('urn:ogc:def:crs:EPSG:27700')
         assert result == True
 
@@ -66,7 +64,6 @@ class CaseworkTestCase(unittest.TestCase):
         assert result == False
 
     def get_valid_create_form_without_charge(self):
-
         with self.app.test_request_context():
             form = RegistrationForm()
 
@@ -89,7 +86,6 @@ class CaseworkTestCase(unittest.TestCase):
             return form
 
     def get_valid_create_form_with_charge(self):
-
         with self.app.test_request_context():
             form = RegistrationForm()
 
@@ -120,7 +116,6 @@ class CaseworkTestCase(unittest.TestCase):
             return form
 
     def test_postcode_validation(self):
-
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'XXXXX'
 

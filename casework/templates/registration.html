@@ -13,12 +13,14 @@
 
 {% macro render_charge(form_element) -%}
 <div>
-    <legend>Charge</legend>
-    {{render_field(form_element.charge_date)}}
-    {{render_field(form_element.chargee_name)}}
-    {{render_field(form_element.chargee_registration_number)}}
-    {{render_field(form_element.chargee_address)}}
-    </legend
+    <fieldset>
+        <legend>Charge</legend>
+        {{render_field(form_element.charge_date)}}
+        {{render_field(form_element.chargee_name)}}
+        {{render_field(form_element.chargee_registration_number)}}
+        {{render_field(form_element.chargee_address)}}
+        </legend>
+    </fieldset>
 </div>
 {%- endmacro %}
 
@@ -27,7 +29,6 @@
         <h1>Create title</h1>
 
         <form id="registration-form" action="" method="POST">
-
             {{ form.csrf_token }}{{form.hidden_tag()}}
             <!--{{ render_field(form.title_number)}}-->
 
@@ -72,19 +73,17 @@
             </fieldset>
 
             <div id="charges" class="charges">
-                <fieldset>
-                    <legend>Charges</legend>
-                    {% if not form.charges %}
-                    <p id="nocharges"> There are no charges on this title</p>
-                    {% endif %}
-                    <ul id="chargeslist">
-                        {% for charge_form in form.charges %}
-                        <li>
-                            {{ render_charge(charge_form) }}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </fieldset>
+                <legend>Charges</legend>
+                {% if not form.charges %}
+                <p id="nocharges"> There are no charges on this title</p>
+                {% endif %}
+                <ul id="chargeslist">
+                    {% for charge_form in form.charges %}
+                    <li>
+                        {{ render_charge(charge_form) }}
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
 
             <div id="addchargesbutton">
@@ -102,6 +101,7 @@
 
     </div>
 </div>
+
 <script type="text/javascript">
     function addForm() {
         var numberOfCharges = ($('#chargeslist').find('li').length);
