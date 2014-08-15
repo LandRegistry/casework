@@ -1,18 +1,22 @@
 import datetime
+
 from flask.ext.security import UserMixin, RoleMixin
+
 from casework import db
 
+
 roles_users = db.Table('roles_users',
-        db.Column('users_id', db.Integer(), db.ForeignKey('users.id')),
-        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+                       db.Column('users_id', db.Integer(), db.ForeignKey('users.id')),
+                       db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
 
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
 
-class User(db.Model, UserMixin):
 
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -29,20 +33,20 @@ class User(db.Model, UserMixin):
             'email': str(self.email)
         })
 
-class Casework(db.Model):
 
+class Casework(db.Model):
     __tablename__ = 'casework'
 
     id = db.Column(db.Integer, primary_key=True)
     title_number = db.Column(db.String(64), nullable=False)
-    submitted_at = db.Column(db.DateTime(),  default=datetime.datetime.now)
+    submitted_at = db.Column(db.DateTime(), default=datetime.datetime.now)
     application_type = db.Column(db.String(50), nullable=False)
 
-class Check(db.Model):
 
+class Check(db.Model):
     __tablename__ = 'checks'
 
     id = db.Column(db.Integer, primary_key=True)
     title_number = db.Column(db.String(64), nullable=False)
-    submitted_at = db.Column(db.DateTime(),  default=datetime.datetime.now)
+    submitted_at = db.Column(db.DateTime(), default=datetime.datetime.now)
     application_type = db.Column(db.String(50), nullable=False)

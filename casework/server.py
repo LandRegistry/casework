@@ -1,13 +1,14 @@
 from sqlalchemy.exc import IntegrityError
-import models
 from flask.ext.security import login_required
 from flask import render_template
 from flask import request
 from flask import flash
 from flask import redirect
 from flask import url_for
-from casework import csrf
 from audit import Audit
+
+import models
+from casework import csrf
 from casework import app
 from casework import db
 from casework.title_number_generator import generate_title_number
@@ -32,26 +33,21 @@ def index():
 @csrf.exempt
 def casework():
     if request.method == 'POST' and request.json:
-
         data = request.json
-
-        # create a new application
-        casework = models.Casework()
+        casework_model = models.Casework()
 
         try:
-            casework.title_number = data['title_number']
-            casework.application_type = data['application_type']
+            casework_model.title_number = data['title_number']
+            casework_model.application_type = data['application_type']
         except KeyError:
             return 'Could not find expected keys in data', 400
 
-        # save to database
         try:
-            db.session.add(casework)
+            db.session.add(casework_model)
             db.session.commit()
         except IntegrityError:
             return 'Failed to save', 400
 
-        # if all OK, return 200
         return 'OK', 200
 
     if request.method == 'GET':
@@ -64,10 +60,7 @@ def casework():
 @login_required
 def checks():
     if request.method == 'POST' and request.json:
-
         data = request.json
-
-        # create a new application
         check = models.Check()
 
         try:
@@ -76,19 +69,16 @@ def checks():
         except KeyError:
             return 'Could not find expected keys in data', 400
 
-        # save to database
         try:
             db.session.add(check)
             db.session.commit()
         except IntegrityError:
             return 'Failed to save', 400
 
-        # if all OK, return 200
         return 'OK', 200
 
     if request.method == 'GET':
-        checks = models.Check.query.order_by(models.Check.submitted_at).all()
-        return render_template("checks.html", checks=checks)
+        return render_template("checks.html", checks=(models.Check.query.order_by(models.Check.submitted_at).all()))
 
 
 @app.route('/registration', methods=['GET', 'POST'])

@@ -46,7 +46,7 @@ class CaseworkTestCase(unittest.TestCase):
             form.validate()
             assert len(form.extent.errors) == 0
 
-            #test cannot validate a point
+            # test cannot validate a point
             form.extent.data = '{"type": "Feature","geometry": {"type": "Point","coordinates": [125.6, 10.1]},"properties": {"name": "Dinagat Islands"}}'
             form.validate()
             assert form.extent.errors[0] == 'A polygon or multi-polygon is required'
@@ -125,24 +125,22 @@ class CaseworkTestCase(unittest.TestCase):
         form.postcode.data = 'XXXXX'
 
         valid = form.validate()
-        assert valid == False
+        assert not valid
         # TODO: Can use form.errors to test the validation errors
 
         form.postcode.data = 'sw1a1aa'
         valid = form.validate()
-        assert valid == True
+        assert valid
 
         form.postcode.data = 'sw1a 1aa'
         valid = form.validate()
-        assert valid == True
+        assert valid
 
         form.postcode.data = 'SW1A1AA'
         valid = form.validate()
-        assert valid == True
-
+        assert valid
 
     def test_create_form(self):
-
         form = self.get_valid_create_form_with_charge()
         valid = form.validate()
         assert valid
@@ -156,19 +154,19 @@ class CaseworkTestCase(unittest.TestCase):
 
         form.price_paid.data = '20000.19'
         result = validate_price_paid(None, form.price_paid)
-        assert result == None
+        assert result is None
 
         form.price_paid.data = '20000.99'
         result = validate_price_paid(None, form.price_paid)
-        assert result == None
+        assert result is None
 
         form.price_paid.data = '20000.00'
         result = validate_price_paid(None, form.price_paid)
-        assert result == None
+        assert result is None
 
         form.price_paid.data = '20000'
         result = validate_price_paid(None, form.price_paid)
-        assert result == None
+        assert result is None
 
         form.price_paid.data = '20000.103'
         try:
@@ -176,24 +174,23 @@ class CaseworkTestCase(unittest.TestCase):
         except ValidationError as e:
             assert e.message == 'Please enter the price paid as pound and pence'
 
-
     def test_valid_pounds_pence(self):
         form = self.get_valid_create_form_with_charge()
         form.price_paid.data = '20000.10'
         valid = form.validate()
-        assert valid == True
+        assert valid
 
         form.price_paid.data = '999999'
         valid = form.validate()
-        assert valid == True
+        assert valid
 
         form.price_paid.data = '0.01'
         valid = form.validate()
-        assert valid == True
+        assert valid
 
         form.price_paid.data = '100.1'
         valid = form.validate()
-        assert valid == True
+        assert valid
 
     def test_format_postcode(self):
         form = self.get_valid_create_form_with_charge()
@@ -212,70 +209,66 @@ class CaseworkTestCase(unittest.TestCase):
         assert new == 'PL13 2AA'
 
     def test_casework(self):
-
-        rv = self.client.get('/casework')
-        assert rv.status_code == 200
+        checks_response = self.client.get('/casework')
+        assert checks_response.status_code is 200
 
         # valid
-        rv = self.client.post('/casework',
-                              data='{"title_number":"DN1001", "application_type": "Change name"}',
-                              content_type='application/json')
+        checks_response = self.client.post('/casework',
+                                           data='{"title_number":"DN1001", "application_type": "Change name"}',
+                                           content_type='application/json')
 
-        assert rv.status_code == 200
+        assert checks_response.status_code is 200
 
-        #make sure we can see the thing we just created
-        rv = self.client.get('/casework')
-        assert rv.status_code == 200
-        assert 'DN1001' in rv.data
-        assert 'Change name' in rv.data
+        # make sure we can see the thing we just created
+        checks_response = self.client.get('/casework')
+        assert checks_response.status_code is 200
+        assert 'DN1001' in checks_response.data
+        assert 'Change name' in checks_response.data
 
+        # invalid keys
+        checks_response = self.client.post('/casework',
+                                           data='{"XX":"DN1001", "XX": "Change name"}',
+                                           content_type='application/json')
 
-        #invalid keys
-        rv = self.client.post('/casework',
-                              data='{"XX":"DN1001", "XX": "Change name"}',
-                              content_type='application/json')
+        assert checks_response.status_code == 400
 
-        assert rv.status_code == 400
+        # invalid data
+        checks_response = self.client.post('/casework',
+                                           data='{"title_number":null, "application_type": null}',
+                                           content_type='application/json')
 
-        #invalid data
-        rv = self.client.post('/casework',
-                              data='{"title_number":null, "application_type": null}',
-                              content_type='application/json')
-
-        assert rv.status_code == 400
+        assert checks_response.status_code == 400
 
     def test_checks(self):
-
-        rv = self.client.get('/checks')
-        assert rv.status_code == 200
+        checks_response = self.client.get('/checks')
+        assert checks_response.status_code == 200
 
         # valid
-        rv = self.client.post('/checks',
-                              data='{"title_number":"DN1001", "application_type": "Change name"}',
-                              content_type='application/json')
+        checks_response = self.client.post('/checks',
+                                           data='{"title_number":"DN1001", "application_type": "Change name"}',
+                                           content_type='application/json')
 
-        assert rv.status_code == 200
+        assert checks_response.status_code == 200
 
-        #make sure we can see the thing we just created
-        rv = self.client.get('/checks')
-        assert rv.status_code == 200
-        assert 'DN1001' in rv.data
-        assert 'Change name' in rv.data
+        # make sure we can see the thing we just created
+        checks_response = self.client.get('/checks')
+        assert checks_response.status_code == 200
+        assert 'DN1001' in checks_response.data
+        assert 'Change name' in checks_response.data
 
+        # invalid keys
+        checks_response = self.client.post('/checks',
+                                           data='{"XX":"DN1001", "XX": "Change name"}',
+                                           content_type='application/json')
 
-        #invalid keys
-        rv = self.client.post('/checks',
-                              data='{"XX":"DN1001", "XX": "Change name"}',
-                              content_type='application/json')
+        assert checks_response.status_code == 400
 
-        assert rv.status_code == 400
+        # invalid data
+        checks_response = self.client.post('/checks',
+                                           data='{"title_number":null, "application_type": null}',
+                                           content_type='application/json')
 
-        #invalid data
-        rv = self.client.post('/checks',
-                              data='{"title_number":null, "application_type": null}',
-                              content_type='application/json')
-
-        assert rv.status_code == 400
+        assert checks_response.status_code == 400
 
     def test_charge_data(self):
         form = self.get_valid_create_form_with_charge()
@@ -287,8 +280,8 @@ class CaseworkTestCase(unittest.TestCase):
 
 
             # @responses.activate
-        #    def test_registration(self):
-        #title_num = 'TEST1234'
-        #responses.add(responses.POST, 'http://0.0.0.0:8001/titles/' + title_num, body='', status=200)
+            # def test_registration(self):
+            # title_num = 'TEST1234'
+            # responses.add(responses.POST, 'http://0.0.0.0:8001/titles/' + title_num, body='', status=200)
 
-        #response = self.client.post('/registration', data = dict(form = self.get_valid_create_form_without_charge()))
+            # response = self.client.post('/registration', data = dict(form = self.get_valid_create_form_without_charge()))
