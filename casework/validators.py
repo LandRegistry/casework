@@ -2,7 +2,9 @@
 
 import re
 
+from pytz import timezone
 from wtforms.validators import ValidationError
+
 from ukpostcodeutils.validation import is_valid_postcode
 import geojson
 
@@ -53,6 +55,12 @@ def format_postcode(postcode):
         out = out[:i] + ' ' + out[i:]
 
     return out
+
+
+def convert_to_bst(dt):
+    utc = timezone('UTC').localize(dt)
+    bst = timezone('Europe/London').localize(dt)
+    return bst + (utc - bst)
 
 
 def validate_price_paid(form, field):
