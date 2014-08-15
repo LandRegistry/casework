@@ -3,9 +3,10 @@
 from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, Optional
-
-from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode
 import simplejson
+
+from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode, \
+    ValidateDateNotInFuture
 
 
 class ChargeForm(Form):
@@ -13,7 +14,7 @@ class ChargeForm(Form):
     Charge Form
     """
 
-    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired()])
+    charge_date = DateField('Charge date', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
     chargee_name = StringField('Company name', validators=[DataRequired()])
     chargee_registration_number = StringField('Company registration number', validators=[DataRequired()])
     chargee_address = TextAreaField('Address', validators=[DataRequired()])
@@ -75,12 +76,10 @@ class RegistrationForm(Form):
         self.charges_template = old_form_charges_template
         return form_is_validated
 
-
     def to_json(self):
         arr = []
         for charge in self['charges'].data:
             dt = charge.pop('charge_date')
-            print "xXX", dt
             charge['charge_date'] = str(dt)
             arr.append(charge)
 
