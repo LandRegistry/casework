@@ -25,4 +25,3 @@ class ValidatorsTestCase(unittest.TestCase):
             self.fail("Should not have thrown validation error " + repr(ve))
 
         self.assertRaises(ValidationError, validate_date_not_in_future, None, day_in_future)
-        self.assertRaises(ValidationError, validate_date_not_in_future, None, None)
