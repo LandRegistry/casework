@@ -1,6 +1,7 @@
 import datetime
 from flask.ext.security import UserMixin, RoleMixin
 from casework import db
+from pytz import timezone
 
 roles_users = db.Table('roles_users',
         db.Column('users_id', db.Integer(), db.ForeignKey('users.id')),
@@ -38,6 +39,10 @@ class Casework(db.Model):
     submitted_at = db.Column(db.DateTime(),  default=datetime.datetime.now)
     application_type = db.Column(db.String(50), nullable=False)
 
+    @property
+    def withBstTime(self):
+        return convertToBst(self.submitted_at)
+
 class Check(db.Model):
 
     __tablename__ = 'checks'
@@ -46,3 +51,13 @@ class Check(db.Model):
     title_number = db.Column(db.String(64), nullable=False)
     submitted_at = db.Column(db.DateTime(),  default=datetime.datetime.now)
     application_type = db.Column(db.String(50), nullable=False)
+
+    @property
+    def withBstTime(self):
+        return convertToBst(self.submitted_at)
+
+def convertToBst(dt):
+    utc = timezone('UTC').localize(dt)
+    bst = timezone('Europe/London').localize(dt)
+    return bst + (utc - bst)
+
