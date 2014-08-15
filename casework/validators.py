@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import re
+from datetime import date
 
 from wtforms.validators import ValidationError
 from ukpostcodeutils.validation import is_valid_postcode
@@ -19,9 +20,9 @@ def validate_ogc_urn(crs):
     return re.match(pattern, crs) is not None
 
 
-def validate_extent(form, field):
+def validate_extent(form, extent):
     try:
-        extents = geojson.loads(field.data)
+        extents = geojson.loads(extent.data)
     except ValueError:
         raise ValidationError('Valid GeoJSON is required')
 
@@ -40,10 +41,15 @@ def validate_extent(form, field):
         raise ValidationError("A valid 'CRS' is required")
 
 
-def validate_postcode(form, field):
-    clean = field.data.replace(' ', '').upper()
+def validate_postcode(form, postcode):
+    clean = postcode.data.replace(' ', '').upper()
     if not is_valid_postcode(clean):
         raise ValidationError('Not a valid UK postcode')
+
+
+def validate_date_not_in_future(form, date_from_form):
+    if date_from_form > date.today():
+        raise ValidationError('Date cannot be in the future')
 
 
 def format_postcode(postcode):
@@ -55,8 +61,8 @@ def format_postcode(postcode):
     return out
 
 
-def validate_price_paid(form, field):
+def validate_price_paid(form, price_paid):
     regex = '^(£?)?[0-9]+(,[0-9]+)?(\.\d{1,2})?$'
-    if field:
-        if not re.match(regex, str(field.data)):
+    if price_paid:
+        if not re.match(regex, str(price_paid.data)):
             raise ValidationError('Please enter the price paid as pound and pence')
