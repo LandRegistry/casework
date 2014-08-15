@@ -105,50 +105,43 @@ class CaseworkTestCase(unittest.TestCase):
     def test_postcode_validation(self):
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'XXXXX'
-
-        valid = form.validate()
-        assert not valid
-        # TODO: Can use form.errors to test the validation errors
+        self.assertFalse(form.validate())
 
         form.postcode.data = 'sw1a1aa'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
         form.postcode.data = 'sw1a 1aa'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
         form.postcode.data = 'SW1A1AA'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
     def test_create_form(self):
         form = self.get_valid_create_form_with_charge()
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
     def test_health(self):
         response = self.client.get('/health')
-        assert response.status == '200 OK'
+        self.assertEquals(response.status, '200 OK')
 
     def test_validate_post_code_method(self):
         form = self.get_valid_create_form_with_charge()
 
         form.price_paid.data = '20000.19'
         result = validate_price_paid(None, form.price_paid)
-        assert result is None
+        self.assertIsNone(result)
 
         form.price_paid.data = '20000.99'
         result = validate_price_paid(None, form.price_paid)
-        assert result is None
+        self.assertIsNone(result)
 
         form.price_paid.data = '20000.00'
         result = validate_price_paid(None, form.price_paid)
-        assert result is None
+        self.assertIsNone(result)
 
         form.price_paid.data = '20000'
         result = validate_price_paid(None, form.price_paid)
-        assert result is None
+        self.assertIsNone(result)
 
         form.price_paid.data = '20000.103'
         try:
@@ -159,111 +152,95 @@ class CaseworkTestCase(unittest.TestCase):
     def test_valid_pounds_pence(self):
         form = self.get_valid_create_form_with_charge()
         form.price_paid.data = '20000.10'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
         form.price_paid.data = '999999'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
         form.price_paid.data = '0.01'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
         form.price_paid.data = '100.1'
-        valid = form.validate()
-        assert valid
+        self.assertTrue(form.validate())
 
     def test_format_postcode(self):
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl11aa'
         new = format_postcode(form.postcode.data)
-        assert new == 'PL1 1AA'
+        self.assertEqual(new, 'PL1 1AA')
 
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl132aa'
         new = format_postcode(form.postcode.data)
-        assert new == 'PL13 2AA'
+        self.assertEquals(new, 'PL13 2AA')
 
         form = self.get_valid_create_form_with_charge()
         form.postcode.data = 'pl13 2aa'
         new = format_postcode(form.postcode.data)
-        assert new == 'PL13 2AA'
+        self.assertEquals(new, 'PL13 2AA')
 
     def test_casework(self):
         checks_response = self.client.get('/casework')
-        assert checks_response.status_code is 200
+        self.assertEquals(checks_response.status_code, 200)
 
         # valid
         checks_response = self.client.post('/casework',
                                            data='{"title_number":"DN1001", "application_type": "Change name"}',
                                            content_type='application/json')
 
-        assert checks_response.status_code is 200
+        self.assertEquals(checks_response.status_code, 200)
 
         # make sure we can see the thing we just created
         checks_response = self.client.get('/casework')
-        assert checks_response.status_code is 200
-        assert 'DN1001' in checks_response.data
-        assert 'Change name' in checks_response.data
+        self.assertEqual(checks_response.status_code, 200)
+        self.assertTrue('DN1001' in checks_response.data)
+        self.assertTrue('Change name' in checks_response.data)
 
         # invalid keys
         checks_response = self.client.post('/casework',
                                            data='{"XX":"DN1001", "XX": "Change name"}',
                                            content_type='application/json')
 
-        assert checks_response.status_code == 400
+        self.assertEquals(checks_response.status_code, 400)
 
         # invalid data
         checks_response = self.client.post('/casework',
                                            data='{"title_number":null, "application_type": null}',
                                            content_type='application/json')
 
-        assert checks_response.status_code == 400
+        self.assertEquals(checks_response.status_code, 400)
 
     def test_checks(self):
         checks_response = self.client.get('/checks')
-        assert checks_response.status_code == 200
+        self.assertEquals(checks_response.status_code, 200)
 
         # valid
         checks_response = self.client.post('/checks',
                                            data='{"title_number":"DN1001", "application_type": "Change name"}',
                                            content_type='application/json')
 
-        assert checks_response.status_code == 200
+        self.assertEquals(checks_response.status_code, 200)
 
         # make sure we can see the thing we just created
         checks_response = self.client.get('/checks')
-        assert checks_response.status_code == 200
-        assert 'DN1001' in checks_response.data
-        assert 'Change name' in checks_response.data
+        self.assertEquals(checks_response.status_code, 200)
+        self.assertTrue('DN1001' in checks_response.data)
+        self.assertTrue('Change name' in checks_response.data)
 
         # invalid keys
         checks_response = self.client.post('/checks',
                                            data='{"XX":"DN1001", "XX": "Change name"}',
                                            content_type='application/json')
 
-        assert checks_response.status_code == 400
+        self.assertEquals(checks_response.status_code, 400)
 
         # invalid data
         checks_response = self.client.post('/checks',
                                            data='{"title_number":null, "application_type": null}',
                                            content_type='application/json')
 
-        assert checks_response.status_code == 400
+        self.assertEquals(checks_response.status_code, 400)
 
     def test_charge_data(self):
         form = self.get_valid_create_form_with_charge()
-        valid = form.validate()
-        assert valid == True
-        for charge in form.charges:
-            print "chargee name"
-            print charge.chargee_name
-
-
-            # @responses.activate
-            # def test_registration(self):
-            # title_num = 'TEST1234'
-            # responses.add(responses.POST, 'http://0.0.0.0:8001/titles/' + title_num, body='', status=200)
-
-            # response = self.client.post('/registration', data = dict(form = self.get_valid_create_form_without_charge()))
+        self.assertTrue(form.validate())
