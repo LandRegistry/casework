@@ -28,57 +28,58 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/casework', methods=['GET', 'POST'])
+@app.route('/casework', methods=['POST'])
+def casework():
+    data = request.json
+    casework_model = models.Casework()
+
+    try:
+        casework_model.title_number = data['title_number']
+        casework_model.application_type = data['application_type']
+    except KeyError:
+        return 'Could not find expected keys in data', 400
+
+    try:
+        db.session.add(casework_model)
+        db.session.commit()
+    except IntegrityError:
+        return 'Failed to save', 400
+
+    return 'OK', 200
+
+
+@app.route('/casework', methods=['GET'])
 @login_required
 @csrf.exempt
 def casework():
-    if request.method == 'POST' and request.json:
-        data = request.json
-        casework_model = models.Casework()
+   casework_items = models.Casework.query.order_by(models.Casework.submitted_at).all()
+   return render_template("casework.html", casework_items=casework_items)
 
-        try:
-            casework_model.title_number = data['title_number']
-            casework_model.application_type = data['application_type']
-        except KeyError:
-            return 'Could not find expected keys in data', 400
+@app.route('/checks', methods=['POST'])
+def checks():
+    data = request.json
+    check = models.Check()
 
-        try:
-            db.session.add(casework_model)
-            db.session.commit()
-        except IntegrityError:
-            return 'Failed to save', 400
+    try:
+        check.title_number = data['title_number']
+        check.application_type = data['application_type']
+    except KeyError:
+        return 'Could not find expected keys in data', 400
 
-        return 'OK', 200
+    try:
+        db.session.add(check)
+        db.session.commit()
+    except IntegrityError:
+        return 'Failed to save', 400
 
-    if request.method == 'GET':
-        casework_items = models.Casework.query.order_by(models.Casework.submitted_at).all()
-        return render_template("casework.html", casework_items=casework_items)
+    return 'OK', 200
 
 
 @csrf.exempt
-@app.route('/checks', methods=['GET', 'POST'])
+@app.route('/checks', methods=['GET'])
 @login_required
 def checks():
-    if request.method == 'POST' and request.json:
-        data = request.json
-        check = models.Check()
-
-        try:
-            check.title_number = data['title_number']
-            check.application_type = data['application_type']
-        except KeyError:
-            return 'Could not find expected keys in data', 400
-
-        try:
-            db.session.add(check)
-            db.session.commit()
-        except IntegrityError:
-            return 'Failed to save', 400
-
-        return 'OK', 200
-
-    if request.method == 'GET':
-        return render_template("checks.html", checks=(models.Check.query.order_by(models.Check.submitted_at).all()))
+    return render_template("checks.html", checks=(models.Check.query.order_by(models.Check.submitted_at).all()))
 
 
 @app.route('/registration', methods=['GET', 'POST'])
