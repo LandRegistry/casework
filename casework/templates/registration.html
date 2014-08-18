@@ -74,9 +74,6 @@
 
             <div id="charges" class="charges">
                 <legend>Charges</legend>
-                {% if not form.charges %}
-                <p id="nocharges"> There are no charges on this title</p>
-                {% endif %}
                 <ul id="chargeslist">
                     {% for charge_form in form.charges %}
                     <li>
