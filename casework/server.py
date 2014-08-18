@@ -29,7 +29,7 @@ def index():
 
 
 @app.route('/casework', methods=['POST'])
-def casework():
+def casework_post():
     data = request.json
     casework_model = models.Casework()
 
@@ -51,12 +51,12 @@ def casework():
 @app.route('/casework', methods=['GET'])
 @login_required
 @csrf.exempt
-def casework():
+def casework_get():
    casework_items = models.Casework.query.order_by(models.Casework.submitted_at).all()
    return render_template("casework.html", casework_items=casework_items)
 
 @app.route('/checks', methods=['POST'])
-def checks():
+def checks_post():
     data = request.json
     check = models.Check()
 
@@ -78,7 +78,7 @@ def checks():
 @csrf.exempt
 @app.route('/checks', methods=['GET'])
 @login_required
-def checks():
+def checks_get():
     return render_template("checks.html", checks=(models.Check.query.order_by(models.Check.submitted_at).all()))
 
 
