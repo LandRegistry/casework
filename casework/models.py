@@ -47,6 +47,14 @@ class Casework(db.Model):
     def with_bst_time(self):
         return convert_to_bst(self.submitted_at)
 
+    @property
+    def with_common_app_type(self):
+        if self.application_type == 'change-name-marriage':
+            return 'change of name'
+        else:
+            return self.application_type
+
+
 
 class Check(db.Model):
     __tablename__ = 'checks'
@@ -60,4 +68,9 @@ class Check(db.Model):
     def with_bst_time(self):
         return convert_to_bst(self.submitted_at)
 
-    application_type = db.Column(db.String(50), nullable=False)
+    @property
+    def with_common_app_type(self):
+        if self.application_type == 'change-name-marriage':
+            return 'change of name'
+        else:
+            return self.application_type
