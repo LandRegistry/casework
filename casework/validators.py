@@ -27,8 +27,11 @@ def validate_extent(form, extent):
     except ValueError:
         raise ValidationError('Valid GeoJSON is required')
 
-    if not extents.get('geometry', False):
+    try:
+      if not extents.get('geometry', False):
         raise ValidationError('A valid geometry type is required')
+    except: #handles if an integer is entered in the geoJSON field.
+      raise ValidationError('Valid GeoJSON is required')
 
     if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
         raise ValidationError('A polygon or multi-polygon is required')
