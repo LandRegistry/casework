@@ -50,6 +50,16 @@ class CaseworkTestCase(unittest.TestCase):
             form.validate()
             assert form.extent.errors[0] == 'A polygon or multi-polygon is required'
 
+            # handles an integer accidentally added as geoJSON.
+            form.extent.data = '120'
+            form.validate()
+            assert form.extent.errors[0] == 'Valid GeoJSON is required'
+
+            # handles a string accidentally added as geoJSON.
+            form.extent.data = 'foo'
+            form.validate()
+            assert form.extent.errors[0] == 'Valid GeoJSON is required'
+
     def get_valid_create_form_without_charge(self):
         with self.app.test_request_context():
             form = RegistrationForm()
