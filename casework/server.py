@@ -6,6 +6,7 @@ from flask import flash
 from flask import redirect
 from flask import url_for
 from audit import Audit
+from datetime import datetime
 
 import models
 from casework import csrf
@@ -29,8 +30,10 @@ def index():
 
 
 @app.route('/casework', methods=['POST'])
+@csrf.exempt
 def casework_post():
     data = request.json
+    app.logger.info("Received POST to casework queue. %s" %(data))
     casework_model = models.Casework()
 
     try:
@@ -56,6 +59,7 @@ def casework_get():
    return render_template("casework.html", casework_items=casework_items)
 
 @app.route('/checks', methods=['POST'])
+@csrf.exempt
 def checks_post():
     data = request.json
     check = models.Check()
