@@ -3,10 +3,12 @@
 import re
 from datetime import date
 
+from datatypes.exceptions import DataDoesNotMatchSchemaException
 from pytz import timezone
 from wtforms.validators import ValidationError
 from ukpostcodeutils.validation import is_valid_postcode
 import geojson
+from datatypes import price_validator
 
 
 def validate_ogc_urn(crs):
@@ -28,10 +30,10 @@ def validate_extent(form, extent):
         raise ValidationError('Valid GeoJSON is required')
 
     try:
-      if not extents.get('geometry', False):
-        raise ValidationError('A valid geometry type is required')
-    except: #handles if an integer is entered in the geoJSON field.
-      raise ValidationError('Valid GeoJSON is required')
+        if not extents.get('geometry', False):
+            raise ValidationError('A valid geometry type is required')
+    except:  # handles if an integer is entered in the geoJSON field.
+        raise ValidationError('Valid GeoJSON is required')
 
     if not extents['geometry'].get('type', None) in ['Polygon', 'MultiPolygon']:
         raise ValidationError('A polygon or multi-polygon is required')
@@ -80,7 +82,8 @@ def convert_to_bst(dt):
 
 
 def validate_price_paid(form, price_paid):
-    regex = '^(£?)?[0-9]+(,[0-9]+)?(\.\d{1,2})?$'
     if price_paid:
-        if not re.match(regex, str(price_paid.data)):
+        try:
+            price_validator.validate(price_paid.data)
+        except DataDoesNotMatchSchemaException:
             raise ValidationError('Please enter the price paid as pound and pence')

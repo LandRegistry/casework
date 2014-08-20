@@ -137,24 +137,24 @@ class CaseworkTestCase(unittest.TestCase):
     def test_validate_post_code_method(self):
         form = self.get_valid_create_form_with_charge()
 
-        form.price_paid.data = '20000.19'
-        result = validate_price_paid(None, form.price_paid)
-        self.assertIsNone(result)
 
-        form.price_paid.data = '20000.99'
-        result = validate_price_paid(None, form.price_paid)
-        self.assertIsNone(result)
-
-        form.price_paid.data = '20000.00'
-        result = validate_price_paid(None, form.price_paid)
-        self.assertIsNone(result)
-
-        form.price_paid.data = '20000'
-        result = validate_price_paid(None, form.price_paid)
-        self.assertIsNone(result)
-
-        form.price_paid.data = '20000.103'
         try:
+            form.price_paid.data = '20000.19'
+            validate_price_paid(None, form.price_paid)
+
+            form.price_paid.data = '20000.99'
+            validate_price_paid(None, form.price_paid)
+
+            form.price_paid.data = '20000.00'
+            validate_price_paid(None, form.price_paid)
+
+            form.price_paid.data = '20000'
+            validate_price_paid(None, form.price_paid)
+        except Exception as e:
+            self.fail("Should not have thrown exception for price " + form.price_paid.data + ' ' + repr(e))
+
+        try:
+            form.price_paid.data = '20000.103'
             validate_price_paid(None, form.price_paid)
         except ValidationError as e:
             assert e.message == 'Please enter the price paid as pound and pence'
