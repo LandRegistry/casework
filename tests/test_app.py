@@ -4,7 +4,7 @@ import datetime
 from wtforms.validators import ValidationError
 
 from casework.server import app, db
-from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
+from casework.forms import RegistrationForm, validate_price_paid, ChargeForm, EasementForm
 from casework.validators import format_postcode
 
 
