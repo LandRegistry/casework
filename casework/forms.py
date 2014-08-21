@@ -4,9 +4,9 @@ from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, Optional
 import simplejson
+from datatypes import postcode_validator, price_validator
 
-from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode, \
-    ValidateDateNotInFuture
+from casework.validators import validate_extent, ValidateDateNotInFuture
 
 
 class ChargeForm(Form):
@@ -37,7 +37,7 @@ class RegistrationForm(Form):
     house_number = StringField('House number', validators=[DataRequired()])
     road = StringField('Road', validators=[DataRequired()])
     town = StringField('Town', validators=[DataRequired()])
-    postcode = StringField('Postcode', validators=[DataRequired(), validate_postcode])
+    postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()])
 
     property_tenure = RadioField(
         'Property tenure',
@@ -59,7 +59,7 @@ class RegistrationForm(Form):
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
-        validators=[Optional(), validate_price_paid],
+        validators=[Optional(), price_validator.wtform_validator()],
         places=2,
         rounding=None)
 
@@ -101,7 +101,7 @@ class RegistrationForm(Form):
                     "house_number": self['house_number'].data,
                     "road": self['road'].data,
                     "town": self['town'].data,
-                    "postcode": format_postcode(self['postcode'].data)
+                    "postcode": postcode_validator.to_canonical_form(self['postcode'].data)
                 },
                 "tenure": self['property_tenure'].data,
                 "class_of_title": self['property_class'].data

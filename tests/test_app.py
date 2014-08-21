@@ -4,8 +4,7 @@ import datetime
 from wtforms.validators import ValidationError
 
 from casework.server import app, db
-from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
-from casework.validators import format_postcode
+from casework.forms import RegistrationForm, ChargeForm
 
 
 class CaseworkTestCase(unittest.TestCase):
@@ -134,28 +133,27 @@ class CaseworkTestCase(unittest.TestCase):
         response = self.client.get('/health')
         self.assertEquals(response.status, '200 OK')
 
-    def test_validate_post_code_method(self):
+    def test_validate_price_paid(self):
         form = self.get_valid_create_form_with_charge()
-
 
         try:
             form.price_paid.data = '20000.19'
-            validate_price_paid(None, form.price_paid)
+            form.validate()
 
             form.price_paid.data = '20000.99'
-            validate_price_paid(None, form.price_paid)
+            form.validate()
 
             form.price_paid.data = '20000.00'
-            validate_price_paid(None, form.price_paid)
+            form.validate()
 
             form.price_paid.data = '20000'
-            validate_price_paid(None, form.price_paid)
+            form.validate()
         except Exception as e:
             self.fail("Should not have thrown exception for price " + form.price_paid.data + ' ' + repr(e))
 
         try:
             form.price_paid.data = '20000.103'
-            validate_price_paid(None, form.price_paid)
+            form.validate()
         except ValidationError as e:
             assert e.message == 'Please enter the price paid as pound and pence'
 
@@ -172,22 +170,6 @@ class CaseworkTestCase(unittest.TestCase):
 
         form.price_paid.data = '100.1'
         self.assertTrue(form.validate())
-
-    def test_format_postcode(self):
-        form = self.get_valid_create_form_with_charge()
-        form.postcode.data = 'pl11aa'
-        new = format_postcode(form.postcode.data)
-        self.assertEqual(new, 'PL1 1AA')
-
-        form = self.get_valid_create_form_with_charge()
-        form.postcode.data = 'pl132aa'
-        new = format_postcode(form.postcode.data)
-        self.assertEquals(new, 'PL13 2AA')
-
-        form = self.get_valid_create_form_with_charge()
-        form.postcode.data = 'pl13 2aa'
-        new = format_postcode(form.postcode.data)
-        self.assertEquals(new, 'PL13 2AA')
 
     def test_casework(self):
         checks_response = self.client.get('/casework')
