@@ -3,11 +3,9 @@
 import re
 from datetime import date
 
-from datatypes.exceptions import DataDoesNotMatchSchemaException
 from pytz import timezone
 from wtforms.validators import ValidationError
 import geojson
-from datatypes import price_validator, postcode_validator
 
 
 def validate_ogc_urn(crs):
@@ -64,10 +62,3 @@ def convert_to_bst(dt):
     bst = timezone('Europe/London').localize(dt)
     return bst + (utc - bst)
 
-
-def validate_price_paid(form, price_paid):
-    if price_paid:
-        try:
-            price_validator.validate(price_paid.data)
-        except DataDoesNotMatchSchemaException:
-            raise ValidationError('Please enter the price paid as pound and pence')

@@ -5,8 +5,7 @@ from wtforms import StringField, RadioField, DecimalField, HiddenField, TextArea
 from wtforms.validators import DataRequired, Optional
 import simplejson
 from datatypes import postcode_validator, price_validator
-
-from casework.validators import validate_extent, ValidateDateNotInFuture
+from casework.validators import ValidateDateNotInFuture, validate_extent
 
 
 class ChargeForm(Form):
@@ -59,7 +58,7 @@ class RegistrationForm(Form):
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
-        validators=[Optional(), price_validator.wtform_validator()],
+        validators=[Optional(), price_validator.wtform_validator(message="Please enter the price paid as pound and pence")],
         places=2,
         rounding=None)
 
