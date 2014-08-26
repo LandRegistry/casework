@@ -9,14 +9,15 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SECURITY_PASSWORD_SALT = SECRET_KEY
     SECURITY_PASSWORD_HASH = 'bcrypt'
+    #SECURITY_LOGIN_USER_TEMPLATE = 'frontend/templates/security/login_user.html'
     # the following two are optional and are only configured on
     # heroku so get safely
     BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
     BASIC_AUTH_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD')
+    WTF_CSRF_ENABLED=False
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    WTF_CSRF_ENABLED=True
 
 class TestConfig(DevelopmentConfig):
     TESTING = True

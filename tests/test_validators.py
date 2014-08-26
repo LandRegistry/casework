@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from wtforms import ValidationError
 
-from casework.validators import validate_ogc_urn, validate_date_not_in_future
+from application.frontend.validators import validate_ogc_urn, validate_date_not_in_future
 
 
 class ValidatorsTestCase(unittest.TestCase):

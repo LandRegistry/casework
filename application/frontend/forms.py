@@ -5,7 +5,7 @@ from wtforms import StringField, RadioField, DecimalField, HiddenField, TextArea
 from wtforms.validators import DataRequired, Optional
 import simplejson
 from datatypes import postcode_validator, price_validator
-from casework.validators import ValidateDateNotInFuture, validate_extent
+from application.frontend.validators import ValidateDateNotInFuture, validate_extent
 
 
 class ChargeForm(Form):
@@ -90,7 +90,7 @@ class RegistrationForm(Form):
         self.easements_template = old_form_easements_template
         return form_is_validated
 
-    def to_json(self):
+    def to_dict(self):
         charges = []
         easements = []
 
@@ -104,7 +104,7 @@ class RegistrationForm(Form):
             easement['easement_description'] = str(dt)
             easements.append(easement)
 
-        data = simplejson.dumps({
+        data = {
             "title_number": self['title_number'].data,
             "proprietors": [
                 {
@@ -136,6 +136,6 @@ class RegistrationForm(Form):
             "charges": charges,
             "easements": easements,
             "extent": simplejson.loads(self['extent'].data)
-        })
+        }
 
         return data
