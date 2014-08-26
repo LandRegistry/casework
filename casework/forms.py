@@ -19,6 +19,14 @@ class ChargeForm(Form):
     chargee_address = TextAreaField('Address', validators=[DataRequired()])
 
 
+class EasementForm(Form):
+    """
+    Easement Form
+    """
+    easement_description = TextAreaField('Easement description', validators=[DataRequired()])
+    easement_geometry = TextAreaField('Easement geometry', validators=[DataRequired()])
+
+
 class RegistrationForm(Form):
     """
     The names of the variables here MUST match the name attribute of the fields
@@ -66,21 +74,35 @@ class RegistrationForm(Form):
 
     charges_template = FieldList(FormField(ChargeForm), min_entries=1)
 
+    easements = FieldList(FormField(EasementForm), min_entries=0)
+
+    easements_template = FieldList(FormField(EasementForm), min_entries=1)
+
     extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
 
     def validate(self):
         old_form_charges_template = self.charges_template
         del self.charges_template
+        old_form_easements_template = self.easements_template
+        del self.easements_template
         form_is_validated = super(RegistrationForm, self).validate()
         self.charges_template = old_form_charges_template
+        self.easements_template = old_form_easements_template
         return form_is_validated
 
     def to_json(self):
-        arr = []
+        charges = []
+        easements = []
+
         for charge in self['charges'].data:
             dt = charge.pop('charge_date')
             charge['charge_date'] = str(dt)
-            arr.append(charge)
+            charges.append(charge)
+
+        for easement in self['easements'].data:
+            dt = easement.pop('easement_description')
+            easement['easement_description'] = str(dt)
+            easements.append(easement)
 
         data = simplejson.dumps({
             "title_number": self['title_number'].data,
@@ -111,7 +133,8 @@ class RegistrationForm(Form):
                     self['title_number'].data
                 ]
             },
-            "charges": arr,
+            "charges": charges,
+            "easements": easements,
             "extent": simplejson.loads(self['extent'].data)
         })
 
