@@ -3,12 +3,9 @@
 import re
 from datetime import date
 
-from datatypes.exceptions import DataDoesNotMatchSchemaException
 from pytz import timezone
 from wtforms.validators import ValidationError
-from ukpostcodeutils.validation import is_valid_postcode
 import geojson
-from datatypes import price_validator
 
 
 def validate_ogc_urn(crs):
@@ -47,12 +44,6 @@ def validate_extent(form, extent):
         raise ValidationError("A valid 'CRS' is required")
 
 
-def validate_postcode(form, postcode):
-    clean = postcode.data.replace(' ', '').upper()
-    if not is_valid_postcode(clean):
-        raise ValidationError('Not a valid UK postcode')
-
-
 class ValidateDateNotInFuture(object):
     def __init__(self):
         self.message = "The date must not be in the future"
@@ -66,24 +57,8 @@ def validate_date_not_in_future(form, date_field):
         raise ValidationError('Date cannot be in the future')
 
 
-def format_postcode(postcode):
-    out = postcode.upper()
-    if ' ' not in postcode:
-        i = len(postcode) - 3
-        out = out[:i] + ' ' + out[i:]
-
-    return out
-
-
 def convert_to_bst(dt):
     utc = timezone('UTC').localize(dt)
     bst = timezone('Europe/London').localize(dt)
     return bst + (utc - bst)
 
-
-def validate_price_paid(form, price_paid):
-    if price_paid:
-        try:
-            price_validator.validate(price_paid.data)
-        except DataDoesNotMatchSchemaException:
-            raise ValidationError('Please enter the price paid as pound and pence')
