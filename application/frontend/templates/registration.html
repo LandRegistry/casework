@@ -24,6 +24,17 @@
 </div>
 {%- endmacro %}
 
+{% macro render_easement(form_element) -%}
+<div>
+    <fieldset>
+        <legend>Easement</legend>
+        {{render_field(form_element.easement_description)}}
+        {{render_field(form_element.easement_geometry)}}
+        </legend>
+    </fieldset>
+</div>
+{%- endmacro %}
+
 <div class="row">
     <div class="col-md-12">
         <h1>Create title</h1>
@@ -86,6 +97,21 @@
                 <input type="button" value="Add a charge"/>
             </div>
 
+            <div id="easements" class="easements">
+                <legend>Easements</legend>
+                <ul id="easementslist">
+                    {% for easement_form in form.easements %}
+                    <li>
+                        {{ render_easement(easement_form) }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div id="addeasementsbutton">
+                <input type="button" value="Add an easement"/>
+            </div>
+
             <button type="submit" id="submit" class="btn btn-default btn-primary">Create title</button>
         </form>
 
@@ -95,11 +121,17 @@
         </div>
         {% endif %}
 
+        {% if form.easements_template %}
+        <div id="easementstemplate" style="display: none;">
+            {{ render_easement(form.easements_template[0]) }}
+        </div>
+        {% endif %}
+
     </div>
 </div>
 
 <script type="text/javascript">
-    function addForm() {
+    function addChargeForm() {
         var numberOfCharges = ($('#chargeslist').find('li').length);
 
         var newChargeHtml = $('#chargestemplate div')
@@ -109,12 +141,29 @@
                 .replace(/charges_template-0/g, 'charges-' + numberOfCharges);
 
         $('#chargeslist').append($("<li></li>").html(newChargeHtml));
+    }
 
+    function addEasementForm() {
+        var numberOfEasements = ($('#easementslist').find('li').length);
+
+        var newEasementHtml = $('#easementstemplate div')
+                .first()
+                .clone()
+                .html()
+                .replace(/easements_template-0/g, 'easements-' + numberOfEasements);
+
+        $('#easementslist').append($("<li></li>").html(newEasementHtml));
     }
 
     $('#addchargesbutton input[type="button"]').click(
             function () {
-                addForm();
+                addChargeForm();
+            }
+    )
+
+    $('#addeasementsbutton input[type="button"]').click(
+            function () {
+                addEasementForm();
             }
     )
 </script>
