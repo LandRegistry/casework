@@ -5,6 +5,7 @@ from application.frontend.frontend import app
 from application import db, user_datastore
 
 
+
 class RegistrationTestCase(unittest.TestCase):
     def setUp(self):
         app.config["TESTING"] = True,

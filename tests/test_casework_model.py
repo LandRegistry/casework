@@ -12,7 +12,7 @@ class CaseworkModelTest(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
-    def test_casework_model_with_common_app_type_returns_right_label(self):
+    def casework_model_with_common_app_type_returns_right_label(self):
         casework = Casework()
         casework.title_number = 'title_number'
         casework.application_type = 'change-name-marriage'
