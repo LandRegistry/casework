@@ -104,7 +104,6 @@ class RegistrationForm(Form):
             easement['easement_description'] = str(dt)
             easements.append(easement)
 
-        data = simplejson.dumps({
         data = {
             "title_number": self['title_number'].data,
             "proprietors": [
