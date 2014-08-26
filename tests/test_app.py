@@ -116,12 +116,6 @@ class CaseworkTestCase(unittest.TestCase):
         form.postcode.data = 'XXXXX'
         self.assertFalse(form.validate())
 
-        form.postcode.data = 'sw1a1aa'
-        self.assertTrue(form.validate())
-
-        form.postcode.data = 'sw1a 1aa'
-        self.assertTrue(form.validate())
-
         form.postcode.data = 'SW1A1AA'
         self.assertTrue(form.validate())
 
@@ -139,15 +133,6 @@ class CaseworkTestCase(unittest.TestCase):
         try:
             form.price_paid.data = '20000.19'
             form.validate()
-
-            form.price_paid.data = '20000.99'
-            form.validate()
-
-            form.price_paid.data = '20000.00'
-            form.validate()
-
-            form.price_paid.data = '20000'
-            form.validate()
         except Exception as e:
             self.fail("Should not have thrown exception for price " + form.price_paid.data + ' ' + repr(e))
 
@@ -156,20 +141,6 @@ class CaseworkTestCase(unittest.TestCase):
             form.validate()
         except ValidationError as e:
             assert e.message == 'Please enter the price paid as pound and pence'
-
-    def test_valid_pounds_pence(self):
-        form = self.get_valid_create_form_with_charge()
-        form.price_paid.data = '20000.10'
-        self.assertTrue(form.validate())
-
-        form.price_paid.data = '999999'
-        self.assertTrue(form.validate())
-
-        form.price_paid.data = '0.01'
-        self.assertTrue(form.validate())
-
-        form.price_paid.data = '100.1'
-        self.assertTrue(form.validate())
 
     def test_casework(self):
         checks_response = self.client.get('/casework')
