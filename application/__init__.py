@@ -3,13 +3,14 @@ from flask.ext.login import LoginManager
 from flask.ext.security import SQLAlchemyUserDatastore, Security
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask import Flask
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf import CsrfProtect
 from raven.contrib.flask import Sentry
 import logging
 import os
+from application.health import Health
 
 
-app = Flask(__name__)
+app = Flask('application.frontend')
 app.config.from_object(os.environ.get('SETTINGS'))
 
 login_manager = LoginManager()
@@ -44,8 +45,9 @@ def health(self):
 db = SQLAlchemy(app)
 SQLAlchemy.health = health
 
-from .models import User, Role
+from application.frontend.login_model import User, Role
 
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
+
 

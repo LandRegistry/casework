@@ -3,9 +3,10 @@ import datetime
 
 from wtforms.validators import ValidationError
 
-from casework.server import app, db
-from casework.forms import RegistrationForm, validate_price_paid, ChargeForm
-from casework.validators import format_postcode
+from application.frontend.frontend import app
+from application import db
+from application.frontend.forms import RegistrationForm, validate_price_paid, ChargeForm
+from application.frontend.validators import format_postcode
 
 
 class CaseworkTestCase(unittest.TestCase):
@@ -22,7 +23,7 @@ class CaseworkTestCase(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
-    def check_server(self):
+    def test_check_server(self):
         rv = self.client.get('/registration')
         self.assertEquals(rv.status, '200 OK')
 
@@ -190,35 +191,35 @@ class CaseworkTestCase(unittest.TestCase):
         self.assertEquals(new, 'PL13 2AA')
 
     def test_casework(self):
-        checks_response = self.client.get('/casework')
-        self.assertEquals(checks_response.status_code, 200)
+        casework_response = self.client.get('/casework')
+        self.assertEquals(casework_response.status_code, 200)
 
         # valid
-        checks_response = self.client.post('/casework',
+        casework_response = self.client.post('/casework',
                                            data='{"title_number":"DN1001", "application_type": "Change name"}',
                                            content_type='application/json')
 
-        self.assertEquals(checks_response.status_code, 200)
+        self.assertEquals(casework_response.status_code, 200)
 
         # make sure we can see the thing we just created
-        checks_response = self.client.get('/casework')
-        self.assertEqual(checks_response.status_code, 200)
-        self.assertTrue('DN1001' in checks_response.data)
-        self.assertTrue('Change name' in checks_response.data)
+        casework_response = self.client.get('/casework')
+        self.assertEqual(casework_response.status_code, 200)
+        self.assertTrue('DN1001' in casework_response.data)
+        self.assertTrue('Change name' in casework_response.data)
 
         # invalid keys
-        checks_response = self.client.post('/casework',
+        casework_response = self.client.post('/casework',
                                            data='{"XX":"DN1001", "XX": "Change name"}',
                                            content_type='application/json')
 
-        self.assertEquals(checks_response.status_code, 400)
+        self.assertEquals(casework_response.status_code, 400)
 
         # invalid data
-        checks_response = self.client.post('/casework',
+        casework_response = self.client.post('/casework',
                                            data='{"title_number":null, "application_type": null}',
                                            content_type='application/json')
 
-        self.assertEquals(checks_response.status_code, 400)
+        self.assertEquals(casework_response.status_code, 400)
 
     def test_checks(self):
         checks_response = self.client.get('/checks')

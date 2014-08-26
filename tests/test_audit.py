@@ -3,8 +3,8 @@ import unittest
 from flask_security.utils import encrypt_password
 
 import mock
-from casework.server import app
-from casework import db, user_datastore
+from application.frontend.frontend import app
+from application import db, user_datastore
 
 
 class CaseworkAuditTestCase(unittest.TestCase):

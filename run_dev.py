@@ -1,4 +1,4 @@
-from casework.server import app
+from application.frontend.frontend import app
 import os
 
 app.run(host="0.0.0.0", port=int(os.environ['PORT']), debug=True)

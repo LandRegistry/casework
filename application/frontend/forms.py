@@ -5,7 +5,7 @@ from wtforms import StringField, RadioField, DecimalField, HiddenField, TextArea
 from wtforms.validators import DataRequired, Optional
 import simplejson
 
-from casework.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode, \
+from application.frontend.validators import validate_postcode, validate_price_paid, validate_extent, format_postcode, \
     ValidateDateNotInFuture
 
 
@@ -76,14 +76,14 @@ class RegistrationForm(Form):
         self.charges_template = old_form_charges_template
         return form_is_validated
 
-    def to_json(self):
+    def to_dict(self):
         arr = []
         for charge in self['charges'].data:
             dt = charge.pop('charge_date')
             charge['charge_date'] = str(dt)
             arr.append(charge)
 
-        data = simplejson.dumps({
+        data = {
             "title_number": self['title_number'].data,
             "proprietors": [
                 {
@@ -114,6 +114,6 @@ class RegistrationForm(Form):
             },
             "charges": arr,
             "extent": simplejson.loads(self['extent'].data)
-        })
+        }
 
         return data

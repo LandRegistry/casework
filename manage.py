@@ -1,14 +1,13 @@
 import os
 
+from flask_security.utils import encrypt_password
+
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate
 from flask.ext.migrate import MigrateCommand
-from flask_security.utils import encrypt_password
-
-from casework.models import *
-from casework import app
-from casework import db
-from casework import user_datastore
+from application import app
+from application import db
+from application import user_datastore
 
 app.config.from_object(os.environ['SETTINGS'])
 
