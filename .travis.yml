@@ -9,7 +9,7 @@ env:
 - SETTINGS=config.TestConfig
 script: 
 - source ./environment_test.sh
-- py.test --cov casework tests/ --cov-report=term --cov-report=html
+- py.test --cov application tests/ --cov-report=term --cov-report=html
 after_success:
   - coveralls --ignore-errors
 deploy:
