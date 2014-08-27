@@ -4,11 +4,13 @@ from application import db
 from application.frontend.forms import RegistrationForm
 import json
 
+PROPERTY_FRONTEND_URL = "http://0.0.0.0:8002"
 
 
 class RegistrationTestCase(unittest.TestCase):
     def setUp(self):
-        app.config["TESTING"] = True,
+        app.config["TESTING"] = True
+        app.config["PROPERTY_FRONTEND_URL"] = PROPERTY_FRONTEND_URL
 
         db.create_all()
         self.app = app
@@ -45,7 +47,7 @@ class RegistrationTestCase(unittest.TestCase):
 
             return form
 
-    # def test_post_registration_returns_property_url_with_for_title(self):
-    #     form = self.get_valid_create_form_without_charge()
-    #     response = self.client.post('/registration', data=form)
-    #     self.assertEquals(200, response.status_code)
+    def test_post_registration_returns_property_url_with_for_title(self):
+        form = self.get_valid_create_form_without_charge()
+        response = self.client.post('/registration', data=json.dumps(form.to_dict()))
+        self.assertEquals(200, response.status_code)
