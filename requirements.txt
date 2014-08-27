@@ -12,7 +12,6 @@ Flask-Script==2.0.5
 Flask-Security==1.7.3
 Flask-SQLAlchemy==1.0
 Flask-WTF==0.10.0
-geojson==1.0.7
 greenlet==0.4.2
 gunicorn==18.0
 itsdangerous==0.24

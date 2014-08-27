@@ -4,8 +4,9 @@ from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, Optional
 import simplejson
-from datatypes import postcode_validator, price_validator
-from application.frontend.validators import ValidateDateNotInFuture, validate_extent
+from datatypes import postcode_validator, price_validator, geo_json_string_validator
+
+from application.frontend.validators import ValidateDateNotInFuture
 
 
 class ChargeForm(Form):
@@ -78,7 +79,7 @@ class RegistrationForm(Form):
 
     easements_template = FieldList(FormField(EasementForm), min_entries=1)
 
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), validate_extent])
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
     def validate(self):
         old_form_charges_template = self.charges_template
