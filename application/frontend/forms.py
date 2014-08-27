@@ -25,7 +25,8 @@ class EasementForm(Form):
     Easement Form
     """
     easement_description = TextAreaField('Easement description', validators=[DataRequired()])
-    easement_geometry = TextAreaField('Easement geometry', validators=[DataRequired(), validate_extent])
+    easement_geometry = TextAreaField('Easement geometry',
+                                      validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
 
 class RegistrationForm(Form):
@@ -67,7 +68,8 @@ class RegistrationForm(Form):
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
-        validators=[Optional(), price_validator.wtform_validator(message="Please enter the price paid as pound and pence")],
+        validators=[Optional(),
+                    price_validator.wtform_validator(message="Please enter the price paid as pound and pence")],
         places=2,
         rounding=None)
 
