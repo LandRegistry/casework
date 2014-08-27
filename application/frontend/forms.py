@@ -131,7 +131,7 @@ class RegistrationForm(Form):
                 "class_of_title": self['property_class'].data
             },
             "payment": {
-                "price_paid": self['price_paid'].data,
+                "price_paid": str(self['price_paid'].data),
                 "titles": [
                     self['title_number'].data
                 ]
