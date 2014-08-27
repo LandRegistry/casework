@@ -1,11 +1,13 @@
 import unittest
 import datetime
+import json
 
 from wtforms.validators import ValidationError
 
 from application.frontend.frontend import app
 from application import db
 from application.frontend.forms import RegistrationForm, ChargeForm
+from geo_json_fixtures import valid_geo_json, invalid_geo_point
 
 
 class CaseworkTestCase(unittest.TestCase):
@@ -38,27 +40,27 @@ class CaseworkTestCase(unittest.TestCase):
 
             form.extent.data = ''
             form.validate()
-            assert form.extent.errors[0] == 'This field is required.'
+            self.assertEqual(form.extent.errors[0], 'This field is required.')
 
             # valid data is valid
-            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
+            form.extent.data = json.dumps(valid_geo_json)
             form.validate()
-            assert len(form.extent.errors) == 0
+            self.assertFalse(form.extent.errors)
 
             # test cannot validate a point
-            form.extent.data = '{"type": "Feature","geometry": {"type": "Point","coordinates": [125.6, 10.1]},"properties": {"name": "Dinagat Islands"}}'
+            form.extent.data = invalid_geo_point
             form.validate()
-            assert form.extent.errors[0] == 'A polygon or multi-polygon is required'
+            self.assertEqual(form.extent.errors[0], 'Valid GeoJSON is required')
 
             # handles an integer accidentally added as geoJSON.
             form.extent.data = '120'
             form.validate()
-            assert form.extent.errors[0] == 'Valid GeoJSON is required'
+            self.assertEqual(form.extent.errors[0], 'Valid GeoJSON is required')
 
             # handles a string accidentally added as geoJSON.
             form.extent.data = 'foo'
             form.validate()
-            assert form.extent.errors[0] == 'Valid GeoJSON is required'
+            self.assertEqual(form.extent.errors[0], 'Valid GeoJSON is required')
 
     def get_valid_create_form_without_charge(self):
         with self.app.test_request_context():
@@ -78,7 +80,7 @@ class CaseworkTestCase(unittest.TestCase):
             form.property_tenure.data = "Freehold"
             form.property_class.data = "Absolute"
             form.price_paid.data = "1000000"
-            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
+            form.extent.data = json.dumps(valid_geo_json)
 
             return form
 
@@ -108,7 +110,7 @@ class CaseworkTestCase(unittest.TestCase):
             charge_form.chargee_registration_number.data = "1234567"
             form.charges = [charge_form]
 
-            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
+            form.extent.data = json.dumps(valid_geo_json)
 
             return form
 
@@ -149,8 +151,8 @@ class CaseworkTestCase(unittest.TestCase):
 
         # valid
         casework_response = self.client.post('/casework',
-                                           data='{"title_number":"DN1001", "application_type": "Change name"}',
-                                           content_type='application/json')
+                                             data='{"title_number":"DN1001", "application_type": "Change name"}',
+                                             content_type='application/json')
 
         self.assertEquals(casework_response.status_code, 200)
 
@@ -162,16 +164,16 @@ class CaseworkTestCase(unittest.TestCase):
 
         # invalid keys
         casework_response = self.client.post('/casework',
-                                           data='{"XX":"DN1001", "XX": "Change name"}',
-                                           content_type='application/json')
+                                             data='{"XX":"DN1001", "XX": "Change name"}',
+                                             content_type='application/json')
 
         self.assertEquals(casework_response.status_code, 400)
 
         # invalid data
         # TODO: need to make this work
         # casework_response = self.client.post('/casework',
-        #                                    data='{"title_number":null, "application_type": null}',
-        #                                    content_type='application/json')
+        # data='{"title_number":null, "application_type": null}',
+        # content_type='application/json')
         #
         # self.assertEquals(casework_response.status_code, 400)
 
@@ -202,8 +204,8 @@ class CaseworkTestCase(unittest.TestCase):
         # invalid data
         # TODO: need to make this work
         # checks_response = self.client.post('/checks',
-        #                                    data='{"title_number":null, "application_type": null}',
-        #                                    content_type='application/json')
+        # data='{"title_number":null, "application_type": null}',
+        # content_type='application/json')
         #
         # self.assertEquals(checks_response.status_code, 400)
 
