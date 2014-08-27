@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import Form
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
+from wtforms import StringField, RadioField, HiddenField, TextAreaField, FieldList, DateField, FormField, DecimalField
 from wtforms.validators import DataRequired, Optional
 import simplejson
-from datatypes import postcode_validator, price_validator, geo_json_string_validator
+from datatypes import postcode_validator, geo_json_string_validator, price_validator
 
 from application.frontend.validators import ValidateDateNotInFuture
 
@@ -68,8 +68,10 @@ class RegistrationForm(Form):
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
-        validators=[Optional(),
-                    price_validator.wtform_validator(message="Please enter the price paid as pound and pence")],
+        validators=[
+            Optional(strip_whitespace=True),
+            price_validator.wtform_validator(message='Please enter the price paid as pound and pence')
+        ],
         places=2,
         rounding=None)
 
@@ -109,6 +111,7 @@ class RegistrationForm(Form):
 
         data = {
             "title_number": self['title_number'].data,
+
             "proprietors": [
                 {
                     "first_name": self['first_name1'].data,
@@ -119,8 +122,8 @@ class RegistrationForm(Form):
                     "last_name": self['surname2'].data
                 }
             ],
-            "property": {
 
+            "property": {
                 "address": {
                     "house_number": self['house_number'].data,
                     "road": self['road'].data,
@@ -130,12 +133,14 @@ class RegistrationForm(Form):
                 "tenure": self['property_tenure'].data,
                 "class_of_title": self['property_class'].data
             },
+
             "payment": {
                 "price_paid": self['price_paid'].data,
                 "titles": [
                     self['title_number'].data
                 ]
             },
+
             "charges": charges,
             "easements": easements,
             "extent": simplejson.loads(self['extent'].data)
