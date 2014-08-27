@@ -71,14 +71,15 @@ class FormsTestCase(unittest.TestCase):
         with self.app.test_request_context():
             form = RegistrationForm()
             form.postcode.data = 'XXXXX'
-            self.assertFalse(form.validate())
+            form.validate()
             self.assertEquals(form.postcode.errors[0], 'Postcode should be a valid UK postcode')
 
     def test_post_code_has_no_errors_when_postcode_is_valid(self):
         with self.app.test_request_context():
             form = RegistrationForm()
             form.postcode.data = 'SW1A1AA'
-            self.assertEquals(form.postcode.errors, ())
+            form.validate()
+            self.assertEquals(form.postcode.errors, [])
 
     def test_validate_price_paid_errors_is_empty_when_valid_price(self):
         with self.app.test_request_context():
