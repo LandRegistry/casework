@@ -107,6 +107,10 @@ class RegistrationForm(Form):
             easement['easement_geometry'] = simplejson.loads(geo)
             easements.append(easement)
 
+        price_paid = ''
+        if self['price_paid'].data:
+            price_paid = str(self['price_paid'].data)
+
         data = {
             "title_number": self['title_number'].data,
             "proprietors": [
@@ -131,7 +135,7 @@ class RegistrationForm(Form):
                 "class_of_title": self['property_class'].data
             },
             "payment": {
-                "price_paid": self['price_paid'].data,
+                "price_paid": price_paid,
                 "titles": [
                     self['title_number'].data
                 ]
