@@ -124,6 +124,7 @@
         {% if form.easements_template %}
         <div id="easementstemplate" style="display: none;">
             {{ render_easement(form.easements_template[0]) }}
+
         </div>
         {% endif %}
 
@@ -164,7 +165,9 @@
     $('#addeasementsbutton input[type="button"]').click(
             function () {
                 addEasementForm();
+                document.getElementById('addeasementsbutton').style.visibility='hidden';
             }
+
     )
 </script>
 {% endblock %}
