@@ -1,5 +1,5 @@
 import logging
-from sqlite3 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 from audit import Audit
 
 from flask import render_template, request, redirect, flash
@@ -40,8 +40,11 @@ def registration():
         title_number = form.title_number.data
 
         try:
-            post_to_mint(app.config['MINT_URL'], mint_data)
-            return redirect('%s?created=%s' % ('/registration', title_number))
+            response = post_to_mint(app.config['MINT_URL'], mint_data)
+            if response.status_code == 400:
+                return 'Failed to save to mint', 400
+            else:
+                return redirect('%s?created=%s' % ('/registration', title_number))
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
@@ -80,7 +83,7 @@ def get_casework():
 @app.route('/casework', methods=['POST'])
 def casework_post():
     try:
-        save_casework(request.data)
+        save_casework(request.json)
     except IntegrityError:
         return 'Failed to save casework item.', 400
     except KeyError:
