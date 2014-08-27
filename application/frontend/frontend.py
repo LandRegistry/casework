@@ -41,10 +41,10 @@ def registration():
 
         try:
             response = post_to_mint(app.config['MINT_URL'], mint_data)
-            if response.status_code == 200:
-                return redirect('%s?created=%s' % ('/registration', title_number))
-            else:
+            if response.status_code == 400:
                 return 'Failed to save to mint', 400
+            else:
+                return redirect('%s?created=%s' % ('/registration', title_number))
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
