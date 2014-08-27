@@ -24,7 +24,7 @@ class EasementForm(Form):
     Easement Form
     """
     easement_description = TextAreaField('Easement description', validators=[DataRequired()])
-    easement_geometry = TextAreaField('Easement geometry', validators=[DataRequired()])
+    easement_geometry = TextAreaField('Easement geometry', validators=[DataRequired(), validate_extent])
 
 
 class RegistrationForm(Form):
@@ -100,8 +100,8 @@ class RegistrationForm(Form):
             charges.append(charge)
 
         for easement in self['easements'].data:
-            dt = easement.pop('easement_description')
-            easement['easement_description'] = str(dt)
+            geo = easement.pop('easement_geometry')
+            easement['easement_geometry'] = simplejson.loads(geo)
             easements.append(easement)
 
         data = {
