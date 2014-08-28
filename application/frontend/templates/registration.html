@@ -35,6 +35,27 @@
 </div>
 {%- endmacro %}
 
+{% macro render_lease(form_element) -%}
+<div id="leaseholddetails">
+    <fieldset>
+        {{render_field(form_element.lease_date)}}
+        {{render_field(form_element.lease_term)}}
+        {{render_field(form_element.lease_from)}}
+        <br/>
+        <h3>Parties</h3>
+        {{render_field(form_element.lessor_name)}}
+        {{render_field(form_element.lessee_name)}}
+        <br/>
+        <h3>Clauses</h3>
+        {{render_field(form_element.lease_easements)}}
+        {{render_field(form_element.alienation_clause)}}
+        {{render_field(form_element.title_registered)}}
+
+        </legend>
+    </fieldset>
+</div>
+{%- endmacro %}
+
 <div class="row">
     <div class="col-md-12">
         <h1>Create title</h1>
@@ -63,10 +84,21 @@
                 {{ render_field(form.country)}}
             </fieldset>
 
-            <fieldset>
-                <legend>Tenure</legend>
-                {{ render_field(form.property_tenure)}}
-            </fieldset>
+            <div id="tenure">
+                <fieldset>
+                    <legend>Tenure</legend>
+                    {{ render_field(form.property_tenure)}}
+                </fieldset>
+            </div>
+
+            <div id="leases" style="display:none;">
+                <legend>Lease Details</legend>
+                <div id ="leaseslist">
+                    {% for lease_form in form.leases %}
+                        {{ render_lease(lease_form) }}
+                    {% endfor %}
+                </div>
+            </div>
 
             <fieldset>
                 <legend>Class of title</legend>
@@ -131,6 +163,12 @@
         </div>
         {% endif %}
 
+        {% if form.leases_template %}
+        <div id="leasestemplate" style="display: none;">
+            {{ render_lease(form.leases_template[0]) }}
+        </div>
+        {% endif %}
+
     </div>
 </div>
 
@@ -159,6 +197,20 @@
         $('#easementslist').append($("<li></li>").html(newEasementHtml));
     }
 
+    function addLeaseForm() {
+        var numberOfLeases = ($('#leaseslist').find('li').length);
+
+        if (numberOfLeases <= 0) {
+            var newLeaseHtml = $('#leasestemplate div')
+                    .first()
+                    .clone()
+                    .html()
+                    .replace(/leases_template-0/g, 'leases-' + numberOfLeases);
+
+            $('#leaseslist').append($("<li></li>").html(newLeaseHtml));
+        }
+    }
+
     $('#addchargesbutton input[type="button"]').click(
             function () {
                 addChargeForm();
@@ -171,5 +223,18 @@
                 document.getElementById('addeasementsbutton').style.visibility = 'hidden';
             }
     )
+
+    $('#tenure input[type="radio"]').click(
+            function () {
+
+                if (document.getElementById('Freehold').checked == true) {
+                    document.getElementById('leases').style.display = 'none';
+                } else if (document.getElementById('Leasehold').checked == true) {
+                    document.getElementById('leases').style.display = '';
+                    addLeaseForm();
+                }
+            }
+    )
+
 </script>
 {% endblock %}

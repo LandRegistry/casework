@@ -66,12 +66,19 @@ class FormsTestCase(unittest.TestCase):
             self.assertEquals(form.extent.errors[0], 'This field is required.')
 
 
-    def test_form_extent_contains_an_error_when_geojson_not_populated(self):
+    def test_validate_extent_raise_validation_error_when_bad_data(self):
         with self.app.test_request_context():
             form = RegistrationForm()
-            form.extent.data = ''
+            form.extent.data = '{"bad":"not a valid thing"}'
             form.validate()
-            self.assertEquals(form.extent.errors[0], 'This field is required.')
+            self.assertEquals(form.extent.errors[0], 'Valid GeoJSON is required')
+
+    def test_validate_extent_raise_validation_error_when_bad_geometry_data(self):
+        with self.app.test_request_context():
+            form = RegistrationForm()
+            form.extent.data = '{"type": "Feature","geometry": {"type": "Point","coordinates": [125.6, 10.1]},"properties": {"name": "Dinagat Islands"}}'
+            form.validate()
+            self.assertEquals(form.extent.errors[0], 'Valid GeoJSON is required')
 
 
     def test_postcode_validation_contains_error_when_bad_postcode(self):
@@ -81,18 +88,17 @@ class FormsTestCase(unittest.TestCase):
             form.validate()
             self.assertEquals(form.postcode.errors[0], 'Postcode should be a valid UK postcode')
 
-
     def test_post_code_has_no_errors_when_postcode_is_valid(self):
         with self.app.test_request_context():
             form = RegistrationForm()
-            form.postcode.data = 'SW1A1AA'
+            form.price_paid.data = '20000.19'
             form.validate()
-            self.assertEquals(form.postcode.errors, [])
+            self.assertEquals(form.price_paid.errors, [])
 
-
-    def test_validate_price_paid_errors_is_empty_when_valid_price(self):
+    def test_validate_price_paid_errors_is_empty_when_price_is_not_a_number(self):
         with self.app.test_request_context():
             form = RegistrationForm()
+            form.price_paid.data = 'not a number'
             form.price_paid.data = '20000.19'
             form.price_paid.raw_data = '20000.19'
             form.validate()
