@@ -1,9 +1,11 @@
 import logging
+import requests
 from sqlalchemy.exc import IntegrityError
 from audit import Audit
 
 from flask import render_template, request, redirect, flash
 from flask_login import login_required
+from werkzeug.exceptions import abort
 
 from application import app, Health, db
 from application.frontend.forms import RegistrationForm
@@ -41,10 +43,16 @@ def registration():
 
         try:
             response = post_to_mint(app.config['MINT_URL'], mint_data)
-            if response.status_code == 400:
-                return 'Failed to save to mint', 400
-            else:
-                return redirect('%s?created=%s' % ('/registration', title_number))
+            response.raise_for_status()
+
+            return redirect('%s?created=%s' % ('/registration', title_number))
+        except requests.exceptions.HTTPError as e:
+            app.logger.error("HTTP Error %s", e)
+            raise e
+        except requests.exceptions.ConnectionError as e:
+            app.logger.error("Error %s", e)
+            raise e
+
         except RuntimeError as e:
             app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
             flash('Creation of title with number %s failed' % title_number)
@@ -91,6 +99,9 @@ def casework_post():
 
     return 'OK', 200
 
+@app.errorhandler(Exception)
+def catch_all_exceptions(error):
+    return render_template('error.html', error=error), 500
 
 @app.errorhandler(404)
 def page_not_found(error):
