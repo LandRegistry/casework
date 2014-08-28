@@ -136,7 +136,7 @@ class RegistrationForm(Form):
 
         for lease in self['leases'].data:
             ld = lease.pop('lease_date')
-            lf = lease.pop('lease_form')
+            lf = lease.pop('lease_from')
             lease['lease_date'] = str(ld)
             lease['lease_from'] = str(lf)
             leases.append(lease)
