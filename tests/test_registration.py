@@ -1,43 +1,55 @@
 import unittest
-from flask_security.utils import encrypt_password
+import json
 
 from application.frontend.frontend import app
-from application import db, user_datastore
+from application import db
+from application.frontend.forms import RegistrationForm
+from geo_json_fixtures import valid_geo_json
 
+
+PROPERTY_FRONTEND_URL = "http://0.0.0.0:8002"
 
 
 class RegistrationTestCase(unittest.TestCase):
     def setUp(self):
-        app.config["TESTING"] = True,
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['SECRET_KEY'] = 'testing-not-a-secret'
-        app.config['PROPERTY_FRONTEND_URL'] = 'http://0.0.0.0:8002'
-        app.config['MINT_URL'] = 'http://0.0.0.0:8001'
+        app.config["TESTING"] = True
+        app.config["PROPERTY_FRONTEND_URL"] = PROPERTY_FRONTEND_URL
+
         db.create_all()
-        self.app = app.test_client()
-
-        with app.test_request_context():
-            user_datastore.create_user(email='caseworker@example.org',
-                                           password=encrypt_password('dummypassword'))
-            db.session.commit()
-
-
-    def _login(self, email=None, password=None):
-        email = email
-        password = password or 'password'
-        return self.app.post('/login', data={'email': email, 'password': password},
-                             follow_redirects=True)
+        self.app = app
+        self.client = app.test_client()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
 
     def test_get_registration_returns_new_title_number(self):
-        with app.app_context():
-            resp = self._login('caseworker@example.org', 'dummypassword')
+        response = self.client.get('/registration')
+        self.assertEqual(200, response.status_code)
+        self.assertTrue('Create title' in response.data)
 
-            self.assertEqual(200, resp.status_code)
+    def get_valid_create_form_without_charge(self):
+        with self.app.test_request_context():
+            form = RegistrationForm()
 
-            response = self.app.get('/registration')
-            self.assertEqual(200, response.status_code)
-            self.assertTrue('Create title' in response.data)
+            form.title_number.data = "TEST1234"
+            form.first_name1.data = "Kurt"
+            form.surname1.data = "Cobain"
+            form.first_name2.data = "Courtney"
+            form.surname2.data = "Love"
+
+            form.house_number.data = '101'
+            form.road.data = "Lake Washington Bldv E"
+            form.town.data = "Seattle"
+            form.postcode.data = 'SW1A1AA'
+
+            form.property_tenure.data = "Freehold"
+            form.property_class.data = "Absolute"
+            form.price_paid.data = "1000000"
+            form.extent.data = json.dumps(valid_geo_json)
+            return form
+
+    def test_post_registration_returns_property_url_with_for_title(self):
+        form = self.get_valid_create_form_without_charge()
+        response = self.client.post('/registration', data=json.dumps(form.to_dict()))
+        self.assertEquals(200, response.status_code)

@@ -1,8 +1,11 @@
-from sqlite3 import IntegrityError
+import logging
+import requests
+from sqlalchemy.exc import IntegrityError
 from audit import Audit
 
-from flask import current_app, render_template, request, redirect, flash
+from flask import render_template, request, redirect, flash
 from flask_login import login_required
+from werkzeug.exceptions import abort
 
 from application import app, Health, db
 from application.frontend.forms import RegistrationForm
@@ -14,8 +17,11 @@ from application.casework.service import get_casework_items, save_casework
 Health(app, checks=[db.health])
 Audit(app)
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.StreamHandler())
+
 @app.route('/')
-# TODO: Figure out how to login from the tests
 @login_required
 def index():
     return render_template("index.html")
@@ -25,25 +31,37 @@ def index():
 @login_required
 def registration():
     form = RegistrationForm(request.form)
-    property_frontend_url = '%s/%s' % (current_app.config['PROPERTY_FRONTEND_URL'], 'property')
+    property_frontend_url = '%s/%s' % (app.config['PROPERTY_FRONTEND_URL'], 'property')
+    created = request.args.get('created', None)
 
     if request.method == 'GET':
         form.title_number.data = generate_title_number()
 
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate():
         mint_data = form.to_dict()
+        title_number = form.title_number.data
+
         try:
-            post_to_mint(current_app.config['MINT_URL'], mint_data)
-            return redirect('%s?created=%s' % ('/registration', mint_data['title_number']))
+            response = post_to_mint(app.config['MINT_URL'], mint_data)
+            response.raise_for_status()
+
+            return redirect('%s?created=%s' % ('/registration', title_number))
+        except requests.exceptions.HTTPError as e:
+            app.logger.error("HTTP Error %s", e)
+            raise e
+        except requests.exceptions.ConnectionError as e:
+            app.logger.error("Error %s", e)
+            raise e
+
         except RuntimeError as e:
-            current_app.logger.error('Failed to register title %s: Error %s' % (mint_data['title_number'], e))
-            flash('Creation of title with number %s failed' % mint_data['title_number'])
+            app.logger.error('Failed to register title %s: Error %s' % (title_number, e))
+            flash('Creation of title with number %s failed' % title_number)
 
     return render_template('registration.html',
                            form=form,
                            property_frontend_url=property_frontend_url,
                            title_number=form.title_number.data,
-                           created=request.args.get('created', None))
+                           created=created)
 
 @app.route('/checks', methods=['GET'])
 @login_required
@@ -73,7 +91,7 @@ def get_casework():
 @app.route('/casework', methods=['POST'])
 def casework_post():
     try:
-        save_casework(request.data)
+        save_casework(request.json)
     except IntegrityError:
         return 'Failed to save casework item.', 400
     except KeyError:
@@ -81,6 +99,9 @@ def casework_post():
 
     return 'OK', 200
 
+@app.errorhandler(Exception)
+def catch_all_exceptions(error):
+    return render_template('error.html', error=error), 500
 
 @app.errorhandler(404)
 def page_not_found(error):

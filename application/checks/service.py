@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
+
 def save_checks(json_data):
     logger.info("Received POST to check queue. %s" % (json_data))
     check = Check()
@@ -16,6 +17,7 @@ def save_checks(json_data):
 
     db.session.add(check)
     db.session.commit()
+
 
 def get_check_items():
     return Check.query.order_by(Check.submitted_at).all()
