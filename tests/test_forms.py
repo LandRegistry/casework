@@ -2,6 +2,8 @@ import datetime
 import unittest
 from application.frontend.frontend import app
 from application.frontend.forms import RegistrationForm, ChargeForm
+from geo_json_fixtures import valid_geo_json
+import json
 
 
 class FormsTestCase(unittest.TestCase):
@@ -20,10 +22,13 @@ class FormsTestCase(unittest.TestCase):
             form.first_name2.data = "Courtney"
             form.surname2.data = "Love"
 
-            form.house_number.data = '101'
-            form.road.data = "Lake Washington Bldv E"
-            form.town.data = "Seattle"
+            form.address_line_1.data = '101 Lake Washington Bldv E'
+            form.address_line_2.data = "line2"
+            form.address_line_3.data = "line3"
+            form.address_line_4.data = "line4"
+            form.city.data = "Seattle"
             form.postcode.data = 'SW1A1AA'
+            form.country.data = 'GB'
 
             form.property_tenure.data = "Freehold"
             form.property_class.data = "Absolute"
@@ -36,7 +41,7 @@ class FormsTestCase(unittest.TestCase):
             charge_form.chargee_registration_number.data = "1234567"
             form.charges = [charge_form]
 
-            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
+            form.extent.data = json.dumps(valid_geo_json)
 
             self.assertTrue(form.validate())
 
@@ -48,10 +53,10 @@ class FormsTestCase(unittest.TestCase):
             self.assertEquals(form.surname1.errors[0], 'This field is required.')
             self.assertEquals(form.first_name2.errors, [])
             self.assertEquals(form.surname2.errors, [])
-            self.assertEquals(form.house_number.errors[0], 'This field is required.')
-            self.assertEquals(form.road.errors[0], 'This field is required.')
-            self.assertEquals(form.town.errors[0], 'This field is required.')
+            self.assertEquals(form.address_line_1.errors[0], 'This field is required.')
+            self.assertEquals(form.city.errors[0], 'This field is required.')
             self.assertEquals(form.postcode.errors[0], 'This field is required.')
+            self.assertEquals(form.country.errors[0], 'This field is required.')
             self.assertEquals(form.property_tenure.errors[0], 'Not a valid choice')
             self.assertEquals(form.property_class.errors[0], 'Not a valid choice')
             self.assertEquals(form.price_paid.errors, [])

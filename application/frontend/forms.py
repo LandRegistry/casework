@@ -4,7 +4,7 @@ from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, Optional
 import simplejson
-from datatypes import postcode_validator, price_validator, geo_json_string_validator
+from datatypes import postcode_validator, price_validator, geo_json_string_validator, country_code_validator
 
 from application.frontend.validators import ValidateDateNotInFuture
 
@@ -43,10 +43,13 @@ class RegistrationForm(Form):
     first_name2 = StringField('First name 2')
     surname2 = StringField('Surname 2')
 
-    house_number = StringField('House number', validators=[DataRequired()])
-    road = StringField('Road', validators=[DataRequired()])
-    town = StringField('Town', validators=[DataRequired()])
+    address_line_1 = StringField('Address line 1', validators=[DataRequired()])
+    address_line_2 = StringField('Address line 2', validators=[Optional()])
+    address_line_3 = StringField('Address line 3', validators=[Optional()])
+    address_line_4 = StringField('Address line 4', validators=[Optional()])
+    city = StringField('City', validators=[DataRequired()])
     postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()])
+    country = StringField('Country', validators=[DataRequired(), country_code_validator.wtform_validator()])
 
     property_tenure = RadioField(
         'Property tenure',
@@ -122,10 +125,13 @@ class RegistrationForm(Form):
             "property": {
 
                 "address": {
-                    "house_number": self['house_number'].data,
-                    "road": self['road'].data,
-                    "town": self['town'].data,
-                    "postcode": postcode_validator.to_canonical_form(self['postcode'].data)
+                    "address_line_1": self['address_line_1'].data,
+                    "address_line_2": self['address_line_2'].data,
+                    "address_line_3": self['address_line_3'].data,
+                    "address_line_4": self['address_line_4'].data,
+                    "city": self['city'].data,
+                    "postcode": postcode_validator.to_canonical_form(self['postcode'].data),
+                    "country": self['country'].data
                 },
                 "tenure": self['property_tenure'].data,
                 "class_of_title": self['property_class'].data

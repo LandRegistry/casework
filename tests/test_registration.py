@@ -35,9 +35,9 @@ class RegistrationTestCase(unittest.TestCase):
             form.first_name2.data = "Courtney"
             form.surname2.data = "Love"
 
-            form.house_number.data = '101'
-            form.road.data = "Lake Washington Bldv E"
-            form.town.data = "Seattle"
+            form.address_line_1.data = '101'
+            form.address_line_2.data = "Lake Washington Bldv E"
+            form.city.data = "Seattle"
             form.postcode.data = 'SW1A1AA'
 
             form.property_tenure.data = "Freehold"
