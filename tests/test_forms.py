@@ -1,7 +1,10 @@
 import datetime
 import unittest
+import json
+
 from application.frontend.frontend import app
 from application.frontend.forms import RegistrationForm, ChargeForm
+from geo_json_fixtures import valid_geo_json
 
 
 class FormsTestCase(unittest.TestCase):
@@ -36,8 +39,7 @@ class FormsTestCase(unittest.TestCase):
             charge_form.chargee_registration_number.data = "1234567"
             form.charges = [charge_form]
 
-            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
-
+            form.extent.data = json.dumps(valid_geo_json)
             self.assertTrue(form.validate())
 
     def test_form_contains_errors_for_all_missing_required_fields(self):
@@ -85,15 +87,26 @@ class FormsTestCase(unittest.TestCase):
         with self.app.test_request_context():
             form = RegistrationForm()
             form.price_paid.data = '20000.19'
+            form.price_paid.raw_data = '20000.19'
             form.validate()
             self.assertEquals(form.price_paid.errors, [])
 
-    @unittest.skip("price paid validation is not working at the moment.")
+    def test_validate_price_paid_contains_errors_when_non_numeric_price(self):
+        with self.app.test_request_context():
+            form = RegistrationForm()
+            form.price_paid.data = 'sausages'
+            form.price_paid.raw_data = 'sausages'     # TODO: Hack. We need to construct forms properly
+            form.validate()
+            self.assertEquals(form.price_paid.errors[0], 'Please enter the price paid as pound and pence')
+
     def test_validate_price_paid_contains_error_when_too_many_decimal_points(self):
         with self.app.test_request_context():
             form = RegistrationForm()
             form.price_paid.data = '20000.103'
+            form.price_paid.raw_data = '20000.103'  # TODO: Hack, we need to construct forms properly
             form.validate()
             self.assertEquals(form.price_paid.errors[0], 'Please enter the price paid as pound and pence')
+
+
 
 
