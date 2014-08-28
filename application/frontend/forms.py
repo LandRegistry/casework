@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from flask_wtf import Form
-from wtforms import StringField, RadioField, HiddenField, TextAreaField, FieldList, DateField, FormField, DecimalField
+from wtforms import *
 from wtforms.validators import DataRequired, Optional
 import simplejson
-from datatypes import postcode_validator, price_validator, geo_json_string_validator, country_code_validator
+from datatypes import *
 
 from application.frontend.validators import ValidateDateNotInFuture
+from application.frontend.field_helpers import countries_list_for_selector
 
 
 class ChargeForm(Form):
@@ -49,7 +49,10 @@ class RegistrationForm(Form):
     address_line_4 = StringField('Address line 4', validators=[Optional()])
     city = StringField('City', validators=[DataRequired()])
     postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()])
-    country = StringField('Country', validators=[DataRequired(), country_code_validator.wtform_validator()])
+    country = SelectField('Country',
+                          validators=[DataRequired(), country_code_validator.wtform_validator()],
+                          choices=countries_list_for_selector
+    )
 
     property_tenure = RadioField(
         'Property tenure',

@@ -30,7 +30,7 @@ def index():
 @app.route('/registration', methods=['GET', 'POST'])
 @login_required
 def registration():
-    form = RegistrationForm(request.form)
+    form = RegistrationForm(request.form, country='GB')
     property_frontend_url = '%s/%s' % (app.config['PROPERTY_FRONTEND_URL'], 'property')
     created = request.args.get('created', None)
 

@@ -57,7 +57,7 @@ class FormsTestCase(unittest.TestCase):
             self.assertEquals(form.address_line_1.errors[0], 'This field is required.')
             self.assertEquals(form.city.errors[0], 'This field is required.')
             self.assertEquals(form.postcode.errors[0], 'This field is required.')
-            self.assertEquals(form.country.errors[0], 'This field is required.')
+            self.assertEquals(form.country.errors[0], 'Not a valid choice')
             self.assertEquals(form.property_tenure.errors[0], 'Not a valid choice')
             self.assertEquals(form.property_class.errors[0], 'Not a valid choice')
             self.assertEquals(form.price_paid.errors, [])
