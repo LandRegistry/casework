@@ -33,8 +33,8 @@ class RegistrationTestCase(unittest.TestCase):
             form = RegistrationForm()
 
             form.title_number.data = "TEST1234"
-            form.fullName1.data = "Kurt Cobain"
-            form.fullName2.data = "Courtney Love"
+            form.full_name1.data = "Kurt Cobain"
+            form.full_name2.data = "Courtney Love"
 
             form.address_line_1.data = '101'
             form.address_line_2.data = "Lake Washington Bldv E"
