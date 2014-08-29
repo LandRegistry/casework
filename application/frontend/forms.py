@@ -2,7 +2,7 @@
 
 from wtforms import *
 from flask_wtf import Form
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, NumberRange
 import simplejson
 from datatypes import *
 
@@ -41,7 +41,7 @@ class LeaseholdForm(Form):
     """
 
     lease_date = DateField('Date of Lease', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
-    lease_term = StringField('Term (years)', validators=[DataRequired()])
+    lease_term = IntegerField('Term (years)', validators=[DataRequired(), NumberRange(7, 999)])
     lease_from = DateField('From date', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
     lessee_name = StringField('2. Lessee name(s)', validators=[DataRequired()])
     lessor_name = StringField('1. Lessor name(s)', validators=[DataRequired()])
