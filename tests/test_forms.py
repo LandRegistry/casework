@@ -18,10 +18,8 @@ class FormsTestCase(unittest.TestCase):
             form = RegistrationForm()
 
             form.title_number.data = "TEST1234"
-            form.first_name1.data = "Kurt"
-            form.surname1.data = "Cobain"
-            form.first_name2.data = "Courtney"
-            form.surname2.data = "Love"
+            form.full_name1.data = "Kurt Cobain"
+            form.full_name2.data = "Courtney Love"
 
             form.address_line_1.data = '101 Lake Washington Bldv E'
             form.address_line_2.data = "line2"
@@ -50,10 +48,8 @@ class FormsTestCase(unittest.TestCase):
         with self.app.test_request_context():
             form = RegistrationForm()
             self.assertFalse(form.validate())
-            self.assertEquals(form.first_name1.errors[0], 'This field is required.')
-            self.assertEquals(form.surname1.errors[0], 'This field is required.')
-            self.assertEquals(form.first_name2.errors, [])
-            self.assertEquals(form.surname2.errors, [])
+            self.assertEquals(form.full_name1.errors[0], 'This field is required.')
+            self.assertEquals(form.full_name2.errors, [])
             self.assertEquals(form.address_line_1.errors[0], 'This field is required.')
             self.assertEquals(form.city.errors[0], 'This field is required.')
             self.assertEquals(form.postcode.errors[0], 'This field is required.')

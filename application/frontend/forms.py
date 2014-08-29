@@ -62,11 +62,9 @@ class RegistrationForm(Form):
     the form object to do the work for you
     """
 
-    title_number = HiddenField('Title Number')
-    first_name1 = StringField('First name 1', validators=[DataRequired()])
-    surname1 = StringField('Surname 1', validators=[DataRequired()])
-    first_name2 = StringField('First name 2')
-    surname2 = StringField('Surname 2')
+    title_number = HiddenField()
+    full_name1 = StringField('Full name 1', validators=[DataRequired()])
+    full_name2 = StringField('Full name 2')
 
     address_line_1 = StringField('Address line 1', validators=[DataRequired()])
     address_line_2 = StringField('Address line 2', validators=[Optional()])
@@ -76,16 +74,14 @@ class RegistrationForm(Form):
     postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()])
     country = SelectField('Country',
                           validators=[DataRequired(), country_code_validator.wtform_validator()],
-                          choices=countries_list_for_selector
-    )
+                          choices=countries_list_for_selector)
 
     property_tenure = RadioField(
         'Property tenure',
         choices=[
             ('Freehold', 'Freehold'),
             ('Leasehold', 'Leasehold')
-        ]
-    )
+        ])
 
     property_class = RadioField(
         'Property class',
@@ -94,8 +90,7 @@ class RegistrationForm(Form):
             ('Good', 'Good'),
             ('Qualified', 'Qualified'),
             ('Possessory', 'Possessory')
-        ]
-    )
+        ])
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
@@ -160,13 +155,12 @@ class RegistrationForm(Form):
 
             "proprietors": [
                 {
-                    "first_name": self['first_name1'].data,
-                    "last_name": self['surname1'].data
-                },
+                    "full_name": self['full_name1'].data,
+
+                    },
                 {
-                    "first_name": self['first_name2'].data,
-                    "last_name": self['surname2'].data
-                }
+                    "full_name": self['full_name2'].data,
+                    }
             ],
 
             "property": {
