@@ -12,7 +12,7 @@ from application.frontend.field_helpers import countries_list_for_selector
 
 
 class MultiCheckboxField(SelectMultipleField):
-    widget = widgotgets.ListWidget(prefix_label=False)
+    widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
 
