@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from shapely.geometry import mapping, shape
 import simplejson
 from datetime import date
@@ -10,12 +9,18 @@ import logging
 
 
 class ValidateDateNotInFuture(object):
-    def __init__(self):
-        self.message = "The date must not be in the future"
+    def __call__(self, form, field):
+        validate_date_not_in_future(form, field.data)
 
-    def __call__(self, form, date_field):
-        if date_field.data > date.today():
+    def validate_date_not_in_future(form, date_field):
+        if date_field > date.today():
             raise ValidationError('Date cannot be in the future')
+
+    def convert_to_bst(dt):
+        utc = timezone('UTC').localize(dt)
+        bst = timezone('Europe/London').localize(dt)
+        return bst + (utc - bst)
+
 
 class ValidateEasementWithinExtent(object):
     def __init__(self):
@@ -32,8 +37,3 @@ class ValidateEasementWithinExtent(object):
 
       if not(extent.contains(easement)):
         raise ValidationError('Easement geometry must exist within the extent.')
-
-def convert_to_bst(dt):
-    utc = timezone('UTC').localize(dt)
-    bst = timezone('Europe/London').localize(dt)
-    return bst + (utc - bst)

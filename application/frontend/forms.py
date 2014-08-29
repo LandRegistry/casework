@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from flask_wtf import Form
 from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField
 from wtforms.validators import DataRequired, Optional
@@ -133,7 +131,7 @@ class RegistrationForm(Form):
                 "class_of_title": self['property_class'].data
             },
             "payment": {
-                "price_paid": str(self['price_paid'].data),
+                "price_paid": self['price_paid'].data,
                 "titles": [
                     self['title_number'].data
                 ]
