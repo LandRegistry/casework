@@ -81,8 +81,7 @@ class RegistrationForm(Form):
         choices=[
             ('Freehold', 'Freehold'),
             ('Leasehold', 'Leasehold')
-        ]
-        )
+        ])
 
     property_class = RadioField(
         'Property class',
@@ -91,8 +90,7 @@ class RegistrationForm(Form):
             ('Good', 'Good'),
             ('Qualified', 'Qualified'),
             ('Possessory', 'Possessory')
-        ]
-        )
+        ])
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
