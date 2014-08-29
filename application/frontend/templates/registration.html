@@ -171,6 +171,15 @@
 </div>
 
 <script type="text/javascript">
+
+    function showLeasesOnError() {
+        if (document.getElementsByClass('has-error') != null) {
+            if (document.getElementById('Leasehold').checked == true) {
+                document.getElementById('leases').style.display = '';
+            }
+        }
+    }
+
     function addChargeForm() {
         var numberOfCharges = ($('#chargeslist').find('li').length);
 
@@ -209,6 +218,7 @@
         }
     }
 
+
     $('#addchargesbutton input[type="button"]').click(
             function () {
                 addChargeForm();
@@ -234,5 +244,12 @@
             }
     )
 
+    $(document).ready(function(){
+        if (document.getElementsByClassName("has-errors")) {
+            if (document.getElementById('Leasehold').checked == true) {
+                document.getElementById('leases').style.display = '';
+            }
+        }
+    })
 </script>
 {% endblock %}
