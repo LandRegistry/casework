@@ -7,8 +7,8 @@ from wtforms.validators import ValidationError
 
 
 class ValidateDateNotInFuture(object):
-    def __call__(self, form, field):
-        if field.data > date.today():
+    def __call__(self, form, date_field):
+        if date_field.data > date.today():
             raise ValidationError('Date cannot be in the future')
 
 

@@ -75,10 +75,13 @@
 
             <fieldset>
                 <legend>Property Address</legend>
-                {{ render_field(form.house_number)}}
-                {{ render_field(form.road)}}
-                {{ render_field(form.town)}}
+                {{ render_field(form.address_line_1)}}
+                {{ render_field(form.address_line_2)}}
+                {{ render_field(form.address_line_3)}}
+                {{ render_field(form.address_line_4)}}
+                {{ render_field(form.city)}}
                 {{ render_field(form.postcode)}}
+                {{ render_field(form.country)}}
             </fieldset>
 
             <div id="tenure">
@@ -217,9 +220,8 @@
     $('#addeasementsbutton input[type="button"]').click(
             function () {
                 addEasementForm();
-                document.getElementById('addeasementsbutton').style.visibility='hidden';
+                document.getElementById('addeasementsbutton').style.visibility = 'hidden';
             }
-
     )
 
     $('#tenure input[type="radio"]').click(
