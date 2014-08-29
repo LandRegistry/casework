@@ -62,20 +62,19 @@ class RegistrationForm(Form):
     the form object to do the work for you
     """
 
-    title_number = HiddenField('Title Number')
-    fullName1 = StringField('Full name 1', validators=[DataRequired()])
-    fullName2 = StringField('Full name 2')
+    title_number = HiddenField()
+    full_name1 = StringField('Full name 1', validators=[DataRequired()], default=u'Bobby Flay')
+    full_name2 = StringField('Full name 2')
 
-    address_line_1 = StringField('Address line 1', validators=[DataRequired()])
-    address_line_2 = StringField('Address line 2', validators=[Optional()])
+    address_line_1 = StringField('Address line 1', validators=[DataRequired()], default=u'123')
+    address_line_2 = StringField('Address line 2', validators=[Optional()], default=u'Main street')
     address_line_3 = StringField('Address line 3', validators=[Optional()])
     address_line_4 = StringField('Address line 4', validators=[Optional()])
-    city = StringField('City', validators=[DataRequired()])
-    postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()])
+    city = StringField('City', validators=[DataRequired()], default=u'London')
+    postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()], default=u'N1 4QX')
     country = SelectField('Country',
                           validators=[DataRequired(), country_code_validator.wtform_validator()],
-                          choices=countries_list_for_selector
-    )
+                          choices=countries_list_for_selector, default='United Kingdom')
 
     property_tenure = RadioField(
         'Property tenure',
@@ -83,7 +82,7 @@ class RegistrationForm(Form):
             ('Freehold', 'Freehold'),
             ('Leasehold', 'Leasehold')
         ]
-    )
+        , default='Freehold')
 
     property_class = RadioField(
         'Property class',
@@ -93,7 +92,7 @@ class RegistrationForm(Form):
             ('Qualified', 'Qualified'),
             ('Possessory', 'Possessory')
         ]
-    )
+        , default='Absolute')
 
     price_paid = DecimalField(
         'Price paid (&pound;)',
@@ -113,7 +112,7 @@ class RegistrationForm(Form):
     leases = FieldList(FormField(LeaseholdForm), min_entries=0)
     leases_template = FieldList(FormField(LeaseholdForm), min_entries=1)
 
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator()], default='{ "type": "Feature", "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG:27700"}}, "geometry": {  "type": "Polygon","coordinates": [[[404439.5558898761,369899.8484076261], [404440.0558898761,369899.8484076261], [404440.0558898761,369900.3484076261], [404439.5558898761,369900.3484076261], [404439.5558898761,369899.8484076261] ]]},"properties": {"Description": "Polygon"}}')
 
     def validate(self):
         old_form_charges_template = self.charges_template
@@ -158,11 +157,12 @@ class RegistrationForm(Form):
 
             "proprietors": [
                 {
-                    "full_name": self['fullName1'].data
-                },
+                    "full_name": self['full_name1'].data,
+
+                    },
                 {
-                    "full_name": self['fullName2'].data
-                }
+                    "full_name": self['full_name2'].data,
+                    }
             ],
 
             "property": {

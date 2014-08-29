@@ -61,14 +61,14 @@
         <h1>Create title</h1>
 
         <form id="registration-form" action="" method="POST">
-            <!--{{ render_field(form.title_number)}}-->
+            {{ form.title_number }}
 
             <p>Reference: <strong>{{title_number}}</strong></p>
 
             <fieldset>
                 <legend>Proprietors</legend>
-                {{ render_field(form.fullName1) }}
-                {{ render_field(form.fullName2) }}
+                {{ render_field(form.full_name1) }}
+                {{ render_field(form.full_name2) }}
             </fieldset>
 
             <fieldset>
