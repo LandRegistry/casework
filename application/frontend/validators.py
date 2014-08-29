@@ -22,43 +22,16 @@ class ValidateEasementWithinExtent(object):
         self.message = "The easement extent must exist within the charge extent"
 
     def __call__(self, form, extent_geo):
-      extent_json = simplejson.dumps(extent_geo.data)
-      app.logger.info(extent_geo.data)
-      extent = shape(simplejson.loads(extent_geo.data))
-      #easement = shape(simplejson.loads(form.easements[0].easement_geometry.data))
-      if (extent_geo.data == form.easements[0].easement_geometry.data):
+      extent_dict = simplejson.loads(extent_geo.data)
+      easement_dict = simplejson.loads(form.easements[0].easement_geometry.data)
+      app.logger.info(extent_dict.get('geometry'))
+      app.logger.info(easement_dict.get('geometry'))
+
+      extent = shape(extent_dict.get('geometry'))
+      easement = shape(easement_dict.get('geometry'))
+
+      if not(extent.contains(easement)):
         raise ValidationError('Easement geometry must exist within the extent.')
-
-      #This is what shapely wants.  
-      # {
-      #     "type": "Polygon",
-      #     "coordinates": [
-      #         [
-      #             [
-      #                 404439.5558898761,
-      #                 369899.8484076261
-      #             ],
-      #             [
-      #                 404440.0558898761,
-      #                 369899.8484076261
-      #             ],
-      #             [
-      #                 404440.0558898761,
-      #                 369900.3484076261
-      #             ],
-      #             [
-      #                 404439.5558898761,
-      #                 369900.3484076261
-      #             ],
-      #             [
-      #                 404439.5558898761,
-      #                 369899.8484076261
-      #             ]
-      #         ]
-      #     ]
-      # }
-
-
 
 def convert_to_bst(dt):
     utc = timezone('UTC').localize(dt)
