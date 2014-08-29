@@ -14,9 +14,16 @@ class ValidateDateNotInFuture(object):
         if date_field.data > date.today():
             raise ValidationError('Date cannot be in the future')
 
+class ValidateEasementWithinExtent(object):
+    def __init__(self):
+        self.message = "The easement extent must exist within the charge extent"
+
+    def __call__(self, form, easement_geo):
+      if (easement_geo.data == form.easements[0].easement_geometry.data):
+        raise ValidationError('Easement geometry must exist within the extent.')
+
 
 def convert_to_bst(dt):
     utc = timezone('UTC').localize(dt)
     bst = timezone('Europe/London').localize(dt)
     return bst + (utc - bst)
-

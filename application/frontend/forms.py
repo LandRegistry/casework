@@ -6,7 +6,9 @@ from wtforms.validators import DataRequired, Optional
 import simplejson
 from datatypes import postcode_validator, price_validator, geo_json_string_validator
 
-from application.frontend.validators import ValidateDateNotInFuture
+from application.frontend.validators import ValidateDateNotInFuture, ValidateEasementWithinExtent
+from application import app
+import logging
 
 
 class ChargeForm(Form):
@@ -26,7 +28,7 @@ class EasementForm(Form):
     """
     easement_description = TextAreaField('Easement description', validators=[DataRequired()])
     easement_geometry = TextAreaField('Easement geometry',
-                                      validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
+      validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
 
 class RegistrationForm(Form):
@@ -81,7 +83,7 @@ class RegistrationForm(Form):
 
     easements_template = FieldList(FormField(EasementForm), min_entries=1)
 
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator(), ValidateEasementWithinExtent()])
 
     def validate(self):
         old_form_charges_template = self.charges_template
