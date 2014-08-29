@@ -1,8 +1,11 @@
 import unittest
+import json
+
 from application.frontend.frontend import app
 from application import db
 from application.frontend.forms import RegistrationForm
-import json
+from geo_json_fixtures import valid_geo_json
+
 
 PROPERTY_FRONTEND_URL = "http://0.0.0.0:8002"
 
@@ -30,21 +33,18 @@ class RegistrationTestCase(unittest.TestCase):
             form = RegistrationForm()
 
             form.title_number.data = "TEST1234"
-            form.first_name1.data = "Kurt"
-            form.surname1.data = "Cobain"
-            form.first_name2.data = "Courtney"
-            form.surname2.data = "Love"
+            form.full_name1.data = "Kurt Cobain"
+            form.full_name2.data = "Courtney Love"
 
-            form.house_number.data = '101'
-            form.road.data = "Lake Washington Bldv E"
-            form.town.data = "Seattle"
+            form.address_line_1.data = '101'
+            form.address_line_2.data = "Lake Washington Bldv E"
+            form.city.data = "Seattle"
             form.postcode.data = 'SW1A1AA'
 
             form.property_tenure.data = "Freehold"
             form.property_class.data = "Absolute"
             form.price_paid.data = "1000000"
-            form.extent.data = '{   "type": "Feature",   "crs": {     "type": "name",     "properties": {       "name": "urn:ogc:def:crs:EPSG:27700"     }   },   "geometry": {      "type": "Polygon",     "coordinates": [       [ [530857.01, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.00, 181500.00], [530857.01, 181500.00] ]       ]   },   "properties" : {      } }'
-
+            form.extent.data = json.dumps(valid_geo_json)
             return form
 
     def test_post_registration_returns_property_url_with_for_title(self):
