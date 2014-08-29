@@ -5,7 +5,6 @@ from audit import Audit
 
 from flask import render_template, request, redirect, flash
 from flask_login import login_required
-from werkzeug.exceptions import abort
 
 from application import app, Health, db
 from application.frontend.forms import RegistrationForm

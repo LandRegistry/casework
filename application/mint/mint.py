@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
 def post_to_mint(url, data):
-    title_url = '%s/titles/%s' % (url, data['title_number'])
+    title_url = '%stitles/%s' % (url, data['title_number'])
     headers = {'content-type': 'application/json'}
     logger.info("Sending data %s to the mint at %s" % (data, title_url))
     try:
