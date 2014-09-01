@@ -153,9 +153,3 @@ class FormsTestCase(unittest.TestCase):
             form.lease_term.data = 999
             self.assertTrue(form.validate())
 
-
-
-
-
-
-
