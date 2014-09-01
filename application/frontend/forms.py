@@ -1,13 +1,16 @@
-from wtforms import *
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField
+
 from flask_wtf import Form
 from wtforms.validators import DataRequired, Optional, NumberRange
+
 import simplejson
+
 from datatypes import postcode_validator, geo_json_string_validator, price_validator, country_code_validator
 
 from application.frontend.validators import ValidateDateNotInFuture, ValidateEasementWithinExtent
+
 from application.frontend.field_helpers import countries_list_for_selector
-from application import app
-import logging
+
 
 class ChargeForm(Form):
     """
@@ -115,6 +118,7 @@ class RegistrationForm(Form):
         form_is_validated = super(RegistrationForm, self).validate()
         self.charges_template = old_form_charges_template
         self.easements_template = old_form_easements_template
+        self.lease_template = old_form_leases_template
         return form_is_validated
 
     def to_dict(self):
