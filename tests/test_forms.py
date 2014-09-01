@@ -23,8 +23,6 @@ class FormsTestCase(unittest.TestCase):
 
             form.address_line_1.data = '101 Lake Washington Bldv E'
             form.address_line_2.data = "line2"
-            form.address_line_3.data = "line3"
-            form.address_line_4.data = "line4"
             form.city.data = "Seattle"
             form.postcode.data = 'SW1A1AA'
             form.country.data = 'GB'
