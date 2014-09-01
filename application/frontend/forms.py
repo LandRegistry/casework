@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import Form
-from matplotlib import widgets
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectMultipleField
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Optional
 import simplejson
-from datatypes import postcode_validator, geo_json_string_validator, price_validator
+from datatypes import postcode_validator, geo_json_string_validator, price_validator, country_code_validator
 
 from application.frontend.validators import ValidateDateNotInFuture
 from application.frontend.field_helpers import countries_list_for_selector
-
-
-class MultiCheckboxField(SelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
-    option_widget = widgets.CheckboxInput()
 
 
 class ChargeForm(Form):
