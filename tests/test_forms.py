@@ -3,7 +3,7 @@ import unittest
 import json
 
 from application.frontend.frontend import app
-from application.frontend.forms import RegistrationForm, ChargeForm
+from application.frontend.forms import RegistrationForm, ChargeForm, LeaseholdForm
 from geo_json_fixtures import valid_geo_json
 
 
@@ -117,3 +117,39 @@ class FormsTestCase(unittest.TestCase):
             form.price_paid.raw_data = '20000.103'  # TODO: Hack, we need to construct forms properly
             form.validate()
             self.assertEquals(form.price_paid.errors[0], 'Please enter the price paid as pound and pence')
+
+    def create_valid_leasehold_form(self):
+        form = LeaseholdForm()
+        form.lease_date.data = datetime.date.today() - datetime.timedelta(days=1)
+        form.lease_term.data = 10
+        form.lease_from.data = datetime.date.today() - datetime.timedelta(days=1)
+        form.lessee_name.data = 'Bob Jones'
+        form.lessor_name.data = 'Jo Blow'
+        form.lease_easements.data = True
+        form.alienation_clause.data = True
+        form.title_registered.data = True
+        return form
+
+    def test_leasehold_form_validation_for_valid_form(self):
+        with self.app.test_request_context():
+            form = self.create_valid_leasehold_form()
+            self.assertTrue(form.validate())
+
+    def test_leasehold_form_lease_term_less_than_7_or_greater_than_999(self):
+        with self.app.test_request_context():
+            form = self.create_valid_leasehold_form()
+            form.lease_term.data = 6
+            self.assertFalse(form.validate())
+            self.assertEquals(form.lease_term.errors[0], "Number must be between 7 and 999.")
+
+            form.lease_term.data = 1000
+            self.assertFalse(form.validate())
+            self.assertEquals(form.lease_term.errors[0], "Number must be between 7 and 999.")
+
+
+            form.lease_term.data = 7
+            self.assertTrue(form.validate())
+
+            form.lease_term.data = 999
+            self.assertTrue(form.validate())
+
