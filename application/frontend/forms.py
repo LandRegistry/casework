@@ -21,6 +21,7 @@ class ChargeForm(Form):
     chargee_name = StringField('Company name', validators=[DataRequired()])
     chargee_registration_number = StringField('Company registration number', validators=[DataRequired()])
     chargee_address = TextAreaField('Address', validators=[DataRequired()])
+    has_restriction = BooleanField('Add Restriction', default=False)
 
 
 class EasementForm(Form):

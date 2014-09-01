@@ -38,6 +38,7 @@ class FormsTestCase(unittest.TestCase):
             charge_form.charge_date.data = datetime.datetime.strptime("01-02-2001", "%d-%m-%Y")
             charge_form.chargee_address.data = "21 The Street Plymouth UK PL1 1AA"
             charge_form.chargee_registration_number.data = "1234567"
+            charge_form.has_restriction = False
             form.charges = [charge_form]
 
             form.extent.data = json.dumps(valid_geo_json)
