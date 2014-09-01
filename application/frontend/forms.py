@@ -1,19 +1,13 @@
-# -*- coding: utf-8 -*-
-
 from wtforms import *
 from flask_wtf import Form
 from wtforms.validators import DataRequired, Optional
 import simplejson
-from datatypes import *
+from datatypes import postcode_validator, geo_json_string_validator, price_validator, country_code_validator
 
-from application.frontend.validators import ValidateDateNotInFuture
+from application.frontend.validators import ValidateDateNotInFuture, ValidateEasementWithinExtent
 from application.frontend.field_helpers import countries_list_for_selector
-
-
-class MultiCheckboxField(SelectMultipleField):
-    widget = widgets.ListWidget(prefix_label=False)
-    option_widget = widgets.CheckboxInput()
-
+from application import app
+import logging
 
 class ChargeForm(Form):
     """
@@ -31,8 +25,7 @@ class EasementForm(Form):
     Easement Form
     """
     easement_description = TextAreaField('Easement description', validators=[DataRequired()])
-    easement_geometry = TextAreaField('Easement geometry',
-                                      validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
+    easement_geometry = TextAreaField('Easement geometry', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
 
 class LeaseholdForm(Form):
@@ -107,10 +100,10 @@ class RegistrationForm(Form):
     easements = FieldList(FormField(EasementForm), min_entries=0)
     easements_template = FieldList(FormField(EasementForm), min_entries=1)
 
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator(), ValidateEasementWithinExtent()])
+
     leases = FieldList(FormField(LeaseholdForm), min_entries=0)
     leases_template = FieldList(FormField(LeaseholdForm), min_entries=1)
-
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
     def validate(self):
         old_form_charges_template = self.charges_template

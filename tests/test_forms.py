@@ -117,7 +117,3 @@ class FormsTestCase(unittest.TestCase):
             form.price_paid.raw_data = '20000.103'  # TODO: Hack, we need to construct forms properly
             form.validate()
             self.assertEquals(form.price_paid.errors[0], 'Please enter the price paid as pound and pence')
-
-
-
-
