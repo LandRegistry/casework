@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField
 
 from flask_wtf import Form
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, NumberRange
+
 import simplejson
+
 from datatypes import postcode_validator, geo_json_string_validator, price_validator, country_code_validator
 
-from application.frontend.validators import ValidateDateNotInFuture
+from application.frontend.validators import ValidateDateNotInFuture, ValidateEasementWithinExtent
+
 from application.frontend.field_helpers import countries_list_for_selector
 
 
@@ -26,8 +28,7 @@ class EasementForm(Form):
     Easement Form
     """
     easement_description = TextAreaField('Easement description', validators=[DataRequired()])
-    easement_geometry = TextAreaField('Easement geometry',
-                                      validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
+    easement_geometry = TextAreaField('Easement geometry', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
 
 class LeaseholdForm(Form):
@@ -36,7 +37,7 @@ class LeaseholdForm(Form):
     """
 
     lease_date = DateField('Date of Lease', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
-    lease_term = StringField('Term (years)', validators=[DataRequired()])
+    lease_term = IntegerField('Term (years)', validators=[DataRequired(), NumberRange(7, 999)])
     lease_from = DateField('From date', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
     lessee_name = StringField('2. Lessee name(s)', validators=[DataRequired()])
     lessor_name = StringField('1. Lessor name(s)', validators=[DataRequired()])
@@ -102,10 +103,10 @@ class RegistrationForm(Form):
     easements = FieldList(FormField(EasementForm), min_entries=0)
     easements_template = FieldList(FormField(EasementForm), min_entries=1)
 
+    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator(), ValidateEasementWithinExtent()])
+
     leases = FieldList(FormField(LeaseholdForm), min_entries=0)
     leases_template = FieldList(FormField(LeaseholdForm), min_entries=1)
-
-    extent = TextAreaField('GeoJSON', validators=[DataRequired(), geo_json_string_validator.wtform_validator()])
 
     def validate(self):
         old_form_charges_template = self.charges_template
