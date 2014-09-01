@@ -1,4 +1,4 @@
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField, IntegerField
 
 from flask_wtf import Form
 from wtforms.validators import DataRequired, Optional, NumberRange
