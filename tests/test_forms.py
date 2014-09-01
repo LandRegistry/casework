@@ -3,7 +3,7 @@ import unittest
 import json
 
 from application.frontend.frontend import app
-from application.frontend.forms import RegistrationForm, ChargeForm
+from application.frontend.forms import RegistrationForm, ChargeForm, LeaseholdForm
 from geo_json_fixtures import valid_geo_json
 
 
