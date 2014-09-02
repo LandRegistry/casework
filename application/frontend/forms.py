@@ -123,7 +123,7 @@ class RegistrationForm(Form):
         form_is_validated = super(RegistrationForm, self).validate()
         self.charges_template = old_form_charges_template
         self.easements_template = old_form_easements_template
-        self.lease_template = old_form_leases_template
+        self.leases_template = old_form_leases_template
         return form_is_validated
 
     def to_dict(self):
