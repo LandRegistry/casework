@@ -37,7 +37,7 @@ class LeaseholdForm(Form):
 
     lease_date = DateField('Date of Lease', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
     lease_term = IntegerField('Term (years)', validators=[DataRequired(), NumberRange(7, 999)])
-    lease_from = DateField('From date', format='%d-%m-%Y', validators=[DataRequired(), ValidateDateNotInFuture()])
+    lease_from = DateField('From date', format='%d-%m-%Y', validators=[DataRequired()])
     lessee_name = StringField('2. Lessee name(s)', validators=[DataRequired()])
     lessor_name = StringField('1. Lessor name(s)', validators=[DataRequired()])
 
