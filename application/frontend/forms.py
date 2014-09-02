@@ -1,15 +1,13 @@
-from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, SelectField, IntegerField
+from wtforms import StringField, RadioField, DecimalField, HiddenField, TextAreaField, FieldList, DateField, FormField, BooleanField, IntegerField
 
 from flask_wtf import Form
 from wtforms.validators import DataRequired, Optional, NumberRange
 
 import simplejson
 
-from datatypes import postcode_validator, geo_json_string_validator, price_validator, country_code_validator
+from datatypes import postcode_validator, geo_json_string_validator, price_validator
 
 from application.frontend.validators import ValidateDateNotInFuture#, ValidateEasementWithinExtent
-
-from application.frontend.field_helpers import countries_list_for_selector
 
 
 class ChargeForm(Form):
@@ -63,15 +61,13 @@ class RegistrationForm(Form):
     full_name1 = StringField('Full name 1', validators=[DataRequired()])
     full_name2 = StringField('Full name 2')
 
-    address_line_1 = StringField('Address line 1', validators=[DataRequired()])
-    address_line_2 = StringField('Address line 2', validators=[Optional()])
-    address_line_3 = StringField('Address line 3', validators=[Optional()])
-    address_line_4 = StringField('Address line 4', validators=[Optional()])
+    address_line_1 = StringField('House number', validators=[DataRequired()])
+    address_line_2 = StringField('Road', validators=[Optional()])
+    # address_line_3 = StringField('Address line 3', validators=[Optional()])
+    # address_line_4 = StringField('Address line 4', validators=[Optional()])
     city = StringField('City', validators=[DataRequired()])
     postcode = StringField('Postcode', validators=[DataRequired(), postcode_validator.wtform_validator()])
-    country = SelectField('Country',
-                          validators=[DataRequired(), country_code_validator.wtform_validator()],
-                          choices=countries_list_for_selector)
+    country = HiddenField('GB')
 
     property_tenure = RadioField(
         'Property tenure',
@@ -169,8 +165,6 @@ class RegistrationForm(Form):
                 "address": {
                     "address_line_1": self['address_line_1'].data,
                     "address_line_2": self['address_line_2'].data,
-                    "address_line_3": self['address_line_3'].data,
-                    "address_line_4": self['address_line_4'].data,
                     "city": self['city'].data,
                     "postcode": postcode_validator.to_canonical_form(self['postcode'].data),
                     "country": self['country'].data

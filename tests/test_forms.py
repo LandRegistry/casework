@@ -23,8 +23,6 @@ class FormsTestCase(unittest.TestCase):
 
             form.address_line_1.data = '101 Lake Washington Bldv E'
             form.address_line_2.data = "line2"
-            form.address_line_3.data = "line3"
-            form.address_line_4.data = "line4"
             form.city.data = "Seattle"
             form.postcode.data = 'SW1A1AA'
             form.country.data = 'GB'
@@ -54,7 +52,7 @@ class FormsTestCase(unittest.TestCase):
             self.assertEquals(form.address_line_1.errors[0], 'This field is required.')
             self.assertEquals(form.city.errors[0], 'This field is required.')
             self.assertEquals(form.postcode.errors[0], 'This field is required.')
-            self.assertEquals(form.country.errors[0], 'Not a valid choice')
+            self.assertEquals(form.country.errors, [])
             self.assertEquals(form.property_tenure.errors[0], 'Not a valid choice')
             self.assertEquals(form.property_class.errors[0], 'Not a valid choice')
             self.assertEquals(form.price_paid.errors, [])
