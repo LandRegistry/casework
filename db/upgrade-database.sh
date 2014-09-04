@@ -10,4 +10,4 @@ if [ -z ${APP_ROOT} ]; then
 	exit 1
 fi
 
-cd ${APP_ROOT} && python manage.py db upgrade
+( cd ${APP_ROOT} && python manage.py db upgrade )
