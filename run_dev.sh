@@ -1,5 +1,5 @@
 #!/bin/bash
 
 
-./db/upgrade-database.sh
+./db/upgrade_database.sh
 python run_dev.py
