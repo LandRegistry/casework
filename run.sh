@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./run_dev.sh
+APP_ROOT=`pwd` bash ./run_dev.sh
