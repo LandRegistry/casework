@@ -15,6 +15,7 @@ class Config(object):
     BASIC_AUTH_USERNAME = os.environ.get('BASIC_AUTH_USERNAME')
     BASIC_AUTH_PASSWORD = os.environ.get('BASIC_AUTH_PASSWORD')
     WTF_CSRF_ENABLED=False
+    CASES_URL = os.environ['CASES_URL']
 
 class DevelopmentConfig(Config):
     DEBUG = True
