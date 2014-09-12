@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
 def get_cases(queue):
-    url = current_app.config['CASES_URL'] + "/cases/queue/" + queue
+    url = current_app.config['CASES_URL'] + "/cases/queued/" + queue
     logging.info("GET_CASES for url: %s" % url)
     response = requests.get(url)
 
