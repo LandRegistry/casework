@@ -16,9 +16,12 @@
        <tbody>
         {% for casework in casework_items %}
           <tr id="casework-item-{{loop.index}}">
-            <td id="change-date-{{loop.index}}">{{casework.with_bst_time.strftime('%d %B %Y %H:%M')}}</td>
+            <td id="change-date-{{loop.index}}">{{casework.submitted_at}}</td>
             <td id="title-id-{{loop.index}}">{{casework.title_number}}</td>
-            <td id="application-type-{{loop.index}}">{{casework.with_common_app_type}}</td>
+            <td id="application-type-{{loop.index}}">{{casework.application_type}}</td>
+            <form id="complete-change-request-form" action="complete-case/{{casework.id}}" method="POST">
+                  <td> <input type="submit" value="complete"></td>
+            </form>
           </tr>
         {% endfor %}
         </tbody>

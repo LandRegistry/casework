@@ -1,6 +1,5 @@
 import logging
 import requests
-from sqlalchemy.exc import IntegrityError
 from audit import Audit
 
 from flask import render_template, request, redirect, flash
@@ -10,8 +9,7 @@ from application import app, Health, db
 from application.frontend.forms import RegistrationForm
 from application.frontend.title_number_generator import generate_title_number
 from application.mint.mint import post_to_mint
-from application.checks import service as check_service
-from application.casework.service import get_casework_items, save_casework
+from application.cases import get_cases, complete_case
 
 Health(app, checks=[db.health])
 Audit(app)
@@ -65,38 +63,27 @@ def registration():
 @app.route('/checks', methods=['GET'])
 @login_required
 def get_checks():
-    check_items = check_service.get_check_items()
-
-    return render_template("checks.html", checks=check_items)
-
-@app.route('/checks', methods=['POST'])
-def post_checks():
-    try:
-        check_service.save_checks(request.json)
-    except IntegrityError:
-        return 'Failed to save', 400
-    except KeyError:
-        return 'Invalid data', 400
-
-    return 'OK', 200
+    checks = get_cases('check')
+    logging.info("check_items:: %s" % checks)
+    return render_template("checks.html", checks=checks)
 
 
 @app.route('/casework', methods=['GET'])
 @login_required
 def get_casework():
-    casework_items = get_casework_items()
+    casework_items = get_cases('casework')
+    logging.info("casework_items:: %s" % casework_items)
     return render_template("casework.html", casework_items=casework_items)
 
-@app.route('/casework', methods=['POST'])
-def casework_post():
-    try:
-        save_casework(request.json)
-    except IntegrityError:
-        return 'Failed to save casework item.', 400
-    except KeyError:
-        return 'Invalid data', 400
-
-    return 'OK', 200
+@app.route("/complete-case/<case_id>", methods=['POST'])
+def complete_case_item(case_id):
+    logging.info("POST complete-case:"+case_id)
+    response = complete_case(case_id)
+    logging.info("response is type:%s" % type(response))
+    if response.status_code == 200:
+        return get_casework()
+    else:
+       return response
 
 @app.errorhandler(Exception)
 def catch_all_exceptions(error):
