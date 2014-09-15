@@ -72,14 +72,12 @@ def get_checks():
 @login_required
 def get_casework():
     casework_items = get_cases('casework')
-    logging.info("casework_items:: %s" % casework_items)
     return render_template("casework.html", casework_items=casework_items)
 
 @app.route("/complete-case/<case_id>", methods=['POST'])
 def complete_case_item(case_id):
     logging.info("POST complete-case:"+case_id)
     response = complete_case(case_id)
-    logging.info("response is type:%s" % type(response))
     if response.status_code == 200:
         return get_casework()
     else:

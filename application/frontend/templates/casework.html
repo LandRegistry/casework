@@ -23,6 +23,15 @@
                   <td> <input type="submit" value="complete"></td>
             </form>
           </tr>
+
+            <tr> <td colspan="4"> New Full Name: {{casework.request_details_data.proprietor_new_full_name }}   </br>
+                      Partner Name: {{casework.request_details_data.partner_name }}               </br>
+                      Marriage Date: {{casework.request_details_data.marriage_date }}                  </br>
+                      Marriage Place: {{casework.request_details_data.marriage_place }}                     </br>
+                      Marriage Country: {{casework.request_details_data.marriage_country }}                      </br>
+                      Marriage Certificate Number: {{casework.request_details_data.marriage_certificate_number }} </br>
+              </td>
+            </tr>
         {% endfor %}
         </tbody>
       </table>
