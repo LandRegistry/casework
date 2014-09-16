@@ -63,7 +63,7 @@ def registration():
 @app.route('/checks', methods=['GET'])
 @login_required
 def get_checks():
-    checks = get_cases('check')
+    checks = get_cases('checks')
     logging.info("check_items:: %s" % checks)
     return render_template("checks.html", checks=checks)
 
