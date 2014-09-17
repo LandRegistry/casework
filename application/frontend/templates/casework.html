@@ -16,7 +16,7 @@
        <tbody>
         {% for casework in casework_items %}
           <tr id="casework-item-{{loop.index}}">
-            <td id="change-date-{{loop.index}}">{{casework.submitted_at}}</td>
+            <td id="change-date-{{loop.index}}">{{casework.submitted_at | minute_resolution}}</td>
             <td id="title-id-{{loop.index}}">{{casework.title_number}}</td>
             <td id="application-type-{{loop.index}}">{{casework.application_type}}</td>
             <form id="complete-change-request-form" action="/complete-case/{{casework.id}}" method="POST">
@@ -28,9 +28,9 @@
                       Previous Full Name: {{casework.request_details_data.proprietor_full_name }}   </br>
                       New Full Name: {{casework.request_details_data.proprietor_new_full_name }}   </br>
                       Partner Name: {{casework.request_details_data.partner_name }}               </br>
-                      Marriage Date: {{casework.request_details_data.marriage_date }}                  </br>
+                      Marriage Date: {{casework.request_details_data.marriage_date | day_resolution}}                  </br>
                       Marriage Place: {{casework.request_details_data.marriage_place }}                     </br>
-                      Marriage Country: {{casework.request_details_data.marriage_country }}                      </br>
+                      Marriage Country: {{casework.request_details_data.marriage_country | country_lookup }}                      </br>
                       Marriage Certificate Number: {{casework.request_details_data.marriage_certificate_number }} </br>
               </td>
             </tr>

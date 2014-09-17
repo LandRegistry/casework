@@ -10,6 +10,8 @@ from application.frontend.forms import RegistrationForm
 from application.frontend.title_number_generator import generate_title_number
 from application.mint.mint import post_to_mint
 from application.cases import get_cases, complete_case
+from datetime import datetime
+from pytz import timezone
 
 Health(app, checks=[db.health])
 Audit(app)
@@ -17,6 +19,34 @@ Audit(app)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
+
+
+# a few date-related Jinja2 filters until until date transport and storage type can be established
+def _tz(dt):
+    utc = timezone('UTC').localize(dt)
+    bst = timezone('Europe/London').localize(dt)
+    return bst + (utc - bst)
+
+
+def _country_lookup_filter(iso):
+    from datatypes.validators.iso_country_code_validator import countries
+    country = countries.get(alpha2=iso).name
+    return country
+
+def _date_filter(dt, which):
+    app.logger.debug("resolution: %s, date: %s, type: %s" % (which, dt, type(dt)))
+    if which == 'minute':
+        input_fmt = '%d-%m-%Y %H:%M:%S %f'
+        norm = datetime.strptime(dt, input_fmt)
+        return datetime.strftime(_tz(norm), '%d-%m-%Y %H:%M')
+    else:
+        norm = datetime.fromtimestamp(dt)
+        return datetime.strftime(_tz(norm), '%d-%m-%Y')
+
+
+app.jinja_env.filters['minute_resolution'] = lambda dt : _date_filter(dt, 'minute')
+app.jinja_env.filters['day_resolution'] = lambda dt : _date_filter(dt, 'day')
+app.jinja_env.filters['country_lookup'] = lambda iso : _country_lookup_filter(iso)
 
 @app.route('/')
 @login_required
