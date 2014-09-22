@@ -19,3 +19,5 @@ deploy:
   app: lr-casework-frontend
   on:
     repo: LandRegistry/casework-frontend
+    branch: master
+  run: "python manage.py db upgrade"
