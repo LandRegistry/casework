@@ -24,6 +24,10 @@ body {
     list-style-type: none;
 }
 
+#submit {
+  margin-top:2em;
+}
+
 ul.navbar-nav.navbar-right:last-child {
   margin-right: 20px; }
 
@@ -46,3 +50,31 @@ ul.navbar-nav.navbar-right:last-child {
     border-bottom: 2px solid #25a8f1;
     font-size: 30px;
     padding: 30px 0px 0px 0px; } }
+
+.phase-banner p {
+    margin: 0px;
+    color: #000;
+    font-family: "nta",Arial,sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 300;
+    text-transform: none;
+    border-bottom:solid 1px #ccc;
+    padding-bottom:16px;
+}
+
+.phase-banner .phase-tag {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0px 8px 0px 0px;
+    padding: 2px 5px 0px;
+    font-family: "nta",Arial,sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: #FFF;
+    background-color: #D53880;
+}
