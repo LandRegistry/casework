@@ -18,10 +18,11 @@ manager.add_command('db', MigrateCommand)
 
 @manager.option('--email', dest='email')
 @manager.option('--password', dest='password')
-def create_user(email, password):
+@manager.option('--active', dest='active')
+def create_user(email, password, active):
     if not user_datastore.find_user(email=email):
         user_datastore.create_user(email=email,
-            password=encrypt_password(password))
+            password=encrypt_password(password), active=active)
         db.session.commit()
 
 

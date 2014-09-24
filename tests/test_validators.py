@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from wtforms import ValidationError
 
 from application.frontend.validators import ValidateDateNotInFuture
+from application.frontend import field_helpers
 
 
 class FakeField(object):
@@ -30,3 +31,8 @@ class ValidatorsTestCase(unittest.TestCase):
             self.fail("Should not have thrown validation error " + repr(ve))
 
         self.assertRaises(ValidationError, self.validator, None, FakeField(day_in_future))
+
+    def test_country_selector(self):
+        x = field_helpers.countries_list_for_selector
+        self.assertIn(('GB', 'United Kingdom'), x)
+        self.assertNotIn(('GG', 'Great Golf'), x)
