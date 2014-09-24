@@ -18,7 +18,6 @@ body {
   border-bottom: 1px solid #2D631F;
 }
 
-
 ul.navbar-nav.navbar-right:last-child {
   margin-right: 20px;
 }
@@ -33,6 +32,10 @@ ul.navbar-nav.navbar-right:last-child {
 
 .dashboard li {
   list-style-type: none;
+}
+
+#submit {
+  margin-top:2em;
 }
 
 /* Medium devices (desktops, 992px and up) */
