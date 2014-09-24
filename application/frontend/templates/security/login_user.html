@@ -16,7 +16,7 @@
 
             <h1 class="form-title heading-large">Login</h1>
 
-            {{ render_field_with_errors(login_user_form.email, class_='form-control') }}
+            {{ render_field_with_errors(login_user_form.email, class_='form-control', label="Email") }}
             {{ render_field_with_errors(login_user_form.password, class_='form-control') }}
 
             {{ render_field_with_errors(login_user_form.remember) }}
