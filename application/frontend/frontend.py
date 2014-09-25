@@ -36,7 +36,7 @@ def _country_lookup_filter(iso):
 def _date_filter(dt, which):
     app.logger.debug("resolution: %s, date: %s, type: %s" % (which, dt, type(dt)))
     if which == 'minute':
-        input_fmt = '%d-%m-%Y %H:%M:%S %f'
+        input_fmt = '%d-%m-%Y %H:%M:%S'
         norm = datetime.strptime(dt, input_fmt)
         return datetime.strftime(_tz(norm), '%d-%m-%Y %H:%M')
     else:
