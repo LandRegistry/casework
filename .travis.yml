@@ -2,24 +2,24 @@ language: python
 python:
 - '2.7'
 addons:
-  postgresql: "9.3"
+  postgresql: '9.3'
 install:
 - pip install -r requirements.txt
 - pip install -r requirements_test.txt
 - pip install python-coveralls
 env:
 - SETTINGS=config.TestConfig
-script: 
+script:
 - source ./environment_test.sh
 - py.test --cov application tests/ --cov-report=term --cov-report=html
 after_success:
-  - coveralls --ignore-errors
+- coveralls --ignore-errors
 deploy:
   provider: heroku
   api_key:
-    secure: LWDLbZ3fXk1jzWrfWdpA6Gj87Jd+jlfKw6PZ3AFjcvJEhImcB70Mzk4pBFtoMTYlrNg5CJM8SFrsos/L4VrRGWjS+Hrvvo30CzwlO8Bd5JgtVD3auGNqls6NPJEuiw4R2il3e9w7CJtN6Fq5C48NzfSU/ofOSyrTn7OCVREqXWs=
+    secure: AlxX9XftFTRARRydGV9z7+jHNl5an92f67vxVCJCBIXQZsWUsnJTH948BGye8gbaWichsY5zv+FvJRr/+ymUWqSlHLMjhVvS9SOJq1YYUcQKrh0XM2sA4m/U4Zmo2IFsXaGNgIuhfyaE3gTnhDTUvoZ0hlb41pYrIrbyClNJB8U=
   app: lr-casework-frontend
   on:
     repo: LandRegistry/casework-frontend
     branch: master
-  run: "python manage.py db upgrade"
+  run: python manage.py db upgrade
