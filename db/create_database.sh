@@ -1,4 +1,4 @@
 #!/bin/bash
 
-createuser -s casework
-createdb -U casework -O casework casework_users -T template0
+createuser -s casework_frontend
+createdb -U casework_frontend -O casework_frontend casework_frontend -T template0
