@@ -6,7 +6,6 @@ from flask import render_template, request, redirect, flash
 from flask_login import login_required
 
 from application import app, Health, db
-from application.frontend.title_number_generator import generate_title_number
 from application.mint.mint import post_to_mint
 from application.cases import get_cases, complete_case
 from datetime import datetime
