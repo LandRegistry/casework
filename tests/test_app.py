@@ -18,8 +18,6 @@ class CaseworkTestCase(unittest.TestCase):
         db.drop_all()
 
     def test_check_server(self):
-        rv = self.client.get('/registration')
-        self.assertEquals(rv.status, '200 OK')
 
         rv = self.client.get('/pagedoesnotexist')
         self.assertEqual(rv.status, '404 NOT FOUND')
