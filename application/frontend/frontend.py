@@ -1,15 +1,14 @@
 import logging
-import requests
 from audit import Audit
 
-from flask import render_template, request, redirect, flash
+from flask import render_template
 from flask_login import login_required
 
 from application import app, Health, db
-from application.mint.mint import post_to_mint
 from application.cases import get_cases, complete_case
 from datetime import datetime
 from pytz import timezone
+import dateutil.parser
 
 Health(app, checks=[db.health])
 Audit(app)
@@ -26,25 +25,24 @@ def _tz(dt):
     return bst + (utc - bst)
 
 
-def _country_lookup_filter(iso):
+def country_lookup_filter(iso):
     from datatypes.validators.iso_country_code_validator import countries
     country = countries.get(alpha2=iso).name
     return country
 
-def _date_filter(dt, which):
+def date_filter(dt, which):
     app.logger.debug("resolution: %s, date: %s, type: %s" % (which, dt, type(dt)))
     if which == 'minute':
-        input_fmt = '%d-%m-%Y %H:%M:%S'
-        norm = datetime.strptime(dt, input_fmt)
-        return datetime.strftime(_tz(norm), '%d-%m-%Y %H:%M')
+        norm = dateutil.parser.parse(dt)
+        return datetime.strftime(norm, '%d-%m-%Y %H:%M')
     else:
         norm = datetime.fromtimestamp(dt)
         return datetime.strftime(_tz(norm), '%d-%m-%Y')
 
 
-app.jinja_env.filters['minute_resolution'] = lambda dt : _date_filter(dt, 'minute')
-app.jinja_env.filters['day_resolution'] = lambda dt : _date_filter(dt, 'day')
-app.jinja_env.filters['country_lookup'] = lambda iso : _country_lookup_filter(iso)
+app.jinja_env.filters['minute_resolution'] = lambda dt : date_filter(dt, 'minute')
+app.jinja_env.filters['day_resolution'] = lambda dt : date_filter(dt, 'day')
+app.jinja_env.filters['country_lookup'] = lambda iso : country_lookup_filter(iso)
 
 @app.route('/')
 @login_required
