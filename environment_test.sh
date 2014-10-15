@@ -8,6 +8,7 @@ set -e
 export DATABASE_URL="postgresql://localhost/casework_frontend_test"
 export MINT_URL='http://nowhere'
 export PROPERTY_FRONTEND_URL='http://nowhere'
-export SECRET_KEY='local-dev-not-secret'
 export CASES_URL='http://nowhere'
 export CSRF_ENABLED=False
+export SECRET_KEY='localdev-not-secret'
+export SECURITY_PASSWORD_HASH='bcrypt'
