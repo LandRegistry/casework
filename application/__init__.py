@@ -31,7 +31,7 @@ if 'SENTRY_DSN' in os.environ:
 csrf = CsrfProtect()
 csrf.init_app(app)
 
-app.logger.info("\nConfiguration\n%s\n" % app.config)
+app.logger.debug("\nConfiguration\n%s\n" % app.config)
 
 
 def health(self):
