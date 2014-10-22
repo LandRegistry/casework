@@ -7,8 +7,6 @@ from flask_login import login_required
 from application import app, Health, db
 from application.cases import get_cases, complete_case
 from datetime import datetime
-from pytz import timezone
-import dateutil.parser
 
 Health(app, checks=[db.health])
 Audit(app)
@@ -17,32 +15,18 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler())
 
-
 # a few date-related Jinja2 filters until until date transport and storage type can be established
-def _tz(dt):
-    utc = timezone('UTC').localize(dt)
-    bst = timezone('Europe/London').localize(dt)
-    return bst + (utc - bst)
-
+def format_time(dt):
+    norm = datetime.fromtimestamp(dt)
+    return datetime.strftime(norm, '%d-%m-%Y')
 
 def country_lookup_filter(iso):
     from datatypes.validators.iso_country_code_validator import countries
     country = countries.get(alpha2=iso).name
     return country
 
-def date_filter(dt, which):
-    app.logger.debug("resolution: %s, date: %s, type: %s" % (which, dt, type(dt)))
-    if which == 'minute':
-        norm = dateutil.parser.parse(dt)
-        return datetime.strftime(norm, '%d-%m-%Y %H:%M')
-    else:
-        norm = datetime.fromtimestamp(dt)
-        return datetime.strftime(_tz(norm), '%d-%m-%Y')
-
-
-app.jinja_env.filters['minute_resolution'] = lambda dt : date_filter(dt, 'minute')
-app.jinja_env.filters['day_resolution'] = lambda dt : date_filter(dt, 'day')
 app.jinja_env.filters['country_lookup'] = lambda iso : country_lookup_filter(iso)
+app.jinja_env.filters['format_time'] = lambda dt : format_time(dt)
 
 @app.route('/')
 @login_required
