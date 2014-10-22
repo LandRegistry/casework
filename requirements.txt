@@ -29,3 +29,4 @@ simplejson
 Werkzeug
 wsgiref
 WTForms
+-e git+https://github.com/LandRegistry/lr-utils.git#egg=lrutils

@@ -8,10 +8,13 @@ from raven.contrib.flask import Sentry
 import logging
 import os
 from application.health import Health
+from lrutils import dateformat, datetimeformat
 
 
 app = Flask('application.frontend')
 app.config.from_object(os.environ.get('SETTINGS'))
+app.jinja_env.filters['datetimeformat'] = datetimeformat
+app.jinja_env.filters['dateformat'] = dateformat
 
 login_manager = LoginManager()
 login_manager.init_app(app)
