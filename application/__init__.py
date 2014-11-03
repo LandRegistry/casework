@@ -9,6 +9,7 @@ import logging
 import os
 from application.health import Health
 from lrutils import dateformat, datetimeformat
+from application.casework.views import casework_blueprint
 
 
 app = Flask('application.frontend')
@@ -19,6 +20,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 
 app.jinja_env.filters['datetimeformat'] = datetimeformat
 app.jinja_env.filters['dateformat'] = dateformat
+
+app.register_blueprint(casework_blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
