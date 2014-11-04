@@ -1,5 +1,4 @@
 import logging
-from audit import Audit
 
 from flask import render_template
 from flask_login import login_required
@@ -7,6 +6,7 @@ from flask_login import login_required
 from application import app, Health, db
 from application.cases import get_cases, complete_case
 from datetime import datetime
+from lrutils.audit import Audit
 
 Health(app, checks=[db.health])
 Audit(app)
