@@ -4,7 +4,6 @@ from flask import render_template
 from flask_login import login_required
 
 from application import app, Health, db
-from application.cases import get_cases, complete_case
 from datetime import datetime
 from lrutils.audit import Audit
 
@@ -34,32 +33,10 @@ def index():
     return render_template("index.html")
 
 
-@app.route('/checks', methods=['GET'])
-@login_required
-def get_checks():
-    checks = get_cases('checks')
-    logging.info("check_items:: %s" % checks)
-    return render_template("checks.html", checks=checks)
-
-
-@app.route('/casework', methods=['GET'])
-@login_required
-def get_casework():
-    casework_items = get_cases('casework')
-    return render_template("casework.html", casework_items=casework_items)
-
-@app.route("/complete-case/<case_id>", methods=['POST'])
-def complete_case_item(case_id):
-    logging.info("POST complete-case:"+case_id)
-    response = complete_case(case_id)
-    if response.status_code == 200:
-        return get_casework()
-    else:
-       return response
-
 @app.errorhandler(Exception)
 def catch_all_exceptions(error):
     return render_template('error.html', error=error), 500
+
 
 @app.errorhandler(404)
 def page_not_found(error):
