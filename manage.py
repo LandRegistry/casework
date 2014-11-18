@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 
 from flask_security.utils import encrypt_password

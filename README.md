@@ -4,72 +4,67 @@
 
 [![Coverage Status](https://img.shields.io/coveralls/LandRegistry/casework-frontend.svg)](https://coveralls.io/r/LandRegistry/casework-frontend)
 
-Basic frontend for title registration
+Basic frontend for casework.  This application can:
 
-This application requires the following environment variables.
+ 1) Display name change requests from the Service Frontend
+ 2) Display name change requests from the Service Frontend that need further checking.
 
-```
-SETTINGS
-DATABASE_URL
-MINT_URL
-PROPERTY_FRONTEND_URL
-SECRET_KEY
-CSRF_ENABLED
-```
 
-For local dev these are the settings.
+This application depends on the following services:
 
 ```
-export SETTINGS='config.DevelopmentConfig'
-export DATABASE_URL='postgresql://localhost/title_number'
-export MINT_URL='http://0.0.0.0:8001'
-export PROPERTY_FRONTEND_URL='http://0.0.0.0:8002'
-export SECRET_KEY='local-dev-not-secret'
-export CSRF_ENABLED=True
+Mint - https://github.com/LandRegistry/mint
+Property-Frontend - https://github.com/LandRegistry/property-frontend
+Cases - https://github.com/LandRegistry/cases
 ```
 
-The root url presents a simple registration form. For your benefit and pleasure we have provided a snippet of geojon to help in filling out the form.
+The application also depends on the following:
 
-Some example valid GEOJson to use on form
 ```
-{
-       "type": "Feature",
-       "crs": {
-         "type": "name",
-         "properties": {
-           "name": "urn:ogc:def:crs:EPSG:27700"
-         }
-       },
-       "geometry": {
-         "type": "Polygon",
-         "coordinates":
-             [[
-     [404439.5558898761,369899.8484076261], [404440.0558898761,369899.8484076261], [404440.0558898761,369900.3484076261], [404439.5558898761,369900.3484076261], [404439.5558898761,369899.8484076261] ]]
-     },
-     "properties": {
-     "Description": "Polygon"
-     }
-     }
+Postgres
+Python modules specified in requirements.txt - https://github.com/LandRegistry/casework-frontend/blob/master/requirements.txt
 ```
 
+###Using the development environment
 
-### Logging into application
+```
+You can use the development environment created for the alpha: https://github.com/LandRegistry/development-environment
+```
 
-This application has a user database. To create test users, use the management script.
+###Running the application manually:
 
-### To create a user
+```
+Install the python modules within requirements.txt.  Recommend doing this in a virtual environment.  If pip is
+installed, you can type "pip install -r requirements.txt"
 
-First activate the virualenv for this project
+You can manually run the app by typing ./run_dev.sh in the terminal.  This will start the application on port 5000.
+The script exports the environment variables needed to run the application.  However, to login and use the application
+you will need to create the database for the application, then restart the server.
+
+```
+
+###Create the database and tables
+
+```
+run the script to create the database by typing ./db/create_database.sh
+run the script to create the tables by typing ./upgrade_db.sh
+
+```
+
+Create Users to login to the the application, by adding them to the user database.
 
 Locally:
 ```
-python manage.py create_user --email=testuser@mail.com --password=password
+run ./create_user.sh     This includes the necessary exports and creates a user with the line below:
+
+python manage.py create_user --email=testuser@mail.com --password=password --active=t
 
 ```
 
 On Heroku:
 ```
-heroku run python manage.py create_user --email=testuser@mail.com --password=password --app lr-casework-frontend
+heroku run python manage.py create_user --email=testuser@mail.com --password=password --active=t --app lr-casework-frontend
 ```
 
+The fixtures application can also be used to create users relationships to titles. https://github.com/LandRegistry/fixtures
 

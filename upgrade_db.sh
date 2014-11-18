@@ -10,6 +10,4 @@ export SECRET_KEY='local-dev-not-secret'
 export CSRF_ENABLED=True
 export SECURITY_PASSWORD_HASH='bcrypt'
 
-
-    ./db/upgrade_database.sh
-python run_dev.py
+python manage.py db upgrade
