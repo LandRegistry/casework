@@ -1,15 +1,20 @@
 import logging
 
-from flask import render_template
+from flask import render_template, abort
 from flask_login import login_required
+from functools import wraps
 
 from application import app, Health, db
 from application.cases import get_cases, complete_case
 from datetime import datetime
 from lrutils.audit import Audit
+from lrutils.errorhandler.errorhandler_utils import ErrorHandler, eh_after_request
 
 Health(app, checks=[db.health])
 Audit(app)
+ErrorHandler(app)
+app.after_request(eh_after_request)
+# app.errorhandler(eh_error_handler)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -56,28 +61,3 @@ def complete_case_item(case_id):
         return get_casework()
     else:
        return response
-
-@app.errorhandler(Exception)
-def catch_all_exceptions(error):
-    return render_template('error.html', error=error), 500
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template('error.html', error=error), 404
-
-
-@app.errorhandler(500)
-def internal_server_error(error):
-    return render_template('error.html', error=error), 500
-
-
-# Some useful headers to set to beef up the robustness of the app
-# https://www.owasp.org/index.php/List_of_useful_HTTP_headers
-@app.after_request
-def after_request(response):
-    response.headers.add('Content-Security-Policy',
-                         "default-src 'self' 'unsafe-inline' data: http://maxcdn.bootstrapcdn.com")
-    response.headers.add('X-Frame-Options', 'deny')
-    response.headers.add('X-Content-Type-Options', 'nosniff')
-    response.headers.add('X-XSS-Protection', '1; mode=block')
-    return response
