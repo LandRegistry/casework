@@ -23,8 +23,8 @@ class CaseworkTestCase(unittest.TestCase):
         self.assertEqual(rv.status, '404 NOT FOUND')
 
         rv = self.client.get('/')
-        self.assertEqual(rv.status, '302 FOUND')
-
+        self.assertEqual(rv.status, '302 FOUND' or '200 OK')
+        
     def test_health(self):
         response = self.client.get('/health')
         self.assertEquals(response.status, '200 OK')
