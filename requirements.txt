@@ -23,7 +23,6 @@ raven==5.1.1
 requests==2.4.3
 simplejson==3.6.4
 Werkzeug==0.9.6
-wsgiref==0.1.2
 WTForms==2.0.1
 lrdatatypes==0.1.1
 lrutils==0.1.3
