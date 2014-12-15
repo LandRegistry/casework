@@ -1,14 +1,18 @@
+import logging
+import os
+
+from flask import Flask
+from flask_wtf import CsrfProtect
+from raven.contrib.flask import Sentry
+
 from flask.ext.basicauth import BasicAuth
 from flask.ext.login import LoginManager
 from flask.ext.security import SQLAlchemyUserDatastore, Security
 from flask.ext.sqlalchemy import SQLAlchemy
-from flask import Flask
-from flask_wtf import CsrfProtect
-from raven.contrib.flask import Sentry
-import logging
-import os
 from application.health import Health
 from lrutils import dateformat, datetimeformat
+from lrutils.audit import Audit
+from lrutils.errorhandler.errorhandler_utils import ErrorHandler, eh_after_request
 from application.casework.views import casework_blueprint
 from application.checks.views import checks_blueprint
 
@@ -27,6 +31,11 @@ app.register_blueprint(checks_blueprint)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Audit, error handling and after_request headers all handled by lrutils
+Audit(app)
+ErrorHandler(app)
+app.after_request(eh_after_request)
 
 if not app.debug:
     app.logger.addHandler(logging.StreamHandler())
