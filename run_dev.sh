@@ -12,4 +12,6 @@ export SECURITY_PASSWORD_HASH='bcrypt'
 
 
 ./db/upgrade_database.sh
+
 python3 run_dev.py
+

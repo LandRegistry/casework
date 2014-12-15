@@ -1,9 +1,34 @@
 {% extends "base.html" %}
-{% block page_title %}Something went wrong{% endblock %}
+{% block page_title %}{{error}}{% endblock %}
 {% block content %}
 
-  <h1>There has been an error</h1>
+<main id="wrapper" role="main">
 
-  {{error}}
+    <div id="content">
+
+        <div class="inner-block">
+
+            {% if code != 500 %}
+            <h1 class="heading-xlarge">
+                {{error}}
+            </h1>
+
+            <div class="text">
+                <p>{{description}}</p><br/>
+            </div>
+            {% else %}
+            <h1 class="heading-xlarge">
+                Sorry, we are experiencing technical difficulties
+            </h1>
+
+            <div class="text">
+                <p>Please try again in a few moments.</p>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</main>
 
 {% endblock %}
