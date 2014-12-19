@@ -1,0 +1,17 @@
+{
+      "name": "casework-frontend",
+      "type": "front-end",
+      "github": "https://github.com/LandRegistry/casework-frontend",
+      "heroku": "lr-casework-frontend",
+      "url": "http://casework.landregistryconcept.co.uk",
+      "port": 8004,
+      "database": "true",
+      "tech": [
+        "python",
+        "flask"
+      ],
+      "dependencies": [
+        "mint",
+        "cases"
+      ]
+}
