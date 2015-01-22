@@ -25,5 +25,5 @@ simplejson==3.6.4
 Werkzeug==0.9.6
 WTForms==2.0.1
 lrdatatypes==0.1.1
-lrutils==0.1.3
+lrutils==0.1.4
 healthcheck==0.2
